@@ -22,7 +22,7 @@
         "license":                  "MIT",
         "readme":                   "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
         "icon":                     "mqtt-client.png",
-        "extIcon":                  "https://github.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
+        "extIcon":                  "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
 		"type":                     "sync",
 		"dependencies":             [{"js-controller": ">=0.8.0"}],
         "stopTimeout":              10000
