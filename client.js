@@ -259,7 +259,7 @@ function setStateObj(id, msg) {
             }
             if (sync[id][adapter.namespace].setAck) obj.ack = true;
             adapter.setForeignState(id, obj);
-            adapter.log.info('object set');
+            adapter.log.info('object set to ' + JSON.stringify(obj));
             return true;
         } else {
             adapter.log.warn('no value in object: ' + msg);
@@ -276,8 +276,8 @@ function setStateVal(id, msg) {
         adapter.log.info('value did not change');
         return false;
     }
-    adapter.setForeignState(id, stringToVal(msg), sync[id][adapter.namespace].setAck);
-    adapter.log.info('value set');
+    adapter.setForeignState(id, {val: stringToVal(msg), ack: sync[id][adapter.namespace].setAck});
+    adapter.log.info('value set to ' + JSON.stringify({val: stringToVal(msg), ack: sync[id][adapter.namespace].setAck}));
     return true;
 }
 
@@ -290,7 +290,7 @@ function publish(id, state) {
         sync[id].pubState = state;
         adapter.log.info('publishing ' + id);
 
-        var topic = convertID2Topic(id, null, adapter.config.prefix, adapter.namespace);
+        var topic = settings.topic;
         var message = settings.pubAsObject ? JSON.stringify(state) : val2String(state.val);
 
         client.publish(topic, message, {qos: settings.qos, retain: settings.retain}, function () {
