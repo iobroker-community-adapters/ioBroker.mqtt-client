@@ -57,8 +57,9 @@ var adapter = utils.adapter({
         } else {
             if (sync[id]) {
                 if (sync[id][adapter.namespace]) {
-                    unsubscribe(sync[id][adapter.namespace].topic, function () { 
-                        adapter.log.info('unsubscribed from ' + sync[id][adapter.namespace].topic);
+                    var topic = sync[id][adapter.namespace].topic;
+                    unsubscribe(topic, function () {
+                        adapter.log.info('unsubscribed from ' + topic);
                     });
                     delete subTopics[sync[id][adapter.namespace].topic];
                     delete topic2id[sync[id][adapter.namespace].topic];
@@ -268,7 +269,6 @@ function setStateObj(id, msg) {
         adapter.log.warn('could not parse message as object: ' + msg);
         return false;
     }
-    return false;
 }
 
 function setStateVal(id, msg) {
