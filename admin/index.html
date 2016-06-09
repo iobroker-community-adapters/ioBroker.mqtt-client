@@ -1,0 +1,263 @@
+<html>
+<meta charset="UTF-8">
+<title></title>
+<!-- these 4 files always have to be included -->
+<link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
+<script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+<script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
+
+<!-- these three files  have to be always included -->
+<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
+<script type="text/javascript" src="../../js/translate.js"></script>
+<script type="text/javascript" src="../../js/adapter-settings.js"></script>
+
+<!-- you have to define 2 functions in the global scope: -->
+<script type="text/javascript">
+    systemDictionary = {
+        "MQTT-client adapter settings": {
+            "de": "MQTT-client Adapter Einstellungen",
+            "ru": "MQTT-client adapter settings"
+        },
+        "note": {
+            "en": "MQTT-client settings must be done for every state individually",
+            "de": "MQTT-client Einstellungen müssen für jeden State einzeln gemacht werden",
+            "ru": "MQTT-client settings must be done for every state individually"
+        },
+        "username": {
+            "de": "Benutzername"
+        },
+        "password": {
+            "de": "Passwort"
+        },
+        "additional subscriptions": {
+            "de": "zusätzliche subscriptions"
+        },
+        "must be unique": {
+            "de": "muss einmalig sein"
+        },
+        "Prefix for topics":     {"en": "Prefix for topics", "de": "Prefix für alle Topics","ru": "Префикс для всех значений"}
+    };
+
+    function setValue(id, value, onChange) {
+        // example: select elements with id=key and class=value and insert value
+        if ($('#' + id + '.value').attr('type') == 'checkbox') {
+            $('#' + id + '.value').prop('checked', value).change(function () {
+                onChange();
+            });
+        } else {
+            $('#' + id + '.value').val(value).change(function () {
+                onChange();
+            }).keyup(function () {
+                // Check that only numbers entered
+                if ($(this).hasClass('number')) {
+                    var val = $(this).val();
+                    if (val) {
+                        var newVal = '';
+                        for (var i = 0; i < val.length; i++) {
+                            if (val[i] >= '0' && val[i] <= '9') {
+                                newVal += val[i];
+                            }
+                        }
+
+                        if (val != newVal) $(this).val(newVal);
+                    }
+                }
+                $(this).trigger('change');
+            });
+        }
+    }
+
+    function load(settings, onChange) {
+        for (var key in settings) {
+            setValue(key, settings[key], onChange);
+        }
+
+
+        $('#demoStart, #demoEnd').datepicker().val(new Date().toDateString());
+
+        $('#generateDemo').button().click(function () {
+            $(".loader").show();
+            sendTo("", "generateDemo", {
+                id: $('#demoID').val(),
+                start: $('#demoStart').val(),
+                end: $('#demoEnd').val(),
+                step: $('#demoStep').val(),
+                curve: $('#demoCurve').val()
+            }, function (e) {
+                $(".loader").hide();
+            })
+        });
+
+        onChange(false);
+    }
+
+    // ... and the function save has to exist.
+    // you have to make sure the callback is called with the settings object as first param!
+    function save(callback) {
+        // example: select elements with class=value and build settings object
+        changed = false;
+        var settings = {};
+        $('.value').each(function () {
+            var $this = $(this);
+            var id = $this.attr('id');
+
+            if ($this.attr('type') == 'checkbox') {
+                settings[id] = $this.prop('checked');
+            } else {
+                settings[id] = $this.val();
+            }
+        });
+        callback(settings);
+    }
+</script>
+
+<style>
+    .loader {
+        display: none;
+        position: absolute;
+        left: calc(50% - 0.5em);
+        top: calc(50% - 0.5em - 72px);
+        font-size: 90px;
+        text-indent: -9999em;
+        overflow: hidden;
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        margin: 72px auto;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load6 1.7s infinite ease;
+        animation: load6 1.7s infinite ease;
+    }
+
+    @-webkit-keyframes load6 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, 0 -0.83em 0 -0.42em #00ffff, 0 -0.83em 0 -0.44em #00ffff, 0 -0.83em 0 -0.46em #00ffff, 0 -0.83em 0 -0.477em #00ffff;
+        }
+        5%,
+        95% {
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, 0 -0.83em 0 -0.42em #00ffff, 0 -0.83em 0 -0.44em #00ffff, 0 -0.83em 0 -0.46em #00ffff, 0 -0.83em 0 -0.477em #00ffff;
+        }
+        10%,
+        59% {
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, -0.087em -0.825em 0 -0.42em #00ffff, -0.173em -0.812em 0 -0.44em #00ffff, -0.256em -0.789em 0 -0.46em #00ffff, -0.297em -0.775em 0 -0.477em #00ffff;
+        }
+        20% {
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, -0.338em -0.758em 0 -0.42em #00ffff, -0.555em -0.617em 0 -0.44em #00ffff, -0.671em -0.488em 0 -0.46em #00ffff, -0.749em -0.34em 0 -0.477em #00ffff;
+        }
+        38% {
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, -0.377em -0.74em 0 -0.42em #00ffff, -0.645em -0.522em 0 -0.44em #00ffff, -0.775em -0.297em 0 -0.46em #00ffff, -0.82em -0.09em 0 -0.477em #00ffff;
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, 0 -0.83em 0 -0.42em #00ffff, 0 -0.83em 0 -0.44em #00ffff, 0 -0.83em 0 -0.46em #00ffff, 0 -0.83em 0 -0.477em #00ffff;
+        }
+    }
+
+    @keyframes load6 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, 0 -0.83em 0 -0.42em #00ffff, 0 -0.83em 0 -0.44em #00ffff, 0 -0.83em 0 -0.46em #00ffff, 0 -0.83em 0 -0.477em #00ffff;
+        }
+        5%,
+        95% {
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, 0 -0.83em 0 -0.42em #00ffff, 0 -0.83em 0 -0.44em #00ffff, 0 -0.83em 0 -0.46em #00ffff, 0 -0.83em 0 -0.477em #00ffff;
+        }
+        10%,
+        59% {
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, -0.087em -0.825em 0 -0.42em #00ffff, -0.173em -0.812em 0 -0.44em #00ffff, -0.256em -0.789em 0 -0.46em #00ffff, -0.297em -0.775em 0 -0.477em #00ffff;
+        }
+        20% {
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, -0.338em -0.758em 0 -0.42em #00ffff, -0.555em -0.617em 0 -0.44em #00ffff, -0.671em -0.488em 0 -0.46em #00ffff, -0.749em -0.34em 0 -0.477em #00ffff;
+        }
+        38% {
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, -0.377em -0.74em 0 -0.42em #00ffff, -0.645em -0.522em 0 -0.44em #00ffff, -0.775em -0.297em 0 -0.46em #00ffff, -0.82em -0.09em 0 -0.477em #00ffff;
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+            box-shadow: 0 -0.83em 0 -0.4em #00ffff, 0 -0.83em 0 -0.42em #00ffff, 0 -0.83em 0 -0.44em #00ffff, 0 -0.83em 0 -0.46em #00ffff, 0 -0.83em 0 -0.477em #00ffff;
+        }
+    }
+</style>
+<div id="adapter-container">
+    <div id="loader" class="loader"></div>
+    <table>
+        <tr>
+            <td><img src="mqtt-client.png"></td>
+            <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">MQTT-client adapter settings</h3></td>
+        </tr>
+    </table>
+    <div class="translate" style="margin:20px">note</div>
+    <br>
+    <h4 style="width: calc(100% - 10px)" class="translate">Server settings:</h4>
+    <table>
+        <tr>
+            <td class="translate">host</td>
+            <td><input id="host" type="text" size="25" class="value"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">port</td>
+            <td><input id="port" type="text" size="5" class="value number"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">ssl</td>
+            <td><input id="ssl" type="checkbox" class="value"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">clientId</td>
+            <td><input id="clientId" type="text" size="10" class="value"/></td>
+            <td class="translate">must be unique</td>
+        </tr>
+        <tr>
+            <td class="translate">username</td>
+            <td><input id="username" type="text" size="10" class="value"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">password</td>
+            <td><input id="password" type="text" size="10" class="value"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">on connect topic</td>
+            <td><input id="onConnectTopic" type="text" size="30" class="value"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">on connect message</td>
+            <td><input id="onConnectMessage" type="text" size="30" class="value"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">last will topic</td>
+            <td><input id="lastWillTopic" type="text" size="30" class="value"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">last will message</td>
+            <td><input id="lastWillMessage" type="text" size="30" class="value"/></td>
+            <td class="translate"></td>
+        </tr>
+        <tr>
+            <td class="translate">subscriptions</td>
+            <td><input id="subscriptions" type="text" size="30" class="value"/></td>
+            <td class="translate">additional subscriptions</td>
+        </tr>
+        <tr>
+            <td class="translate">prefix</td>
+            <td><input id="prefix" type="text" size="30" class="value"/></td>
+            <td class="translate">Prefix for topics</td>
+        </tr>
+    </table>
+</div>
+</html>

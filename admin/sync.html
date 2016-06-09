@@ -1,0 +1,103 @@
+<script type="text/x-iobroker" data-template-name="mqtt-client">
+    <div class="form-row">
+        <table style="font-size: 12px">
+            <tr>
+                <td class="translate">enabled</td>
+                <!-- this field is mandatory, just to find out if to include this settings or not -->
+                <td><input type="checkbox" data-field="enabled" data-default="false"></td>
+                <td style="width: 40px">&nbsp;</td>
+                <td><input type="text" data-field="topic" size="30"></td>
+            </tr>
+            <tr>
+                <td>publish</td>
+                <td><input type="checkbox" data-field="publish" data-default="false"></td>
+                <td style="width: 40px">&nbsp;</td>
+                <td class="translate">changes only</td>
+                <td><input type="checkbox" data-field="pubChangesOnly" data-default="false"></td>
+                <td style="width: 20px">&nbsp;</td>
+                <td class="translate">as object</td>
+                <td><input type="checkbox" data-field="pubAsObject" data-default="false"></td>
+                <td style="width: 20px">&nbsp;</td>
+                <td>qos</td>
+                <td>
+                    <select data-field="qos" data-default="0">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </td>
+                <td style="width: 20px">&nbsp;</td>
+                <td>retain</td>
+                <td><input type="checkbox" data-field="retain" data-default="false"></td>
+            </tr>
+            <tr>
+                <td>subscribe</td>
+                <td><input type="checkbox" data-field="subscribe" data-default="false"></td>
+                <td style="width: 40px">&nbsp;</td>
+                <td class="translate">changes only</td>
+                <td><input type="checkbox" data-field="subChangesOnly" data-default="false"></td>
+                <td style="width: 20px">&nbsp;</td>
+                <td class="translate">as object</td>
+                <td><input type="checkbox" data-field="subAsObject" data-default="false"></td>
+                <td style="width: 20px">&nbsp;</td>
+                <td>qos</td>
+                <td>
+                    <select data-field="subQos" data-default="0">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </td>
+                <td style="width: 20px">&nbsp;</td>
+                <td>ack</td>
+                <td><input type="checkbox" data-field="setAck" data-default="false"></td>
+            </tr>
+        </table>
+    </div>
+</script>
+
+<!-- translations -->
+<script type="text/javascript">
+    systemDictionary = $.extend(systemDictionary, {
+        "enabled":          {"en": "enabled",           "de": "Aktiviert",          "ru": "активно"},
+        "changes only":     {"en": "changes only",      "de": "Nur Änderungen",     "ru": "changes only"},
+        "as object":        {"en": "as object",         "de": "als Objekt",         "ru": "as object"}
+    });
+    // There are two ways how to predefine default settings:
+    // - with attribute "data-default" (content independent)
+    // - with function in global variable "defaults". Function name is equal with adapter name.
+    //   as input function receives object with all information concerning it
+    if (typeof defaults !== 'undefined') {
+        defaults["mqtt-client"] = function (obj, instanceObj) {
+            console.log(JSON.stringify(instanceObj));
+            var topic = convertID2Topic(obj._id, instanceObj.native.prefix, instanceObj._id.replace("system.adapter.", ""))
+            return {
+                enabled:        false,
+                topic:          topic,
+                publish:        false,
+                pubChangesOnly: false,
+                pubAsObject:    false,
+                qos:            0,
+                retain:         false,
+                subscribe:      false,
+                subChangesOnly: false,
+                subAsObject:    false,
+                subQos:         0,
+                ack:            false
+            };
+        }
+    }
+    function convertID2Topic(id, prefix, namespace) {
+        var topic;
+        if (namespace && id.substring(0, namespace.length) === namespace) {
+            topic = id.substring(namespace.length + 1);
+        } else {
+            topic = id;
+        }
+        if(prefix && prefix !== '') {
+            topic = prefix + '.' + topic;
+        }
+        topic = topic.replace(/\./g, '/').replace(/_/g, ' ');
+        return topic;
+    }
+</script>

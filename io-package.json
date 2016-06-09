@@ -1,0 +1,71 @@
+{
+    "common": {
+        "name":                     "mqtt-client",
+        "title":                    "MQTT-client",
+        "desc":                     {
+            "en": "Syncing with MQTT Brokers",
+            "de": "Synchronisierung mit MQTT Brokern",
+            "ru": "Syncing with MQTT Brokers"
+        },
+        "version": "0.1.0",
+        "mode":                     "daemon",
+        "platform":                 "Javascript/Node.js",
+        "loglevel":                 "info",
+        "messagebox":               false,
+        "keywords":                 ["mqtt", "syncing", "data"],
+        "main":                     "client.js",
+        "enabled":                  true,
+        "preserveSettings":         "mqtt_client",
+        "authors": [
+            "Pmant <patrickmo@gmx.de>"
+        ],
+        "license":                  "MIT",
+        "readme":                   "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
+        "icon":                     "mqtt-client.png",
+        "extIcon":                  "https://github.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
+		"type":                     "sync",
+		"dependencies":             [{"js-controller": ">=0.8.0"}],
+        "stopTimeout":              10000
+    },
+    "native": {
+        "host": "",
+        "port":     1883,
+        "ssl": false,
+        "clientId": "",
+        "username": "",
+        "password": "",
+        "onConnectTopic": "",
+        "onConnectMessage": "",
+        "lastWillTopic": "",
+        "lastWillMessage": "",
+        "subscriptions": "",
+        "reconnectPeriod": 2000,
+        "prefix": "",
+
+
+        "enabled": false,
+
+        "publish": false,
+        "pubChangesOnly": false,
+        "pubAsObject": false,
+        "qos": 0,
+        "retain": false,
+
+        "subscribe": false,
+        "subChangesOnly": false,
+        "subAsObject": false,
+        "subQos": 0,
+        "setAck": true
+    },
+    "objects": [
+        {
+            "_id": "_design/sync",
+            "language": "javascript",
+            "views": {
+                "state": {
+                    "map": "function(doc) { if (doc.type=='state' && doc.common.sync) emit(doc._id, doc.common) }"
+                }
+            }
+        }
+    ]
+}
