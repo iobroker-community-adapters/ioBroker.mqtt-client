@@ -50,7 +50,7 @@
                 </td>
                 <td style="width: 20px">&nbsp;</td>
                 <td>ack</td>
-                <td><input type="checkbox" data-field="setAck" data-default="false"></td>
+                <td><input type="checkbox" data-field="setAck" data-default="true"></td>
             </tr>
         </table>
     </div>
@@ -70,7 +70,7 @@
     if (typeof defaults !== 'undefined') {
         defaults["mqtt-client"] = function (obj, instanceObj) {
             console.log(JSON.stringify(instanceObj));
-            var topic = convertID2Topic(obj._id, instanceObj.native.prefix, instanceObj._id.replace("system.adapter.", ""))
+            var topic = convertID2Topic(obj._id, instanceObj.native.prefix, instanceObj._id.replace("system.adapter.", ""));
             return {
                 enabled:        false,
                 topic:          topic,
@@ -83,7 +83,7 @@
                 subChangesOnly: false,
                 subAsObject:    false,
                 subQos:         0,
-                ack:            false
+                ack:            true
             };
         }
     }

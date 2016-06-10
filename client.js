@@ -276,8 +276,8 @@ function setStateVal(id, msg) {
         adapter.log.info('value did not change');
         return false;
     }
-    adapter.setForeignState(id, {val: stringToVal(msg), ack: sync[id][adapter.namespace].setAck});
-    adapter.log.info('value set to ' + JSON.stringify({val: stringToVal(msg), ack: sync[id][adapter.namespace].setAck}));
+    adapter.setForeignState(id, {val: stringToVal(id, msg), ack: sync[id][adapter.namespace].setAck});
+    adapter.log.info('value set to ' + JSON.stringify({val: stringToVal(id, msg), ack: sync[id][adapter.namespace].setAck}));
     return true;
 }
 
