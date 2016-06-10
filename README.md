@@ -12,7 +12,9 @@ The ```last will message``` is published to the ```last will topic``` every time
 The Server will store this message and send it to its subscribers when the client disconnects.
 
 ### subscriptions 
-Not implemented!
+Comma separated list of topics that are not covered by existing states. 
+Received messages are converted to states within the adapters namespace (e.g. mqtt.0) and subscribed.
+You can remove topics after all states have been created.
 
 ### prefix
 When publishing this will be prepended to the topics and it also will be removed from subscribed topics if necessary.

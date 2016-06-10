@@ -7,6 +7,8 @@ var mqtt = require('mqtt');
 var sync = {};
 var subTopics = {};
 var topic2id = {};
+var addTopics = {};
+var addedTopics = {};
 var client = null;
 
 var adapter = utils.adapter({
@@ -146,6 +148,12 @@ function main() {
                     }
                 }
             }
+            var subarr = adapter.config.subscriptions.split(',');
+            for (var j = 0; j < subarr.length; j++) {
+                if (subarr[j].trim() !== '') {
+                    addTopics[subarr[j].trim()] = 0;
+                }
+            }
             if (adapter.config.lastWillTopic && adapter.config.lastWillTopic !== '' && adapter.config.lastWillMessage && adapter.config.lastWillMessage !== '') {
                 adapter.log.info('Try to connect to ' + __url + ' with lwt');
                 client = mqtt.connect(_url, {
@@ -200,7 +208,10 @@ function connect(connack) {
     }
     //initially subscribe to topics
     if (Object.keys(subTopics).length) subscribe(subTopics, function () { 
-        adapter.log.info('subscribed to ' + JSON.stringify(subTopics));
+        adapter.log.info('subscribed to: ' + JSON.stringify(subTopics));
+    });
+    if (Object.keys(addTopics).length) subscribe(addTopics, function () {
+        adapter.log.info('subscribed to additional topics: ' + JSON.stringify(addTopics));
     });
 }
 
@@ -231,8 +242,43 @@ function message(topic, msg) {
         } else {
             setStateVal(id, msg);
         }
+    } else if (!addedTopics[topic]) {
+        addedTopics[topic] = null;
+        var obj = {
+            type: "state",
+            role: "text",
+            common: {
+                name: id.split('.').pop(),
+                type: "mixed",
+                read: true,
+                write: true,
+                desc: "created from topic",
+                sync: {
+                }
+            },
+            native: {
+                topic: topic
+            }
+        };
+        obj.common.sync[adapter.namespace] = {
+            "enabled": true,
+            "topic": topic,
+            "publish": false,
+            "pubChangesOnly": false,
+            "pubAsObject": false,
+            "qos": 0,
+            "retain": false,
+            "subscribe": true,
+            "subChangesOnly": false,
+            "subAsObject": false,
+            "subQos": 0,
+            "setAck": true
+        };
+        adapter.setObject (id, obj, function () {
+            adapter.log.info('created and subscribed to new state: ' + id);
+        });
     } else {
-        adapter.log.info('received unknown topic!');
+        adapter.log.info('state already exists');
     }
 }
 
