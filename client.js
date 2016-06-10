@@ -35,7 +35,7 @@ var adapter = utils.adapter({
             sync[id][adapter.namespace].subChangesOnly  = sync[id][adapter.namespace].subChangesOnly    || adapter.config.subChangesOnly    || false;
             sync[id][adapter.namespace].subAsObject     = sync[id][adapter.namespace].subAsObject       || adapter.config.subAsObject       || false;
             sync[id][adapter.namespace].subQos          = parseInt(sync[id][adapter.namespace].subQos   || adapter.config.subQos, 10)       || 0;
-            sync[id][adapter.namespace].setAck          = sync[id][adapter.namespace].setAck            || adapter.config.setAck            || false;
+            sync[id][adapter.namespace].setAck          = !sync[id][adapter.namespace].setAck           || !adapter.config.setAck           || true;
 
             if (sync[id][adapter.namespace].subscribe) {
                 subTopics[sync[id][adapter.namespace].topic] = sync[id][adapter.namespace].subQos;
