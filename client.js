@@ -23,19 +23,19 @@ var adapter = utils.adapter({
             sync[id].state = state;
             sync[id].type = obj.common.type;
 
-            sync[id][adapter.namespace].topic           = sync[id][adapter.namespace].topic             || convertID2Topic(id, adapter.config.prefix, adapter.namespace);
+            sync[id][adapter.namespace].topic           = sync[id][adapter.namespace].topic || convertID2Topic(id, adapter.config.prefix, adapter.namespace);
 
-            sync[id][adapter.namespace].publish         = sync[id][adapter.namespace].publish           === false ? false : adapter.config.publish          === true;
-            sync[id][adapter.namespace].pubChangesOnly  = sync[id][adapter.namespace].pubChangesOnly    === false ? false : adapter.config.pubChangesOnly   === true;
-            sync[id][adapter.namespace].pubAsObject     = sync[id][adapter.namespace].pubAsObject       === false ? false : adapter.config.pubAsObject      === true;
-            sync[id][adapter.namespace].retain          = sync[id][adapter.namespace].retain            === false ? false : adapter.config.retain           === true;
-            sync[id][adapter.namespace].qos             = parseInt(sync[id][adapter.namespace].qos || adapter.config.qos, 10)                               || 0;
+            sync[id][adapter.namespace].publish         = sync[id][adapter.namespace].publish === true;
+            sync[id][adapter.namespace].pubChangesOnly  = sync[id][adapter.namespace].pubChangesOnly === true;
+            sync[id][adapter.namespace].pubAsObject     = sync[id][adapter.namespace].pubAsObject === true;
+            sync[id][adapter.namespace].retain          = sync[id][adapter.namespace].retain  === true;
+            sync[id][adapter.namespace].qos             = parseInt(sync[id][adapter.namespace].qos || adapter.config.qos, 10) || 0;
 
-            sync[id][adapter.namespace].subscribe       = sync[id][adapter.namespace].subscribe         === false ? false : adapter.config.subscribe        === true;
-            sync[id][adapter.namespace].subChangesOnly  = sync[id][adapter.namespace].subChangesOnly    === false ? false : adapter.config.subChangesOnly   === true;
-            sync[id][adapter.namespace].subAsObject     = sync[id][adapter.namespace].subAsObject       === false ? false : adapter.config.subAsObject      === true;
-            sync[id][adapter.namespace].setAck          = sync[id][adapter.namespace].setAck            === false ? false : adapter.config.setAck           !== false;
-            sync[id][adapter.namespace].subQos          = parseInt(sync[id][adapter.namespace].subQos || adapter.config.subQos, 10)                         || 0;
+            sync[id][adapter.namespace].subscribe       = sync[id][adapter.namespace].subscribe === true;
+            sync[id][adapter.namespace].subChangesOnly  = sync[id][adapter.namespace].subChangesOnly === true;
+            sync[id][adapter.namespace].subAsObject     = sync[id][adapter.namespace].subAsObject === true;
+            sync[id][adapter.namespace].setAck          = sync[id][adapter.namespace].setAck !== false;
+            sync[id][adapter.namespace].subQos          = parseInt(sync[id][adapter.namespace].subQos || adapter.config.subQos, 10) || 0;
 
             if (sync[id][adapter.namespace].subscribe) {
                 subTopics[sync[id][adapter.namespace].topic] = sync[id][adapter.namespace].subQos;
@@ -122,17 +122,17 @@ function main() {
                             }
                             delete sync[id];
                         } else {
-                            sync[id][adapter.namespace].publish         = sync[id][adapter.namespace].publish           || adapter.config.publish           || false;
-                            sync[id][adapter.namespace].pubChangesOnly  = sync[id][adapter.namespace].pubChangesOnly    || adapter.config.pubChangesOnly    || false;
-                            sync[id][adapter.namespace].pubAsObject     = sync[id][adapter.namespace].pubAsObject       || adapter.config.pubAsObject       || false;
-                            sync[id][adapter.namespace].qos             = parseInt(sync[id][adapter.namespace].qos      || adapter.config.qos, 10)          || 0;
-                            sync[id][adapter.namespace].retain          = sync[id][adapter.namespace].retain            || adapter.config.retain            || false;
+                            sync[id][adapter.namespace].publish         = sync[id][adapter.namespace].publish === true;
+                            sync[id][adapter.namespace].pubChangesOnly  = sync[id][adapter.namespace].pubChangesOnly === true;
+                            sync[id][adapter.namespace].pubAsObject     = sync[id][adapter.namespace].pubAsObject === true;
+                            sync[id][adapter.namespace].retain          = sync[id][adapter.namespace].retain  === true;
+                            sync[id][adapter.namespace].qos             = parseInt(sync[id][adapter.namespace].qos || adapter.config.qos, 10) || 0;
 
-                            sync[id][adapter.namespace].subscribe       = sync[id][adapter.namespace].subscribe         || adapter.config.subscribe         || false;
-                            sync[id][adapter.namespace].subChangesOnly  = sync[id][adapter.namespace].subChangesOnly    || adapter.config.subChangesOnly    || false;
-                            sync[id][adapter.namespace].subAsObject     = sync[id][adapter.namespace].subAsObject       || adapter.config.subAsObject       || false;
-                            sync[id][adapter.namespace].subQos          = parseInt(sync[id][adapter.namespace].subQos   || adapter.config.subQos, 10)       || 0;
-                            sync[id][adapter.namespace].setAck          = sync[id][adapter.namespace].setAck            || adapter.config.setAck            || false;
+                            sync[id][adapter.namespace].subscribe       = sync[id][adapter.namespace].subscribe === true;
+                            sync[id][adapter.namespace].subChangesOnly  = sync[id][adapter.namespace].subChangesOnly === true;
+                            sync[id][adapter.namespace].subAsObject     = sync[id][adapter.namespace].subAsObject === true;
+                            sync[id][adapter.namespace].setAck          = sync[id][adapter.namespace].setAck !== false;
+                            sync[id][adapter.namespace].subQos          = parseInt(sync[id][adapter.namespace].subQos || adapter.config.subQos, 10) || 0;
 
                             if (sync[id][adapter.namespace].subscribe) {
                                 subTopics[sync[id][adapter.namespace].topic] = sync[id][adapter.namespace].subQos;
