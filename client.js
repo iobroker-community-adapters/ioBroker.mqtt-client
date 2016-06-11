@@ -167,7 +167,7 @@ function main() {
                     clean: true,
                     will: {
                         topic: adapter.config.lastWillTopic,
-                        message: adapter.config.lastWillMessage,
+                        payload: adapter.config.lastWillMessage,
                         qos: 2,
                         retain: true
                     }
