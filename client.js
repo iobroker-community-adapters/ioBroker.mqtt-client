@@ -274,7 +274,7 @@ function message(topic, msg) {
             "subQos": 0,
             "setAck": true
         };
-        adapter.setObject (id, obj, function () {
+        adapter.setObjectNotExists(id, obj, function () {
             adapter.log.info('created and subscribed to new state: ' + id);
         });
     } else {
