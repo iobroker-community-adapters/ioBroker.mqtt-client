@@ -69,7 +69,6 @@
     //   as input function receives object with all information concerning it
     if (typeof defaults !== 'undefined') {
         defaults["mqtt-client"] = function (obj, instanceObj) {
-            console.log(JSON.stringify(instanceObj));
             var topic = convertID2Topic(obj._id, instanceObj.native.prefix, instanceObj._id.replace("system.adapter.", ""));
             return {
                 enabled:        false,
