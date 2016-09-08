@@ -306,7 +306,7 @@ function setStateObj(id, msg) {
                 return false;
             }
             if (custom[id][adapter.namespace].setAck) obj.ack = true;
-            delete obj['from'];
+            delete obj.from;
             adapter.setForeignState(id, obj);
             adapter.log.info('object set to ' + JSON.stringify(obj));
             return true;
