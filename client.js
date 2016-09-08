@@ -4,7 +4,7 @@
 var utils      = require(__dirname + '/lib/utils'); // Get common adapter utils
 var mqtt = require('mqtt');
 
-var sync = {};
+var custom = {};
 var subTopics = {};
 var topic2id = {};
 var addTopics = {};
@@ -16,66 +16,66 @@ var adapter = utils.adapter({
     name: 'mqtt-client',
 
     objectChange: function (id, obj) {
-        if (obj && obj.common && obj.common.sync && obj.common.sync[adapter.namespace]) {
-            var pubState = sync[id] ? sync[id].pubState : null;
-            var state = sync[id] ? sync[id].state : null;
+        if (obj && obj.common && obj.common.custom && obj.common.custom[adapter.namespace]) {
+            var pubState = custom[id] ? custom[id].pubState : null;
+            var state = custom[id] ? custom[id].state : null;
 
-            sync[id] = obj.common.sync;
-            sync[id].pubState = pubState;
-            sync[id].state = state;
-            sync[id].type = obj.common.type;
+            custom[id] = obj.common.custom;
+            custom[id].pubState = pubState;
+            custom[id].state = state;
+            custom[id].type = obj.common.type;
 
-            sync[id][adapter.namespace].topic           = sync[id][adapter.namespace].topic || convertID2Topic(id, adapter.config.prefix, adapter.namespace);
+            custom[id][adapter.namespace].topic           = custom[id][adapter.namespace].topic || convertID2Topic(id, adapter.config.prefix, adapter.namespace);
 
-            sync[id][adapter.namespace].publish         = sync[id][adapter.namespace].publish === true;
-            sync[id][adapter.namespace].pubChangesOnly  = sync[id][adapter.namespace].pubChangesOnly === true;
-            sync[id][adapter.namespace].pubAsObject     = sync[id][adapter.namespace].pubAsObject === true;
-            sync[id][adapter.namespace].retain          = sync[id][adapter.namespace].retain  === true;
-            sync[id][adapter.namespace].qos             = parseInt(sync[id][adapter.namespace].qos || adapter.config.qos, 10) || 0;
+            custom[id][adapter.namespace].publish         = custom[id][adapter.namespace].publish === true;
+            custom[id][adapter.namespace].pubChangesOnly  = custom[id][adapter.namespace].pubChangesOnly === true;
+            custom[id][adapter.namespace].pubAsObject     = custom[id][adapter.namespace].pubAsObject === true;
+            custom[id][adapter.namespace].retain          = custom[id][adapter.namespace].retain  === true;
+            custom[id][adapter.namespace].qos             = parseInt(custom[id][adapter.namespace].qos || adapter.config.qos, 10) || 0;
 
-            sync[id][adapter.namespace].subscribe       = sync[id][adapter.namespace].subscribe === true;
-            sync[id][adapter.namespace].subChangesOnly  = sync[id][adapter.namespace].subChangesOnly === true;
-            sync[id][adapter.namespace].subAsObject     = sync[id][adapter.namespace].subAsObject === true;
-            sync[id][adapter.namespace].setAck          = sync[id][adapter.namespace].setAck !== false;
-            sync[id][adapter.namespace].subQos          = parseInt(sync[id][adapter.namespace].subQos || adapter.config.subQos, 10) || 0;
+            custom[id][adapter.namespace].subscribe       = custom[id][adapter.namespace].subscribe === true;
+            custom[id][adapter.namespace].subChangesOnly  = custom[id][adapter.namespace].subChangesOnly === true;
+            custom[id][adapter.namespace].subAsObject     = custom[id][adapter.namespace].subAsObject === true;
+            custom[id][adapter.namespace].setAck          = custom[id][adapter.namespace].setAck !== false;
+            custom[id][adapter.namespace].subQos          = parseInt(custom[id][adapter.namespace].subQos || adapter.config.subQos, 10) || 0;
 
-            if (sync[id][adapter.namespace].subscribe) {
-                subTopics[sync[id][adapter.namespace].topic] = sync[id][adapter.namespace].subQos;
-                topic2id[sync[id][adapter.namespace].topic] = id;
+            if (custom[id][adapter.namespace].subscribe) {
+                subTopics[custom[id][adapter.namespace].topic] = custom[id][adapter.namespace].subQos;
+                topic2id[custom[id][adapter.namespace].topic] = id;
                 var sub = {};
-                sub[sync[id][adapter.namespace].topic] = sync[id][adapter.namespace].subQos;
+                sub[custom[id][adapter.namespace].topic] = custom[id][adapter.namespace].subQos;
                 subscribe(sub, function () { 
                     adapter.log.info('subscribed to ' + JSON.stringify(sub));
                 });
             } else {
-                delete subTopics[sync[id][adapter.namespace].topic];
-                delete topic2id[sync[id][adapter.namespace].topic];
-                unsubscribe(sync[id][adapter.namespace].topic, function () { 
-                    adapter.log.info('unsubscribed from ' + sync[id][adapter.namespace].topic);
+                delete subTopics[custom[id][adapter.namespace].topic];
+                delete topic2id[custom[id][adapter.namespace].topic];
+                unsubscribe(custom[id][adapter.namespace].topic, function () {
+                    adapter.log.info('unsubscribed from ' + custom[id][adapter.namespace].topic);
                 });
             }
 
-            adapter.log.info('enabled syncing of ' + id + ' (publish/subscribe:' + sync[id][adapter.namespace].publish.toString() + '/' + sync[id][adapter.namespace].subscribe.toString() + ')');
+            adapter.log.info('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id][adapter.namespace].publish.toString() + '/' + custom[id][adapter.namespace].subscribe.toString() + ')');
         } else {
-            if (sync[id]) {
-                if (sync[id][adapter.namespace]) {
-                    var topic = sync[id][adapter.namespace].topic;
+            if (custom[id]) {
+                if (custom[id][adapter.namespace]) {
+                    var topic = custom[id][adapter.namespace].topic;
                     unsubscribe(topic, function () {
                         adapter.log.info('unsubscribed from ' + topic);
                     });
-                    delete subTopics[sync[id][adapter.namespace].topic];
-                    delete topic2id[sync[id][adapter.namespace].topic];
+                    delete subTopics[custom[id][adapter.namespace].topic];
+                    delete topic2id[custom[id][adapter.namespace].topic];
                 }
-                delete sync[id];
+                delete custom[id];
                 adapter.log.info('disabled syncing of ' + id);
             }
         }
     },
 
     stateChange: function (id, state) {
-        if (sync[id]) {
-            sync[id].state = state;
-            if (sync[id][adapter.namespace].enabled && sync[id][adapter.namespace].publish) {
+        if (custom[id]) {
+            custom[id].state = state;
+            if (custom[id][adapter.namespace].enabled && custom[id][adapter.namespace].publish) {
                 //prevent republishing to same broker
                 if (state.from !== 'system.adapter.' + adapter.namespace) publish(id, state);
             }
@@ -109,41 +109,41 @@ function main() {
     if (adapter.config.host && adapter.config.host !== '') {
         var _url = ((!adapter.config.ssl) ? 'mqtt' : 'mqtts') + '://' + (adapter.config.username ? (adapter.config.username + ':' + adapter.config.password + '@') : '') + adapter.config.host + (adapter.config.port ? (':' + adapter.config.port) : '') + '?clientId=' + adapter.config.clientId;
         var __url = ((!adapter.config.ssl) ? 'mqtt' : 'mqtts') + '://' + (adapter.config.username ? (adapter.config.username + ':*******************@') : '') + adapter.config.host + (adapter.config.port ? (':' + adapter.config.port) : '') + '?clientId=' + adapter.config.clientId;
-        adapter.objects.getObjectView('sync', 'state', {}, function (err, doc) {
+        adapter.objects.getObjectView('custom', 'state', {}, function (err, doc) {
             if (doc && doc.rows) {
                 for (var i = 0, l = doc.rows.length; i < l; i++) {
-                    if (doc.rows[i].value && doc.rows[i].value.sync) {
+                    if (doc.rows[i].value && doc.rows[i].value.custom) {
                         var id = doc.rows[i].id;
-                        sync[id] = doc.rows[i].value.sync;
-                        sync[id].type = doc.rows[i].value.type;
-                        sync[id][adapter.namespace].topic = sync[id][adapter.namespace].topic || convertID2Topic(id, adapter.config.prefix, adapter.namespace);
-                        if (!sync[id][adapter.namespace] || sync[id][adapter.namespace].enabled === false) {
-                            if (sync[id][adapter.namespace]) {
-                                delete subTopics[sync[id][adapter.namespace].topic];
-                                delete topic2id[sync[id][adapter.namespace].topic];
+                        custom[id] = doc.rows[i].value.custom;
+                        custom[id].type = doc.rows[i].value.type;
+                        custom[id][adapter.namespace].topic = custom[id][adapter.namespace].topic || convertID2Topic(id, adapter.config.prefix, adapter.namespace);
+                        if (!custom[id][adapter.namespace] || custom[id][adapter.namespace].enabled === false) {
+                            if (custom[id][adapter.namespace]) {
+                                delete subTopics[custom[id][adapter.namespace].topic];
+                                delete topic2id[custom[id][adapter.namespace].topic];
                             }
-                            delete sync[id];
+                            delete custom[id];
                         } else {
-                            sync[id][adapter.namespace].publish         = sync[id][adapter.namespace].publish === true;
-                            sync[id][adapter.namespace].pubChangesOnly  = sync[id][adapter.namespace].pubChangesOnly === true;
-                            sync[id][adapter.namespace].pubAsObject     = sync[id][adapter.namespace].pubAsObject === true;
-                            sync[id][adapter.namespace].retain          = sync[id][adapter.namespace].retain  === true;
-                            sync[id][adapter.namespace].qos             = parseInt(sync[id][adapter.namespace].qos || adapter.config.qos, 10) || 0;
+                            custom[id][adapter.namespace].publish         = custom[id][adapter.namespace].publish === true;
+                            custom[id][adapter.namespace].pubChangesOnly  = custom[id][adapter.namespace].pubChangesOnly === true;
+                            custom[id][adapter.namespace].pubAsObject     = custom[id][adapter.namespace].pubAsObject === true;
+                            custom[id][adapter.namespace].retain          = custom[id][adapter.namespace].retain  === true;
+                            custom[id][adapter.namespace].qos             = parseInt(custom[id][adapter.namespace].qos || adapter.config.qos, 10) || 0;
 
-                            sync[id][adapter.namespace].subscribe       = sync[id][adapter.namespace].subscribe === true;
-                            sync[id][adapter.namespace].subChangesOnly  = sync[id][adapter.namespace].subChangesOnly === true;
-                            sync[id][adapter.namespace].subAsObject     = sync[id][adapter.namespace].subAsObject === true;
-                            sync[id][adapter.namespace].setAck          = sync[id][adapter.namespace].setAck !== false;
-                            sync[id][adapter.namespace].subQos          = parseInt(sync[id][adapter.namespace].subQos || adapter.config.subQos, 10) || 0;
+                            custom[id][adapter.namespace].subscribe       = custom[id][adapter.namespace].subscribe === true;
+                            custom[id][adapter.namespace].subChangesOnly  = custom[id][adapter.namespace].subChangesOnly === true;
+                            custom[id][adapter.namespace].subAsObject     = custom[id][adapter.namespace].subAsObject === true;
+                            custom[id][adapter.namespace].setAck          = custom[id][adapter.namespace].setAck !== false;
+                            custom[id][adapter.namespace].subQos          = parseInt(custom[id][adapter.namespace].subQos || adapter.config.subQos, 10) || 0;
 
-                            if (sync[id][adapter.namespace].subscribe) {
-                                subTopics[sync[id][adapter.namespace].topic] = sync[id][adapter.namespace].subQos;
-                                topic2id[sync[id][adapter.namespace].topic] = id;
+                            if (custom[id][adapter.namespace].subscribe) {
+                                subTopics[custom[id][adapter.namespace].topic] = custom[id][adapter.namespace].subQos;
+                                topic2id[custom[id][adapter.namespace].topic] = id;
                             } else {
-                                delete subTopics[sync[id][adapter.namespace].topic];
-                                delete topic2id[sync[id][adapter.namespace].topic];
+                                delete subTopics[custom[id][adapter.namespace].topic];
+                                delete topic2id[custom[id][adapter.namespace].topic];
                             }
-                            adapter.log.info('enabled syncing of ' + id + ' (publish/subscribe:' + sync[id][adapter.namespace].publish.toString() + '/' + sync[id][adapter.namespace].subscribe.toString() + ')');
+                            adapter.log.info('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id][adapter.namespace].publish.toString() + '/' + custom[id][adapter.namespace].subscribe.toString() + ')');
                         }
                     }
                 }
@@ -236,8 +236,8 @@ function message(topic, msg) {
     var id = topic2id[topic] || convertTopic2ID(topic, adapter.config.prefix, adapter.namespace);
     adapter.log.info('received message ' + topic + '=>' + id + ': ' + msg);
 
-    if (topic2id[topic] && sync[id] && sync[id][adapter.namespace]) {
-        if (sync[id][adapter.namespace].subAsObject) {
+    if (topic2id[topic] && custom[id] && custom[id][adapter.namespace]) {
+        if (custom[id][adapter.namespace].subAsObject) {
             setStateObj(id, msg);
         } else {
             setStateVal(id, msg);
@@ -253,14 +253,14 @@ function message(topic, msg) {
                 read: true,
                 write: true,
                 desc: "created from topic",
-                sync: {
+                custom: {
                 }
             },
             native: {
                 topic: topic
             }
         };
-        obj.common.sync[adapter.namespace] = {
+        obj.common.custom[adapter.namespace] = {
             "enabled": true,
             "topic": topic,
             "publish": false,
@@ -287,23 +287,25 @@ function setStateObj(id, msg) {
         var obj = JSON.parse(msg);
         adapter.log.info(JSON.stringify(obj));
         if (obj.hasOwnProperty('val')) {
-            if (obj.hasOwnProperty('ts') && sync[id].state && obj.ts <= sync[id].state.ts) {
+            if (obj.hasOwnProperty('ts') && custom[id].state && obj.ts <= custom[id].state.ts) {
                 adapter.log.info('object ts not newer than current state ts: ' + msg);
                 return false;
             }
-            if (obj.hasOwnProperty('lc') && sync[id].state && obj.lc < sync[id].state.lc) {
+            if (obj.hasOwnProperty('lc') && custom[id].state && obj.lc < custom[id].state.lc) {
                 adapter.log.info('object lc not newer than current state lc: ' + msg);
                 return false;
             }
-            if (sync[id][adapter.namespace].publish && !obj.hasOwnProperty('ts') && !obj.hasOwnProperty('lc') && obj.val !== sync[id].state.val) {
+            //todo: !== correct???
+            if (custom[id][adapter.namespace].publish && !obj.hasOwnProperty('ts') && !obj.hasOwnProperty('lc') && obj.val !== custom[id].state.val) {
                 adapter.log.info('object value did not change (loop protection): ' + msg);
                 return false;
             }
-            if (sync[id][adapter.namespace].subChangesOnly && obj.val !== sync[id].state.val) {
+            //todo: !== correct???
+            if (custom[id][adapter.namespace].subChangesOnly && obj.val !== custom[id].state.val) {
                 adapter.log.info('object value did not change: ' + msg);
                 return false;
             }
-            if (sync[id][adapter.namespace].setAck) obj.ack = true;
+            if (custom[id][adapter.namespace].setAck) obj.ack = true;
             delete obj['from'];
             adapter.setForeignState(id, obj);
             adapter.log.info('object set to ' + JSON.stringify(obj));
@@ -319,22 +321,27 @@ function setStateObj(id, msg) {
 }
 
 function setStateVal(id, msg) {
-    if ((sync[id][adapter.namespace].subChangesOnly || sync[id][adapter.namespace].publish) && sync[id].state && val2String(sync[id].state.val) === msg) {
-        adapter.log.info('value did not change');
-        return false;
+    if (custom[id].state && val2String(custom[id].state.val) === msg) {
+        if (custom[id][adapter.namespace].publish) {
+            adapter.log.info('value did not change (loop protection)');
+            return false;
+        } else if (custom[id][adapter.namespace].subChangesOnly) {
+            adapter.log.info('value did not change');
+            return false;
+        }
     }
-    adapter.setForeignState(id, {val: stringToVal(id, msg), ack: sync[id][adapter.namespace].setAck});
-    adapter.log.info('value set to ' + JSON.stringify({val: stringToVal(id, msg), ack: sync[id][adapter.namespace].setAck}));
+    adapter.setForeignState(id, {val: stringToVal(id, msg), ack: custom[id][adapter.namespace].setAck});
+    adapter.log.info('value set to ' + JSON.stringify({val: stringToVal(id, msg), ack: custom[id][adapter.namespace].setAck}));
     return true;
 }
 
 function publish(id, state) {
     if (client) {
-        var settings = sync[id][adapter.namespace];
+        var settings = custom[id][adapter.namespace];
         if (!settings || !state) return false;
-        if (sync[id].pubState && settings.pubChangesOnly && (state.ts !== state.lc)) return false;
+        if (custom[id].pubState && settings.pubChangesOnly && (state.ts !== state.lc)) return false;
 
-        sync[id].pubState = state;
+        custom[id].pubState = state;
         adapter.log.info('publishing ' + id);
 
         var topic = settings.topic;
@@ -366,15 +373,15 @@ function val2String(val) {
 function stringToVal(id, val) {
     if (val === 'undefined') return undefined;
     if (val === 'null') return null;
-    if (!sync[id] || !sync[id].type || sync[id].type === 'string' || sync[id].type === 'mixed') return val;
-    if (sync[id].type === 'number') {
+    if (!custom[id] || !custom[id].type || custom[id].type === 'string' || custom[id].type === 'mixed') return val;
+    if (custom[id].type === 'number') {
         if (val === true  || val === 'true')  val = 1;
         if (val === false || val === 'false') val = 0;
         val = val.replace(',', '.');
         val = parseFloat(val) || 0;
         return val;
     }
-    if (sync[id].type === 'boolean') {
+    if (custom[id].type === 'boolean') {
         if (val === '1' || val === 'true')  val = true;
         if (val === '0' || val === 'false') val = false;
         return !!val;

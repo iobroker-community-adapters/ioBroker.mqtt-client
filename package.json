@@ -1,7 +1,7 @@
 {
   "name": "iobroker.mqtt-client",
   "description": "Sync ioBroker with MQTT Brokers",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "Pmant <patrickmo@gmx.de>",
   "contributors": [
     "Pmant <patrickmo@gmx.de>"
@@ -24,7 +24,7 @@
     "home automation"
   ],
   "dependencies": {
-    "mqtt": "^1.11.0"
+    "mqtt": "^1.14.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
