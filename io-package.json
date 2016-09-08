@@ -7,7 +7,7 @@
             "de": "Synchronisierung mit MQTT Brokern",
             "ru": "Syncing with MQTT Brokers"
         },
-        "version": "0.2.5",
+        "version": "0.3.0",
         "mode":                     "daemon",
         "platform":                 "Javascript/Node.js",
         "loglevel":                 "info",
@@ -41,8 +41,8 @@
         "lastWillMessage": "",
         "subscriptions": "",
         "reconnectPeriod": 30000,
-        "prefix": "",
-
+        "outbox": "",
+        "inbox": "",
 
         "enabled": false,
 

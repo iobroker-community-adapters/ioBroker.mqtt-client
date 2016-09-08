@@ -16,9 +16,15 @@ Comma separated list of topics that are not covered by existing states.
 Received messages are converted to states within the adapters namespace (e.g. mqtt.0) and subscribed.
 You can remove topics after all states have been created.
 
-### prefix
-When publishing this will be prepended to the topics and it also will be removed from subscribed topics if necessary.
+### publish prefix
+When publishing this will be prepended to all topics.
 Default is empty (no prefix).
+
+### subscribe prefix
+When subscribing this will be prepended to all topics.
+Default is empty (no prefix).
+
+
 
 ## State Settings
 ![State](dialog.png)
@@ -50,6 +56,9 @@ default: state-ID converted to a mqtt topic.
 * to prevent message loops, if both publish and subscribe are enabled ```changes only``` is always on for subscribe
 
 ## Changelog
+### 0.3.0 (2016-09-08)
+* (Pmant) add optional publish and subscribe prefixes
+
 ### 0.2.5 (2016-09-08)
 * (Pmant) reduce logging -> debug
 

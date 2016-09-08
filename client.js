@@ -25,7 +25,7 @@ var adapter = utils.adapter({
             custom[id].state = state;
             custom[id].type = obj.common.type;
 
-            custom[id][adapter.namespace].topic           = custom[id][adapter.namespace].topic || convertID2Topic(id, adapter.config.prefix, adapter.namespace);
+            custom[id][adapter.namespace].topic           = custom[id][adapter.namespace].topic || convertID2Topic(id, adapter.namespace);
 
             custom[id][adapter.namespace].publish         = custom[id][adapter.namespace].publish === true;
             custom[id][adapter.namespace].pubChangesOnly  = custom[id][adapter.namespace].pubChangesOnly === true;
@@ -116,7 +116,7 @@ function main() {
                         var id = doc.rows[i].id;
                         custom[id] = doc.rows[i].value.custom;
                         custom[id].type = doc.rows[i].value.type;
-                        custom[id][adapter.namespace].topic = custom[id][adapter.namespace].topic || convertID2Topic(id, adapter.config.prefix, adapter.namespace);
+                        custom[id][adapter.namespace].topic = custom[id][adapter.namespace].topic || convertID2Topic(id, adapter.namespace);
                         if (!custom[id][adapter.namespace] || custom[id][adapter.namespace].enabled === false) {
                             if (custom[id][adapter.namespace]) {
                                 delete subTopics[custom[id][adapter.namespace].topic];
@@ -200,8 +200,11 @@ function main() {
 function connect(connack) {
     adapter.log.info('connected to broker');
     if (adapter.config.onConnectTopic && adapter.config.onConnectTopic !== '' && adapter.config.onConnectMessage && adapter.config.onConnectMessage !== '') {
-        var topic = adapter.config.prefix && adapter.config.prefix !== '' ? adapter.config.prefix + '/' : '';
-        topic += adapter.config.onConnectTopic;
+        var topic = adapter.config.onConnectTopic;
+
+        //add outgoing prefix
+        if (adapter.config.outbox) topic = adapter.config.outbox + '/' + topic;
+
         client.publish(topic, adapter.config.onConnectMessage, {qos: 2, retain: true}, function () {
             adapter.log.debug('succesfully published ' + JSON.stringify({topic: topic, message: adapter.config.onConnectMessage}));
         });
@@ -233,7 +236,15 @@ function error(err) {
 
 function message(topic, msg) {
     msg = msg.toString();
-    var id = topic2id[topic] || convertTopic2ID(topic, adapter.config.prefix, adapter.namespace);
+
+    //remove inbox prefix if exists
+    if (adapter.config.inbox && topic.substring(0, adapter.config.inbox.length) == adapter.config.inbox) {
+        topic = topic.substr(adapter.config.inbox.length + 1);
+    }
+
+    //if topic2id[topic] does not exist automatically convert topic to id with guiding adapter namespace
+    var id = topic2id[topic] || convertTopic2ID(topic, adapter.namespace);
+
     adapter.log.debug('received message ' + topic + '=>' + id + ': ' + msg);
 
     if (topic2id[topic] && custom[id] && custom[id][adapter.namespace]) {
@@ -296,7 +307,11 @@ function setStateObj(id, msg) {
                 return false;
             }
             //todo: !== correct???
-            if (custom[id][adapter.namespace].publish && !obj.hasOwnProperty('ts') && !obj.hasOwnProperty('lc') && obj.val !== custom[id].state.val) {
+            if (adapter.config.inbox === adapter.config.outbox &&
+            custom[id][adapter.namespace].publish &&
+            !obj.hasOwnProperty('ts') &&
+            !obj.hasOwnProperty('lc') &&
+            obj.val !== custom[id].state.val) {
                 adapter.log.debug('object value did not change (loop protection): ' + msg);
                 return false;
             }
@@ -322,7 +337,7 @@ function setStateObj(id, msg) {
 
 function setStateVal(id, msg) {
     if (custom[id].state && val2String(custom[id].state.val) === msg) {
-        if (custom[id][adapter.namespace].publish) {
+        if (adapter.config.inbox === adapter.config.outbox && custom[id][adapter.namespace].publish) {
             adapter.log.debug('value did not change (loop protection)');
             return false;
         } else if (custom[id][adapter.namespace].subChangesOnly) {
@@ -345,7 +360,11 @@ function publish(id, state) {
         adapter.log.debug('publishing ' + id);
 
         var topic = settings.topic;
+
         var message = settings.pubAsObject ? JSON.stringify(state) : val2String(state.val);
+
+        //add outgoing prefix
+        if (adapter.config.outbox) topic = adapter.config.outbox + '/' + topic;
 
         client.publish(topic, message, {qos: settings.qos, retain: settings.retain}, function () {
             adapter.log.debug('succesfully published ' + id + ': ' + JSON.stringify({topic: topic, message: message}));
@@ -356,7 +375,21 @@ function publish(id, state) {
 
 function subscribe(topics, callback) {
     if (client) {
-        client.subscribe(topics, callback);
+        var subTopics = {};
+
+        if (adapter.config.inbox) {
+            //add inbox prefix to all subscriptions
+            var keys = Object.keys(topics);
+            for (var j = 0; j < keys.length; j++) {
+                var key = adapter.config.inbox + '/' + keys[j];
+                subTopics[key] = topics[keys[j]];
+            }
+        } else {
+            subTopics = topics;
+        }
+
+
+        client.subscribe(subTopics, callback);
     }
 }
 
@@ -389,30 +422,32 @@ function stringToVal(id, val) {
     return val;
 }
 
-function convertID2Topic(id, prefix, namespace) {
+function convertID2Topic(id, namespace) {
     var topic;
-    if (namespace && id.substring(0, namespace.length) == namespace) {
+
+    //if necessary remove namespace before converting, e.g. "mqtt-client.0..."
+    if (namespace && id.substring(0, namespace.length) === namespace) {
         topic = id.substring(namespace.length + 1);
     } else {
         topic = id;
     }
-    if (prefix && prefix !== '') {
-        topic = prefix + '.' + topic;
-    }
+
+    //replace dots with slashes and underscores with spaces
     topic = topic.replace(/\./g, '/').replace(/_/g, ' ');
     return topic;
 }
 
-function convertTopic2ID(topic, prefix, namespace) {
+function convertTopic2ID(topic, namespace) {
     if (!topic) return topic;
+
+    //replace slashes with dots and spaces with underscores
     topic = topic.replace(/\//g, '.').replace(/\s/g, '_');
-    if (topic[0] == '.') topic = topic.substring(1);
-    if (topic[topic.length - 1] == '.') topic = topic.substring(0, topic.length - 1);
-    // Remove own prefix if
-    if (prefix && topic.substring(0, prefix.length) == prefix) {
-        topic = topic.substring(prefix.length);
-    }
-    //add namespace to id
+
+    //replace guiding and trailing dot
+    if (topic[0] === '.') topic = topic.substring(1);
+    if (topic[topic.length - 1] === '.') topic = topic.substring(0, topic.length - 1);
+
+    //add namespace to id if exists
     if (namespace && namespace !== '') {
         topic = namespace + '.' + topic;
     }

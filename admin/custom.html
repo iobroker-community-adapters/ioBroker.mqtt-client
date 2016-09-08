@@ -7,6 +7,8 @@
                 <td><input type="checkbox" data-field="enabled" data-default="false"></td>
                 <td style="width: 40px">&nbsp;</td>
                 <td><input type="text" data-field="topic" size="30"></td>
+                <td style="width: 20px">&nbsp;</td>
+                <td class="translate">(without prefix)</td>
             </tr>
             <tr>
                 <td>publish</td>
@@ -61,7 +63,8 @@
     systemDictionary = $.extend(systemDictionary, {
         "enabled":          {"en": "enabled",           "de": "Aktiviert",          "ru": "активно"},
         "changes only":     {"en": "changes only",      "de": "Nur Änderungen",     "ru": "changes only"},
-        "as object":        {"en": "as object",         "de": "als Objekt",         "ru": "as object"}
+        "as object":        {"en": "as object",         "de": "als Objekt",         "ru": "as object"},
+        "without prefix":   {"en": "without prefix",    "de": "ohne prefix",        "ru": "without prefix"}
     });
     // There are two ways how to predefine default settings:
     // - with attribute "data-default" (content independent)
@@ -69,7 +72,7 @@
     //   as input function receives object with all information concerning it
     if (typeof defaults !== 'undefined') {
         defaults["mqtt-client"] = function (obj, instanceObj) {
-            var topic = convertID2Topic(obj._id, instanceObj.native.prefix, instanceObj._id.replace("system.adapter.", ""));
+            var topic = convertID2Topic(obj._id, null, instanceObj._id.replace("system.adapter.", ""));
             return {
                 enabled:        false,
                 topic:          topic,
@@ -92,9 +95,6 @@
             topic = id.substring(namespace.length + 1);
         } else {
             topic = id;
-        }
-        if(prefix && prefix !== '') {
-            topic = prefix + '.' + topic;
         }
         topic = topic.replace(/\./g, '/').replace(/_/g, ' ');
         return topic;
