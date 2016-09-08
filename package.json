@@ -1,7 +1,7 @@
 {
   "name": "iobroker.mqtt-client",
   "description": "Sync ioBroker with MQTT Brokers",
-  "version": "0.2.0",
+  "version": "0.2.5",
   "author": "Pmant <patrickmo@gmx.de>",
   "contributors": [
     "Pmant <patrickmo@gmx.de>"

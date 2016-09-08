@@ -143,7 +143,7 @@ function main() {
                                 delete subTopics[custom[id][adapter.namespace].topic];
                                 delete topic2id[custom[id][adapter.namespace].topic];
                             }
-                            adapter.log.info('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id][adapter.namespace].publish.toString() + '/' + custom[id][adapter.namespace].subscribe.toString() + ')');
+                            adapter.log.debug('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id][adapter.namespace].publish.toString() + '/' + custom[id][adapter.namespace].subscribe.toString() + ')');
                         }
                     }
                 }
@@ -203,15 +203,15 @@ function connect(connack) {
         var topic = adapter.config.prefix && adapter.config.prefix !== '' ? adapter.config.prefix + '/' : '';
         topic += adapter.config.onConnectTopic;
         client.publish(topic, adapter.config.onConnectMessage, {qos: 2, retain: true}, function () {
-            adapter.log.info('succesfully published ' + JSON.stringify({topic: topic, message: adapter.config.onConnectMessage}));
+            adapter.log.debug('succesfully published ' + JSON.stringify({topic: topic, message: adapter.config.onConnectMessage}));
         });
     }
     //initially subscribe to topics
     if (Object.keys(subTopics).length) subscribe(subTopics, function () { 
-        adapter.log.info('subscribed to: ' + JSON.stringify(subTopics));
+        adapter.log.debug('subscribed to: ' + JSON.stringify(subTopics));
     });
     if (Object.keys(addTopics).length) subscribe(addTopics, function () {
-        adapter.log.info('subscribed to additional topics: ' + JSON.stringify(addTopics));
+        adapter.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics));
     });
 }
 
@@ -220,11 +220,11 @@ function reconnect() {
 }
 
 function disconnect() {
-    adapter.log.info('disconnected from broker');
+    adapter.log.warn('disconnected from broker');
 }
 
 function offline() {
-    adapter.log.info('client offline');
+    adapter.log.warn('client offline');
 }
 
 function error(err) {
@@ -234,7 +234,7 @@ function error(err) {
 function message(topic, msg) {
     msg = msg.toString();
     var id = topic2id[topic] || convertTopic2ID(topic, adapter.config.prefix, adapter.namespace);
-    adapter.log.info('received message ' + topic + '=>' + id + ': ' + msg);
+    adapter.log.debug('received message ' + topic + '=>' + id + ': ' + msg);
 
     if (topic2id[topic] && custom[id] && custom[id][adapter.namespace]) {
         if (custom[id][adapter.namespace].subAsObject) {
@@ -278,37 +278,37 @@ function message(topic, msg) {
             adapter.log.info('created and subscribed to new state: ' + id);
         });
     } else {
-        adapter.log.info('state already exists');
+        adapter.log.debug('state already exists');
     }
 }
 
 function setStateObj(id, msg) {
     try {
         var obj = JSON.parse(msg);
-        adapter.log.info(JSON.stringify(obj));
+        adapter.log.debug(JSON.stringify(obj));
         if (obj.hasOwnProperty('val')) {
             if (obj.hasOwnProperty('ts') && custom[id].state && obj.ts <= custom[id].state.ts) {
-                adapter.log.info('object ts not newer than current state ts: ' + msg);
+                adapter.log.debug('object ts not newer than current state ts: ' + msg);
                 return false;
             }
             if (obj.hasOwnProperty('lc') && custom[id].state && obj.lc < custom[id].state.lc) {
-                adapter.log.info('object lc not newer than current state lc: ' + msg);
+                adapter.log.debug('object lc not newer than current state lc: ' + msg);
                 return false;
             }
             //todo: !== correct???
             if (custom[id][adapter.namespace].publish && !obj.hasOwnProperty('ts') && !obj.hasOwnProperty('lc') && obj.val !== custom[id].state.val) {
-                adapter.log.info('object value did not change (loop protection): ' + msg);
+                adapter.log.debug('object value did not change (loop protection): ' + msg);
                 return false;
             }
             //todo: !== correct???
             if (custom[id][adapter.namespace].subChangesOnly && obj.val !== custom[id].state.val) {
-                adapter.log.info('object value did not change: ' + msg);
+                adapter.log.debug('object value did not change: ' + msg);
                 return false;
             }
             if (custom[id][adapter.namespace].setAck) obj.ack = true;
             delete obj.from;
             adapter.setForeignState(id, obj);
-            adapter.log.info('object set to ' + JSON.stringify(obj));
+            adapter.log.debug('object set to ' + JSON.stringify(obj));
             return true;
         } else {
             adapter.log.warn('no value in object: ' + msg);
@@ -323,15 +323,15 @@ function setStateObj(id, msg) {
 function setStateVal(id, msg) {
     if (custom[id].state && val2String(custom[id].state.val) === msg) {
         if (custom[id][adapter.namespace].publish) {
-            adapter.log.info('value did not change (loop protection)');
+            adapter.log.debug('value did not change (loop protection)');
             return false;
         } else if (custom[id][adapter.namespace].subChangesOnly) {
-            adapter.log.info('value did not change');
+            adapter.log.debug('value did not change');
             return false;
         }
     }
     adapter.setForeignState(id, {val: stringToVal(id, msg), ack: custom[id][adapter.namespace].setAck});
-    adapter.log.info('value set to ' + JSON.stringify({val: stringToVal(id, msg), ack: custom[id][adapter.namespace].setAck}));
+    adapter.log.debug('value set to ' + JSON.stringify({val: stringToVal(id, msg), ack: custom[id][adapter.namespace].setAck}));
     return true;
 }
 
@@ -342,13 +342,13 @@ function publish(id, state) {
         if (custom[id].pubState && settings.pubChangesOnly && (state.ts !== state.lc)) return false;
 
         custom[id].pubState = state;
-        adapter.log.info('publishing ' + id);
+        adapter.log.debug('publishing ' + id);
 
         var topic = settings.topic;
         var message = settings.pubAsObject ? JSON.stringify(state) : val2String(state.val);
 
         client.publish(topic, message, {qos: settings.qos, retain: settings.retain}, function () {
-            adapter.log.info('succesfully published ' + id + ': ' + JSON.stringify({topic: topic, message: message}));
+            adapter.log.debug('succesfully published ' + id + ': ' + JSON.stringify({topic: topic, message: message}));
         });
         return true;
     }

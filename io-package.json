@@ -7,7 +7,7 @@
             "de": "Synchronisierung mit MQTT Brokern",
             "ru": "Syncing with MQTT Brokers"
         },
-        "version": "0.2.0",
+        "version": "0.2.5",
         "mode":                     "daemon",
         "platform":                 "Javascript/Node.js",
         "loglevel":                 "info",
