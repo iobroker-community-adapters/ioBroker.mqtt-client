@@ -24,8 +24,6 @@ Default is empty (no prefix).
 When subscribing this will be prepended to all topics.
 Default is empty (no prefix).
 
-
-
 ## State Settings
 ![State](dialog.png)
 
@@ -56,6 +54,9 @@ default: state-ID converted to a mqtt topic.
 * to prevent message loops, if both publish and subscribe are enabled ```changes only``` is always on for subscribe
 
 ## Changelog
+### 0.3.1 (2016-11-16)
+* (Pmant) fix crash
+
 ### 0.3.0 (2016-09-08)
 * (Pmant) add optional publish and subscribe prefixes
 
@@ -70,3 +71,7 @@ default: state-ID converted to a mqtt topic.
 
 ### 0.1.0 (2016-06-08)
 * (Pmant) initial commit
+
+## TODO
+* test prefixes
+* connect/reconnect without clean session

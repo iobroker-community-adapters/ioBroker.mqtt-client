@@ -116,6 +116,7 @@ function main() {
                         var id = doc.rows[i].id;
                         custom[id] = doc.rows[i].value.custom;
                         custom[id].type = doc.rows[i].value.type;
+                        custom[id][adapter.namespace] = {};
                         custom[id][adapter.namespace].topic = custom[id][adapter.namespace].topic || convertID2Topic(id, adapter.namespace);
                         if (!custom[id][adapter.namespace] || custom[id][adapter.namespace].enabled === false) {
                             if (custom[id][adapter.namespace]) {
