@@ -112,12 +112,14 @@ function main() {
         adapter.objects.getObjectView('custom', 'state', {}, function (err, doc) {
             if (doc && doc.rows) {
                 for (var i = 0, l = doc.rows.length; i < l; i++) {
-                    if (doc.rows[i].value && doc.rows[i].value.custom) {
+                    if (doc.rows[i].value && doc.rows[i].value[adapter.namespace]) {
                         var id = doc.rows[i].id;
-                        custom[id] = doc.rows[i].value.custom;
+                        custom[id] = doc.rows[i].value;
                         custom[id].type = doc.rows[i].value.type;
-                        if (!custom[id][adapter.namespace]) custom[id][adapter.namespace] = {};
-                        custom[id][adapter.namespace].topic = custom[id][adapter.namespace].topic || convertID2Topic(id, adapter.namespace);
+                        adapter.log.info(JSON.stringify(custom[id][adapter.namespace]));
+                        if (custom[id][adapter.namespace] && !custom[id][adapter.namespace].topic){
+                            custom[id][adapter.namespace].topic = convertID2Topic(id, adapter.namespace);
+                        }
                         if (!custom[id][adapter.namespace] || custom[id][adapter.namespace].enabled === false) {
                             if (custom[id][adapter.namespace]) {
                                 delete subTopics[custom[id][adapter.namespace].topic];

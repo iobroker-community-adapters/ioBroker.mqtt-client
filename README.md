@@ -54,6 +54,9 @@ default: state-ID converted to a mqtt topic.
 * to prevent message loops, if both publish and subscribe are enabled ```changes only``` is always on for subscribe
 
 ## Changelog
+### 0.3.2 (2016-11-18)
+* (Pmant) fix initial object parsing
+
 ### 0.3.1 (2016-11-16)
 * (Pmant) fix crash
 
