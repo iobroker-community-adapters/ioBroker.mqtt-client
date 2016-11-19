@@ -60,7 +60,7 @@
     },
     "objects": [
         {
-            "_id": "_design/custom",
+            "_id": "_design/mqttclient",
             "language": "javascript",
             "views": {
                 "state": {

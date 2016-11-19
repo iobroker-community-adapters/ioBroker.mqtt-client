@@ -109,12 +109,12 @@ function main() {
     if (adapter.config.host && adapter.config.host !== '') {
         var _url = ((!adapter.config.ssl) ? 'mqtt' : 'mqtts') + '://' + (adapter.config.username ? (adapter.config.username + ':' + adapter.config.password + '@') : '') + adapter.config.host + (adapter.config.port ? (':' + adapter.config.port) : '') + '?clientId=' + adapter.config.clientId;
         var __url = ((!adapter.config.ssl) ? 'mqtt' : 'mqtts') + '://' + (adapter.config.username ? (adapter.config.username + ':*******************@') : '') + adapter.config.host + (adapter.config.port ? (':' + adapter.config.port) : '') + '?clientId=' + adapter.config.clientId;
-        adapter.objects.getObjectView('custom', 'state', {}, function (err, doc) {
+        adapter.objects.getObjectView('mqttclient', 'state', {}, function (err, doc) {
             if (doc && doc.rows) {
                 for (var i = 0, l = doc.rows.length; i < l; i++) {
-                    if (doc.rows[i].value && doc.rows[i].value[adapter.namespace]) {
+                    if (doc.rows[i].value && doc.rows[i].value.custom) {
                         var id = doc.rows[i].id;
-                        custom[id] = doc.rows[i].value;
+                        custom[id] = doc.rows[i].value.custom;
                         custom[id].type = doc.rows[i].value.type;
                         if (!custom[id][adapter.namespace].topic){
                             custom[id][adapter.namespace].topic = convertID2Topic(id, adapter.namespace);

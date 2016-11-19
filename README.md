@@ -56,7 +56,8 @@ default: state-ID converted to a mqtt topic.
 ## Changelog
 ### 0.3.2 (2016-11-18)
 * (Pmant) fix initial object parsing
-
+* (Pmant) fix objects view
+ 
 ### 0.3.1 (2016-11-16)
 * (Pmant) fix crash
 
