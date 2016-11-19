@@ -116,12 +116,14 @@ function main() {
                         var id = doc.rows[i].id;
                         custom[id] = doc.rows[i].value.custom;
                         custom[id].type = doc.rows[i].value.type;
-                        if (!custom[id][adapter.namespace].topic){
+                        if (custom[id][adapter.namespace] && !custom[id][adapter.namespace].topic){
                             custom[id][adapter.namespace].topic = convertID2Topic(id, adapter.namespace);
                         }
-                        if (!custom[id][adapter.namespace].enabled) {
-                            delete subTopics[custom[id][adapter.namespace].topic];
-                            delete topic2id[custom[id][adapter.namespace].topic];
+                        if (!custom[id][adapter.namespace] || !custom[id][adapter.namespace].enabled) {
+                            if (custom[id][adapter.namespace]) {
+                                delete subTopics[custom[id][adapter.namespace].topic];
+                                delete topic2id[custom[id][adapter.namespace].topic];
+                            }
                             delete custom[id];
                         } else {
                             custom[id][adapter.namespace].publish         = custom[id][adapter.namespace].publish === true;
