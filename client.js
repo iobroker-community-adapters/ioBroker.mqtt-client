@@ -116,15 +116,12 @@ function main() {
                         var id = doc.rows[i].id;
                         custom[id] = doc.rows[i].value;
                         custom[id].type = doc.rows[i].value.type;
-                        adapter.log.info(JSON.stringify(custom[id][adapter.namespace]));
-                        if (custom[id][adapter.namespace] && !custom[id][adapter.namespace].topic){
+                        if (!custom[id][adapter.namespace].topic){
                             custom[id][adapter.namespace].topic = convertID2Topic(id, adapter.namespace);
                         }
-                        if (!custom[id][adapter.namespace] || custom[id][adapter.namespace].enabled === false) {
-                            if (custom[id][adapter.namespace]) {
-                                delete subTopics[custom[id][adapter.namespace].topic];
-                                delete topic2id[custom[id][adapter.namespace].topic];
-                            }
+                        if (!custom[id][adapter.namespace].enabled) {
+                            delete subTopics[custom[id][adapter.namespace].topic];
+                            delete topic2id[custom[id][adapter.namespace].topic];
                             delete custom[id];
                         } else {
                             custom[id][adapter.namespace].publish         = custom[id][adapter.namespace].publish === true;
@@ -146,7 +143,7 @@ function main() {
                                 delete subTopics[custom[id][adapter.namespace].topic];
                                 delete topic2id[custom[id][adapter.namespace].topic];
                             }
-                            adapter.log.debug('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id][adapter.namespace].publish.toString() + '/' + custom[id][adapter.namespace].subscribe.toString() + ')');
+                            adapter.log.info('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id][adapter.namespace].publish.toString() + '/' + custom[id][adapter.namespace].subscribe.toString() + ')');
                         }
                     }
                 }
