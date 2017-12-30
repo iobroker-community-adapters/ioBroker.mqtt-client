@@ -3,6 +3,16 @@
 'use strict';
 
 systemDictionary = {
+    "(without prefix)": {
+        "en": "(without prefix)",
+        "de": "(ohne Präfix)",
+        "ru": "(без префикса)",
+        "pt": "(sem prefixo)",
+        "nl": "(zonder voorvoegsel)",
+        "fr": "(sans préfixe)",
+        "it": "(senza prefisso)",
+        "es": "(sin prefijo)"
+    },
     "Client ID": {                                   "en": "Client ID",                                       "de": "Client ID",                                       "ru": "ID клиента",                                      "pt": "ID do Cliente",                                   "nl": "klant identificatie",                             "fr": "identité du client",                              "it": "Identificativo cliente",                          "es": "Identificación del cliente"},
     "MQTT-client adapter settings": {                "en": "MQTT-client adapter settings",                    "de": "MQTT-client Adapter Einstellungen",               "ru": "Настройки драйвера MQTT-клиента",                 "pt": "Configurações do adaptador do cliente MQTT",      "nl": "MQTT-client adapterinstellingen",                 "fr": "MQTT-paramètres de la carte client",              "it": "Impostazioni dell'adattatore client MQTT",        "es": "Configuraciones del adaptador MQTT-cliente"},
     "Prefix for topics": {                           "en": "Prefix for topics",                               "de": "Prefix für alle Topics",                          "ru": "Префикс для всех значений",                       "pt": "Prefixo para tópicos",                            "nl": "Voorvoegsel voor onderwerpen",                    "fr": "Préfixe pour les sujets",                         "it": "Prefisso per argomenti",                          "es": "Prefijo para temas"},
