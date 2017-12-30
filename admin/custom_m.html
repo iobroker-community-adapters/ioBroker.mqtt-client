@@ -1,0 +1,161 @@
+<script type="text/x-iobroker" data-template-name="mqtt-client">
+    <div class="row">
+        <div class="col s2">
+            <input type="checkbox" data-field="enabled" data-default="false"/>
+            <!-- this field is mandatory, just to find out if to include this settings or not</span-->
+            <span class="translate">enabled</span>
+        </div>
+        <div class="col s10">
+            <input type="text" data-field="topic" size="30">
+            <span class="translate">(without prefix)</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <h6 class="translate title">publish</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s2">
+        </div>
+        <div class="col s2">
+            <input type="checkbox" data-field="publish" data-default="false">
+            <span class="translate">enabled</span>
+        </div>
+        <div class="col s2">
+           <input type="checkbox" data-field="pubChangesOnly" data-default="false">
+            <span class="translate">changes only</span>
+        </div>
+        <div class="col s2">
+            <input type="checkbox" data-field="pubAsObject" data-default="false">
+            <span class="translate">as object</span>
+        </div>
+        <div class="col s2">
+            <select data-field="qos" data-default="0">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+            <span class="translate">qos</span>
+        </div>
+        <div class="col s2">
+            <input type="checkbox" data-field="retain" data-default="false">
+            <span class="translate">retain</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <h6 class="translate title">subscribe</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s2">
+        </div>
+        <div class="col s2">
+            <input type="checkbox" data-field="subscribe" data-default="false">
+            <span class="translate">enabled</span>
+        </div>
+        <div class="col s2">
+           <input type="checkbox" data-field="subChangesOnly" data-default="false">
+            <span class="translate">changes only</span>
+        </div>
+        <div class="col s2">
+            <input type="checkbox" data-field="subAsObject" data-default="false">
+            <span class="translate">as object</span>
+        </div>
+        <div class="col s2">
+            <select data-field="subQos" data-default="0">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+            <span class="translate">retain</span>
+        </div>
+        <div class="col s2">
+            <input type="checkbox" data-field="setAck" data-default="true">
+            <span class="translate">ack</span>
+        </div>
+    </div>
+</script>
+
+<!-- translations -->
+<script type="text/javascript">
+    systemDictionary = $.extend(systemDictionary, {
+        "enabled": {
+            "en": "enabled",
+            "de": "aktiviert",
+            "ru": "включен",
+            "pt": "ativado",
+            "nl": "ingeschakeld",
+            "fr": "activée",
+            "it": "abilitato",
+            "es": "habilitado"
+        },
+        "changes only": {
+            "en": "changes only",
+            "de": "ändert sich nur",
+            "ru": "только изменения",
+            "pt": "muda apenas",
+            "nl": "alleen wijzigingen",
+            "fr": "changements seulement",
+            "it": "solo modifiche",
+            "es": "solo cambios"
+        },
+        "as object": {
+            "en": "as object",
+            "de": "als Objekt",
+            "ru": "как объект",
+            "pt": "como objeto",
+            "nl": "als object",
+            "fr": "comme objet",
+            "it": "come oggetto",
+            "es": "como objeto"
+        },
+        "without prefix": {
+            "en": "without prefix",
+            "de": "ohne Präfix",
+            "ru": "без префикса",
+            "pt": "sem prefixo",
+            "nl": "zonder voorvoegsel",
+            "fr": "sans préfixe",
+            "it": "senza prefisso",
+            "es": "sin prefijo"
+        },
+        "retain": {"en": "retain", "de": "retain", "ru": "retain", "pt": "retain", "nl": "retain", "fr": "retain"},
+        "publish": {"en": "publish", "de": "publish", "ru": "publish", "pt": "publish", "nl": "publish", "fr": "publish"},
+        "qos": {"en": "qos", "de": "qos", "ru": "qos", "pt": "qos", "nl": "qos", "fr": "qos"}
+    });
+    // There are two ways how to predefine default settings:
+    // - with attribute "data-default" (content independent)
+    // - with function in global variable "defaults". Function name is equal with adapter name.
+    //   as input function receives object with all information concerning it
+    if (typeof defaults !== 'undefined') {
+        defaults['mqtt-client'] = function (obj, instanceObj) {
+            var topic = convertID2Topic(obj._id, null, instanceObj._id.replace('system.adapter.', ''));
+            return {
+                enabled:        false,
+                topic:          topic,
+                publish:        false,
+                pubChangesOnly: false,
+                pubAsObject:    false,
+                qos:            0,
+                retain:         false,
+                subscribe:      false,
+                subChangesOnly: false,
+                subAsObject:    false,
+                subQos:         0,
+                setAck:         true
+            };
+        }
+    }
+    function convertID2Topic(id, prefix, namespace) {
+        var topic;
+        if (namespace && id.substring(0, namespace.length) === namespace) {
+            topic = id.substring(namespace.length + 1);
+        } else {
+            topic = id;
+        }
+        topic = topic.replace(/\./g, '/').replace(/_/g, ' ');
+        return topic;
+    }
+</script>

@@ -1,17 +1,17 @@
 /* jshint -W097 */// jshint strict:false
 /*jslint node: true */
-"use strict";
-var utils      = require(__dirname + '/lib/utils'); // Get common adapter utils
-var mqtt = require('mqtt');
+'use strict';
+var utils = require(__dirname + '/lib/utils'); // Get common adapter utils
+var mqtt  = require('mqtt');
 
-var custom = {};
-var subTopics = {};
-var topic2id = {};
-var addTopics = {};
+var custom      = {};
+var subTopics   = {};
+var topic2id    = {};
+var addTopics   = {};
 var addedTopics = {};
-var client = null;
+var client      = null;
 
-var adapter = utils.adapter({
+var adapter = new utils.Adapter({
 
     name: 'mqtt-client',
 
@@ -199,25 +199,34 @@ function main() {
     adapter.subscribeForeignObjects('*');
 }
 
-function connect(connack) {
+function connect(/* connack */) {
     adapter.log.info('connected to broker');
-    if (adapter.config.onConnectTopic && adapter.config.onConnectTopic !== '' && adapter.config.onConnectMessage && adapter.config.onConnectMessage !== '') {
+    if (adapter.config.onConnectTopic          &&
+        adapter.config.onConnectTopic   !== '' &&
+        adapter.config.onConnectMessage        &&
+        adapter.config.onConnectMessage !== '') {
         var topic = adapter.config.onConnectTopic;
 
         //add outgoing prefix
-        if (adapter.config.outbox) topic = adapter.config.outbox + '/' + topic;
+        if (adapter.config.outbox) {
+            topic = adapter.config.outbox + '/' + topic;
+        }
 
         client.publish(topic, adapter.config.onConnectMessage, {qos: 2, retain: true}, function () {
             adapter.log.debug('succesfully published ' + JSON.stringify({topic: topic, message: adapter.config.onConnectMessage}));
         });
     }
     //initially subscribe to topics
-    if (Object.keys(subTopics).length) subscribe(subTopics, function () { 
-        adapter.log.debug('subscribed to: ' + JSON.stringify(subTopics));
-    });
-    if (Object.keys(addTopics).length) subscribe(addTopics, function () {
-        adapter.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics));
-    });
+    if (Object.keys(subTopics).length) {
+        subscribe(subTopics, function () {
+            adapter.log.debug('subscribed to: ' + JSON.stringify(subTopics));
+        });
+    }
+    if (Object.keys(addTopics).length) {
+        subscribe(addTopics, function () {
+            adapter.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics));
+        });
+    }
 }
 
 function reconnect() {
@@ -240,7 +249,7 @@ function message(topic, msg) {
     msg = msg.toString();
 
     //remove inbox prefix if exists
-    if (adapter.config.inbox && topic.substring(0, adapter.config.inbox.length) == adapter.config.inbox) {
+    if (adapter.config.inbox && topic.substring(0, adapter.config.inbox.length) === adapter.config.inbox) {
         topic = topic.substr(adapter.config.inbox.length + 1);
     }
 
@@ -258,14 +267,14 @@ function message(topic, msg) {
     } else if (!addedTopics[topic]) {
         addedTopics[topic] = null;
         var obj = {
-            type: "state",
-            role: "text",
+            type:       'state',
+            role:       'text',
             common: {
-                name: id.split('.').pop(),
-                type: "mixed",
-                read: true,
-                write: true,
-                desc: "created from topic",
+                name:   id.split('.').pop(),
+                type:   'mixed',
+                read:   true,
+                write:  true,
+                desc:   'created from topic',
                 custom: {
                 }
             },
@@ -274,18 +283,18 @@ function message(topic, msg) {
             }
         };
         obj.common.custom[adapter.namespace] = {
-            "enabled": true,
-            "topic": topic,
-            "publish": false,
-            "pubChangesOnly": false,
-            "pubAsObject": false,
-            "qos": 0,
-            "retain": false,
-            "subscribe": true,
-            "subChangesOnly": false,
-            "subAsObject": false,
-            "subQos": 0,
-            "setAck": true
+            enabled:        true,
+            topic:          topic,
+            publish:        false,
+            pubChangesOnly: false,
+            pubAsObject:    false,
+            qos:            0,
+            retain:         false,
+            subscribe:      true,
+            subChangesOnly: false,
+            subAsObject:    false,
+            subQos:         0,
+            setAck:         true
         };
         adapter.setObjectNotExists(id, obj, function () {
             adapter.log.info('created and subscribed to new state: ' + id);
