@@ -1,5 +1,11 @@
 ![Logo](admin/mqtt-client.png)
-# iobroker.mqtt-client
+# ioBroker.mqtt-client
+===================
+
+[![NPM version](http://img.shields.io/npm/v/iobroker.mqtt-client.svg)](https://www.npmjs.com/package/iobroker.mqtt-client)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.mqtt-client.svg)](https://www.npmjs.com/package/iobroker.mqtt-client)
+
+[![NPM](https://nodei.co/npm/iobroker.mqtt-client.png?downloads=true)](https://nodei.co/npm/iobroker.mqtt-client/)
 
 ## Adapter Settings
 ![Adapter](settings.png)
@@ -54,6 +60,10 @@ default: state-ID converted to a mqtt topic.
 * to prevent message loops, if both publish and subscribe are enabled ```changes only``` is always on for subscribe
 
 ## Changelog
+### 1.1.0 (2017-12-30)
+* (bluefox) Translations
+* (bluefox) Udpate of MQTT module
+
 ### 1.0.1 (2017-11-16)
 
 ### 1.0.0 (2017-11-16)

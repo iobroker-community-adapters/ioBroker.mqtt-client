@@ -1,0 +1,157 @@
+<html>
+<head>
+    <!-- Materialze style -->
+    <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
+    <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+
+    <script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+
+    <script type="text/javascript" src="../../js/translate.js"></script>
+    <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+    <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+    <script type="text/javascript" src="words.js"></script>
+
+    <script type="text/javascript">
+        function setValue(id, value, onChange) {
+            var $value = $('#' + id + '.value');
+            if ($value.attr('type') === 'checkbox') {
+                $value.prop('checked', value).change(function () {
+                    onChange();
+                });
+            } else {
+                $value.val(value).change(function () {
+                    onChange();
+                }).keyup(function () {
+                    // Check that only numbers entered
+                    if ($(this).hasClass('number')) {
+                        var val = $(this).val();
+                        if (val) {
+                            var newVal = '';
+                            for (var i = 0; i < val.length; i++) {
+                                if (val[i] >= '0' && val[i] <= '9') {
+                                    newVal += val[i];
+                                }
+                            }
+
+                            if (val != newVal) $(this).val(newVal);
+                        }
+                    }
+                    $(this).trigger('change');
+                });
+            }
+        }
+
+        function load(settings, onChange) {
+            for (var key in settings) {
+                if (settings.hasOwnProperty(key)) {
+                    setValue(key, settings[key], onChange);
+                }
+            }
+
+            onChange(false);
+        }
+
+        function save(callback) {
+            var settings = {};
+            $('.value').each(function () {
+                var $this = $(this);
+                var id = $this.attr('id');
+
+                if ($this.attr('type') === 'checkbox') {
+                    settings[id] = $this.prop('checked');
+                } else {
+                    settings[id] = $this.val();
+                }
+            });
+            callback(settings);
+        }
+    </script>
+</head>
+<body>
+<div class="m adapter-container">
+    <div class="row">
+        <div class="col s12">
+            <img src="mqtt-client.png" class="logo">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <span class="translate">note</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <h6 class="translate title">Server settings</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m8">
+            <input id="host" type="text" size="25" class="value"/>
+            <label for="host" class="translate">host</label>
+        </div>
+        <div class="col s12 m4">
+            <input id="port" type="number" size="5" class="value"/>
+            <label for="port" class="translate">port</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m8">
+            <input id="clientId" type="text" size="10" class="value"/>
+            <label for="clientId"><span  class="translate">Client ID</span> <span class="translate">must be unique</span></label>
+        </div>
+        <div class="col s12 m3">
+            <input id="ssl" type="checkbox" class="value"/>
+            <span class="translate">ssl</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m6">
+            <input id="username" type="text" size="10" class="value"/>
+            <label for="username" class="translate">username</label>
+        </div>
+        <div class="col s12 m6">
+            <input id="password" type="text" size="10" class="value"/>
+            <label for="password" class="translate">password</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m6">
+            <input id="onConnectTopic" type="text" size="30" class="value"/>
+            <label for="onConnectTopic" class="translate">on connect topic</label>
+        </div>
+        <div class="col s12 m6">
+            <input id="onConnectMessage" type="text" size="30" class="value"/>
+            <label for="onConnectMessage" class="translate">on connect message</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m6">
+            <input id="lastWillTopic" type="text" size="30" class="value"/>
+            <label for="lastWillTopic" class="translate">last will topic</label>
+        </div>
+        <div class="col s12 m6">
+            <input id="lastWillMessage" type="text" size="30" class="value"/>
+            <label for="lastWillMessage" class="translate">last will message</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <input id="subscriptions" type="text" size="30" class="value"/>
+            <label for="subscriptions" class="translate">additional subscriptions</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m6">
+            <input id="outbox" type="text" size="30" class="value"/>
+            <label for="outbox" class="translate">prefix for publishing topics</label>
+        </div>
+        <div class="col s12 m6">
+            <input id="inbox" type="text" size="30" class="value"/>
+            <label for="inbox" class="translate">prefix for subscribing topics</label>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

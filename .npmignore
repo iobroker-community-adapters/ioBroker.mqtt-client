@@ -1,6 +1,8 @@
-Gruntfile.js
+gulpfile.js
 tasks
 tmp
 .idea
 test
+admin/i18n
 node_modules
+package-lock.json

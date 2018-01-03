@@ -1,52 +1,27 @@
 <html>
+<head>
 <meta charset="UTF-8">
 <title></title>
-<!-- these 4 files always have to be included -->
+
 <link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
 <script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
 <script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
 
-<!-- these three files  have to be always included -->
 <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
 <script type="text/javascript" src="../../js/translate.js"></script>
 <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+<script type="text/javascript" src="words.js"></script>
 
-<!-- you have to define 2 functions in the global scope: -->
 <script type="text/javascript">
-    systemDictionary = {
-        "MQTT-client adapter settings": {
-            "de": "MQTT-client Adapter Einstellungen",
-            "ru": "MQTT-client adapter settings"
-        },
-        "note": {
-            "en": "MQTT-client settings must be done for every state individually",
-            "de": "MQTT-client Einstellungen müssen für jeden State einzeln gemacht werden",
-            "ru": "MQTT-client settings must be done for every state individually"
-        },
-        "username": {
-            "de": "Benutzername"
-        },
-        "password": {
-            "de": "Passwort"
-        },
-        "additional subscriptions": {
-            "de": "zusätzliche subscriptions"
-        },
-        "must be unique": {
-            "de": "muss einmalig sein"
-        },
-        "Prefix for topics":     {"en": "Prefix for topics", "de": "Prefix für alle Topics","ru": "Префикс для всех значений"}
-    };
-
     function setValue(id, value, onChange) {
-        // example: select elements with id=key and class=value and insert value
-        if ($('#' + id + '.value').attr('type') == 'checkbox') {
-            $('#' + id + '.value').prop('checked', value).change(function () {
+        var $value = $('#' + id + '.value');
+        if ($value.attr('type') === 'checkbox') {
+            $value.prop('checked', value).change(function () {
                 onChange();
             });
         } else {
-            $('#' + id + '.value').val(value).change(function () {
+            $value.val(value).change(function () {
                 onChange();
             }).keyup(function () {
                 // Check that only numbers entered
@@ -70,39 +45,21 @@
 
     function load(settings, onChange) {
         for (var key in settings) {
-            setValue(key, settings[key], onChange);
+            if (settings.hasOwnProperty(key)) {
+                setValue(key, settings[key], onChange);
+            }
         }
-
-
-        $('#demoStart, #demoEnd').datepicker().val(new Date().toDateString());
-
-        $('#generateDemo').button().click(function () {
-            $(".loader").show();
-            sendTo("", "generateDemo", {
-                id: $('#demoID').val(),
-                start: $('#demoStart').val(),
-                end: $('#demoEnd').val(),
-                step: $('#demoStep').val(),
-                curve: $('#demoCurve').val()
-            }, function (e) {
-                $(".loader").hide();
-            })
-        });
 
         onChange(false);
     }
 
-    // ... and the function save has to exist.
-    // you have to make sure the callback is called with the settings object as first param!
     function save(callback) {
-        // example: select elements with class=value and build settings object
-        changed = false;
         var settings = {};
         $('.value').each(function () {
             var $this = $(this);
             var id = $this.attr('id');
 
-            if ($this.attr('type') == 'checkbox') {
+            if ($this.attr('type') === 'checkbox') {
                 settings[id] = $this.prop('checked');
             } else {
                 settings[id] = $this.val();
@@ -185,84 +142,88 @@
             box-shadow: 0 -0.83em 0 -0.4em #00ffff, 0 -0.83em 0 -0.42em #00ffff, 0 -0.83em 0 -0.44em #00ffff, 0 -0.83em 0 -0.46em #00ffff, 0 -0.83em 0 -0.477em #00ffff;
         }
     }
+
 </style>
+</head>
+<body>
 <div id="adapter-container">
     <div id="loader" class="loader"></div>
     <table>
         <tr>
             <td><img src="mqtt-client.png"></td>
-            <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">MQTT-client adapter settings</h3></td>
+            <td style="padding-top: 20px; padding-left: 10px"><h3 class="translate">MQTT-client adapter settings</h3></td>
         </tr>
     </table>
-    <div class="translate" style="margin:20px">note</div>
+    <div class="translate" style="margin: 20px">note</div>
     <br>
     <h4 style="width: calc(100% - 10px)" class="translate">Server settings:</h4>
     <table>
         <tr>
-            <td class="translate">host</td>
+            <td><label for="host" class="translate">host</label></td>
             <td><input id="host" type="text" size="25" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">port</td>
-            <td><input id="port" type="text" size="5" class="value number"/></td>
+            <td><label for="port" class="translate">port</label></td>
+            <td><input id="port" type="number" size="5" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">ssl</td>
+            <td><label for="ssl" class="translate">ssl</label></td>
             <td><input id="ssl" type="checkbox" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">clientId</td>
+            <td><label for="clientId" class="translate">clientId</label></td>
             <td><input id="clientId" type="text" size="10" class="value"/></td>
             <td class="translate">must be unique</td>
         </tr>
         <tr>
-            <td class="translate">username</td>
+            <td><label for="username" class="translate">username</label></td>
             <td><input id="username" type="text" size="10" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">password</td>
+            <td><label for="password" class="translate">password</label></td>
             <td><input id="password" type="text" size="10" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">on connect topic</td>
+            <td><label for="onConnectTopic" class="translate">on connect topic</label></td>
             <td><input id="onConnectTopic" type="text" size="30" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">on connect message</td>
+            <td><label for="onConnectMessage" class="translate">on connect message</label></td>
             <td><input id="onConnectMessage" type="text" size="30" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">last will topic</td>
+            <td><label for="lastWillTopic" class="translate">last will topic</label></td>
             <td><input id="lastWillTopic" type="text" size="30" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">last will message</td>
+            <td><label for="lastWillMessage" class="translate">last will message</label></td>
             <td><input id="lastWillMessage" type="text" size="30" class="value"/></td>
             <td class="translate"></td>
         </tr>
         <tr>
-            <td class="translate">subscriptions</td>
+            <td><label for="subscriptions" class="translate">subscriptions</label></td>
             <td><input id="subscriptions" type="text" size="30" class="value"/></td>
             <td class="translate">additional subscriptions</td>
         </tr>
         <tr>
-            <td class="translate">publish prefix</td>
+            <td><label for="outbox" class="translate">publish prefix</label></td>
             <td><input id="outbox" type="text" size="30" class="value"/></td>
             <td class="translate">prefix for publishing topics</td>
         </tr>
         <tr>
-            <td class="translate">subscribe prefix</td>
+            <td><label for="inbox" class="translate">subscribe prefix</label></td>
             <td><input id="inbox" type="text" size="30" class="value"/></td>
             <td class="translate">prefix for subscribing topics</td>
         </tr>
     </table>
 </div>
+</body>
 </html>
