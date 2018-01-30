@@ -60,6 +60,9 @@ default: state-ID converted to a mqtt topic.
 * to prevent message loops, if both publish and subscribe are enabled ```changes only``` is always on for subscribe
 
 ## Changelog
+### 1.1.1 (2018-01-30)
+* (bluefox) small fixes
+
 ### 1.1.0 (2017-12-30)
 * (bluefox) Translations
 * (bluefox) Udpate of MQTT module

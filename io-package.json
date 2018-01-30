@@ -1,8 +1,8 @@
 {
     "common": {
-        "name":                     "mqtt-client",
-        "title":                    "MQTT client",
-        "desc":                     {
+        "name": "mqtt-client",
+        "title": "MQTT client",
+        "desc": {
             "en": "Syncing with MQTT Brokers",
             "de": "Synchronisierung mit MQTT-Brokern",
             "ru": "Синхронизация с брокерами MQTT",
@@ -13,6 +13,11 @@
             "es": "Sincronización con intermediarios MQTT"
         },
         "news": {
+            "1.1.1": {
+                "en": "small fixes",
+                "de": "kleine Ausbesserungen",
+                "ru": "небольшие исправления"
+            },
             "1.1.0": {
                 "en": "Translations\nUpdate of MQTT module",
                 "de": "Übersetzungen\nUpdate des MQTT-Moduls",
@@ -24,31 +29,39 @@
                 "es": "Traducciones\nActualización del módulo MQTT"
             }
         },
-        "version": "1.1.0",
-        "mode":                     "daemon",
-        "platform":                 "Javascript/Node.js",
-        "loglevel":                 "info",
-        "messagebox":               false,
-        "keywords":                 ["mqtt", "syncing", "data"],
-        "main":                     "client.js",
-        "enabled":                  true,
-        "preserveSettings":         "custom",
-        "supportCustoms":           true,
+        "version": "1.1.1",
+        "mode": "daemon",
+        "platform": "Javascript/Node.js",
+        "loglevel": "info",
+        "messagebox": false,
+        "keywords": [
+            "mqtt",
+            "syncing",
+            "data"
+        ],
+        "main": "client.js",
+        "enabled": true,
+        "preserveSettings": "custom",
+        "supportCustoms": true,
         "authors": [
             "Pmant <patrickmo@gmx.de>"
         ],
-        "materialize":              true,
-        "license":                  "MIT",
-        "readme":                   "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
-        "icon":                     "mqtt-client.png",
-        "extIcon":                  "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
-		"type":                     "protocols",
-		"dependencies":             [{"js-controller": ">=0.12.0"}],
-        "stopTimeout":              10000
+        "materialize": true,
+        "license": "MIT",
+        "readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
+        "icon": "mqtt-client.png",
+        "extIcon": "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
+        "type": "protocols",
+        "dependencies": [
+            {
+                "js-controller": ">=0.12.0"
+            }
+        ],
+        "stopTimeout": 10000
     },
     "native": {
         "host": "",
-        "port":     1883,
+        "port": 1883,
         "ssl": false,
         "clientId": "",
         "username": "",
@@ -61,15 +74,12 @@
         "reconnectPeriod": 30000,
         "outbox": "",
         "inbox": "",
-
         "enabled": false,
-
         "publish": false,
         "pubChangesOnly": false,
         "pubAsObject": false,
         "qos": 0,
         "retain": false,
-
         "subscribe": false,
         "subChangesOnly": false,
         "subAsObject": false,
