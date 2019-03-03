@@ -27,14 +27,17 @@
     "mqtt": "^2.15.0"
   },
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "mocha": "^6.0.2",
+    "chai": "^4.2.0",
+    "@iobroker/adapter-core": "^1.0.3"
   },
   "bugs": {
     "url": "https://github.com/Pmant/ioBroker.mqtt-client/issues"
   },
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node node_modules/mocha/bin/mocha --exit"
   },
   "license": "MIT"
 }
