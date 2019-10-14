@@ -10,9 +10,24 @@
             "nl": "Synchroniseren met MQTT-makelaars",
             "fr": "Synchronisation avec les courtiers MQTT",
             "it": "Sincronizzazione con i broker MQTT",
-            "es": "Sincronización con intermediarios MQTT"
+            "es": "Sincronización con intermediarios MQTT",
+            "pl": "Synchronizacja z brokerami MQTT",
+            "zh-cn": "与MQTT经纪人同步"
         },
+        "version": "1.2.0",
         "news": {
+            "1.2.0": {
+                "en": "Used MQTT 5.0\nSupport of js-controller 2.0 was added",
+                "de": "Verwendet MQTT 5.0\nUnterstützung von js-controller 2.0 wurde hinzugefügt",
+                "ru": "Используется MQTT 5.0\nДобавлена поддержка js-controller 2.0",
+                "pt": "MQTT 5.0 usado\nSuporte do js-controller 2.0 foi adicionado",
+                "nl": "Gebruikt MQTT 5.0\nOndersteuning van js-controller 2.0 is toegevoegd",
+                "fr": "MQTT 5.0 d'occasion\nLe support de js-controller 2.0 a été ajouté",
+                "it": "Usato MQTT 5.0\nÈ stato aggiunto il supporto di js-controller 2.0",
+                "es": "MQTT 5.0 usado\nSe agregó soporte de js-controller 2.0",
+                "pl": "Używany MQTT 5.0\nDodano obsługę js-kontrolera 2.0",
+                "zh-cn": "二手MQTT 5.0\n添加了对js-controller 2.0的支持"
+            },
             "1.1.1": {
                 "en": "small fixes",
                 "de": "kleine Ausbesserungen",
@@ -29,7 +44,6 @@
                 "es": "Traducciones\nActualización del módulo MQTT"
             }
         },
-        "version": "1.1.1",
         "mode": "daemon",
         "platform": "Javascript/Node.js",
         "loglevel": "info",
@@ -39,7 +53,7 @@
             "syncing",
             "data"
         ],
-        "main": "client.js",
+		"main": "main.js",
         "enabled": true,
         "preserveSettings": "custom",
         "supportCustoms": true,
@@ -47,6 +61,7 @@
             "Pmant <patrickmo@gmx.de>"
         ],
         "materialize": true,
+        "compact": true,
         "license": "MIT",
         "readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
         "icon": "mqtt-client.png",
@@ -86,13 +101,36 @@
         "subQos": 0,
         "setAck": true
     },
+	"instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "If connected to MQTT broker",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+	],
     "objects": [
         {
-            "_id": "_design/mqttclient",
+            "_id": "_design/custom",
             "language": "javascript",
             "views": {
                 "state": {
-                    "map": "function (doc) { if (doc.type == 'state' && doc.common.custom) emit(doc._id, doc.common); }"
+                    "map": "function(doc) { doc.type === 'state' && doc.common && doc.common.custom && emit(doc._id, doc.common.custom) }"
                 }
             }
         }
