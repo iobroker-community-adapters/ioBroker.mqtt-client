@@ -16,13 +16,13 @@
         function setValue(id, value, onChange) {
             var $value = $('#' + id + '.value');
             if ($value.attr('type') === 'checkbox') {
-                $value.prop('checked', value).change(function () {
+                $value.prop('checked', value).on('change', function () {
                     onChange();
                 });
             } else {
-                $value.val(value).change(function () {
+                $value.val(value).on('change', function () {
                     onChange();
-                }).keyup(function () {
+                }).on('keyup', function () {
                     // Check that only numbers entered
                     if ($(this).hasClass('number')) {
                         var val = $(this).val();
@@ -64,6 +64,7 @@
                     settings[id] = $this.val();
                 }
             });
+
             callback(settings);
         }
     </script>
