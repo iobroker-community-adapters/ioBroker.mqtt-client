@@ -1,7 +1,8 @@
 {
-    "common": {
-        "name": "mqtt-client",
-        "title": "MQTT client",
+	"common": {
+		"name": "mqtt-client",
+		"title": "MQTT client",
+		"version": "1.1.1",
         "desc": {
             "en": "Syncing with MQTT Brokers",
             "de": "Synchronisierung mit MQTT-Brokern",
@@ -29,37 +30,39 @@
                 "es": "Traducciones\nActualización del módulo MQTT"
             }
         },
-        "version": "1.1.1",
-        "mode": "daemon",
-        "platform": "Javascript/Node.js",
-        "loglevel": "info",
-        "messagebox": false,
-        "keywords": [
+		"authors": [
+			"Pmant <patrickmo@gmx.de>",
+			"algar42 <igor.aleschenkov@gmail.com>"
+		],
+		"keywords": [
             "mqtt",
             "syncing",
             "data"
         ],
         "main": "client.js",
-        "enabled": true,
-        "preserveSettings": "custom",
-        "supportCustoms": true,
-        "authors": [
-            "Pmant <patrickmo@gmx.de>"
-        ],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"icon": "mqtt-client.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
+		"readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "protocols",
+		"preserveSettings": "custom",
+		"compact": true,
         "materialize": true,
-        "license": "MIT",
-        "readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
-        "icon": "mqtt-client.png",
-        "extIcon": "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
-        "type": "protocols",
-        "dependencies": [
-            {
-                "js-controller": ">=0.12.0"
-            }
-        ],
-        "stopTimeout": 10000
-    },
-    "native": {
+        "messagebox": true,
+        "subscribe": "messagebox",
+        "supportCustoms": true,
+        "supportStopInstance": true,
+		"dependencies": [
+			{
+                "js-controller": ">=1.5.14"
+			}
+		]
+	},
+	"native": {
         "host": "",
         "port": 1883,
         "ssl": false,
@@ -92,9 +95,32 @@
             "language": "javascript",
             "views": {
                 "state": {
-                    "map": "function (doc) { if (doc.type == 'state' && doc.common.custom) emit(doc._id, doc.common); }"
+                    "map": "function(doc) {if (doc.type == 'state' && doc.common.custom) emit(doc._id, doc.common);}"
                 }
             }
         }
-    ]
+    ],
+	"instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "If connected to MQTT broker",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+	]
 }
