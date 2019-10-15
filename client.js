@@ -116,7 +116,7 @@ class MqttClient extends utils.Adapter {
 		//if topic2id[topic] does not exist automatically convert topic to id with guiding adapter namespace
 		const id = topic2id[topic] || this.convertTopic2ID(topic, this.namespace);
 
-		this.log.debug('for id ' + id + '=>' + JSON.stringify(custom[id]) );
+		this.log.debug('for id ' + id + '=>' + JSON.stringify(custom[id]));
 
 		if (topic2id[topic] && custom[id] && custom[id]) {
 
@@ -166,53 +166,55 @@ class MqttClient extends utils.Adapter {
 	}
 
 	setStateObj(id, msg) {
-		try {
-			const obj = JSON.parse(msg);
-			this.log.debug(JSON.stringify(obj));
-			if (obj.hasOwnProperty('val')) {
-				const custom = _context.custom;
-				if (obj.hasOwnProperty('ts') && custom[id].state && obj.ts <= custom[id].state.ts) {
-					this.log.debug('object ts not newer than current state ts: ' + msg);
+		this.getForeignState(id, (err, state) => {
+			try {
+				const obj = JSON.parse(msg);
+				this.log.debug(JSON.stringify(obj));
+				if (obj.hasOwnProperty('val')) {
+					const custom = _context.custom;
+					if (obj.hasOwnProperty('ts') && state && obj.ts <= state.ts) {
+						this.log.debug('object ts not newer than current state ts: ' + msg);
+						return false;
+					}
+					if (obj.hasOwnProperty('lc') && state && obj.lc < state.lc) {
+						this.log.debug('object lc not newer than current state lc: ' + msg);
+						return false;
+					}
+					//todo: !== correct???
+					if (this.config.inbox === this.config.outbox &&
+						custom[id].publish &&
+						!obj.hasOwnProperty('ts') &&
+						!obj.hasOwnProperty('lc') &&
+						obj.val !== state.val) {
+						this.log.debug('object value did not change (loop protection): ' + msg);
+						return false;
+					}
+					//todo: !== correct???
+					if (custom[id].subChangesOnly && obj.val !== state.val) {
+						this.log.debug('object value did not change: ' + msg);
+						return false;
+					}
+					if (custom[id].setAck) obj.ack = true;
+					if (obj && obj.from) delete obj.from;
+					this.setForeignState(id, obj);
+					this.log.debug('object set (as object) to ' + JSON.stringify(obj));
+					return true;
+				} else {
+					this.log.warn('no value in object: ' + msg);
 					return false;
 				}
-				if (obj.hasOwnProperty('lc') && custom[id].state && obj.lc < custom[id].state.lc) {
-					this.log.debug('object lc not newer than current state lc: ' + msg);
-					return false;
-				}
-				//todo: !== correct???
-				if (this.config.inbox === this.config.outbox &&
-					custom[id].publish &&
-					!obj.hasOwnProperty('ts') &&
-					!obj.hasOwnProperty('lc') &&
-					obj.val !== custom[id].state.val) {
-					this.log.debug('object value did not change (loop protection): ' + msg);
-					return false;
-				}
-				//todo: !== correct???
-				if (custom[id].subChangesOnly && obj.val !== custom[id].state.val) {
-					this.log.debug('object value did not change: ' + msg);
-					return false;
-				}
-				if (custom[id].setAck) obj.ack = true;
-				delete obj.from;
-				this.setForeignState(id, obj);
-				this.log.debug('object set to ' + JSON.stringify(obj));
-				return true;
-			} else {
-				this.log.warn('no value in object: ' + msg);
+			} catch (e) {
+				this.log.warn('could not parse message as object: ' + msg);
 				return false;
 			}
-		} catch (e) {
-			this.log.warn('could not parse message as object: ' + msg);
-			return false;
-		}
+		});
 	}
 
 	setStateVal(id, msg) {
 		const custom = _context.custom;
 		//this.log.debug('state for id: '+ id);
 		this.getForeignState(id, (err, state) => {
-			
+
 			if (state && this.val2String(state.val) === msg) {
 				//this.log.debug('setVAL: ' + JSON.stringify(state) + '; value: ' + this.val2String(state.val) + '=> ' + msg);
 				if (this.config.inbox === this.config.outbox && custom[id].publish) {
@@ -226,7 +228,7 @@ class MqttClient extends utils.Adapter {
 			this.setForeignState(id, { val: this.stringToVal(custom, id, msg), ack: custom[id].setAck });
 			this.log.debug('value set to ' + JSON.stringify({ val: this.stringToVal(custom, id, msg), ack: custom[id].setAck }));
 			return true;
-	});
+		});
 	}
 
 	publish(id, state) {
@@ -352,7 +354,7 @@ class MqttClient extends utils.Adapter {
 
 	checkSettings(id, custom, aNamespace, qos, subQos) {
 		custom.topic = custom.topic || this.convertID2Topic(id, aNamespace);
-        custom.enabled = custom.enabled === false;
+		custom.enabled = custom.enabled === true;
 		custom.publish = custom.publish === true;
 		custom.pubChangesOnly = custom.pubChangesOnly === true;
 		custom.pubAsObject = custom.pubAsObject === true;
@@ -411,7 +413,7 @@ class MqttClient extends utils.Adapter {
 						Object.keys(objs).forEach(id => {
 							custom[id] = objs[id].common.custom[this.namespace];
 							custom[id].type = objs[id].common.type;
-							this.log.debug('complete Custom: '+ JSON.stringify(custom));
+							this.log.debug('complete Custom: ' + JSON.stringify(custom));
 
 							this.checkSettings(id, custom[id], this.namespace, this.config.qos, this.config.subQos);
 
@@ -525,16 +527,16 @@ class MqttClient extends utils.Adapter {
 		const subTopics = _context.subTopics;
 		const topic2id = _context.topic2id;
 
-		if (obj && obj.common && obj.common.custom && obj.common.custom[this.namespace] ) {
-			const pubState = custom[id] ? custom[id].pubState : null;
-			const state = custom[id] ? custom[id].state : null;
-            
+		if (obj && obj.common && obj.common.custom && obj.common.custom[this.namespace] && obj.common.custom[this.namespace].enabled) {
+			//const pubState = custom[id] ? custom[id].pubState : null;
+			//const state = custom[id] ? custom[id].state : null;
+
 			custom[id] = obj.common.custom[this.namespace];
 			this.log.info('object common: ' + JSON.stringify(obj.common.custom[this.namespace]));
-			custom[id].pubState = pubState;
-			custom[id].state = state;
+			//custom[id].pubState = pubState;
+			//custom[id].state = state;
 			custom[id].type = obj.common.type;
-			
+
 
 			this.checkSettings(id, custom[id], this.namespace, this.config.qos, this.config.subQos);
 
