@@ -1,92 +1,110 @@
 ![Logo](admin/mqtt-client.png)
 # ioBroker.mqtt-client
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.mqtt-client.svg)](https://www.npmjs.com/package/iobroker.mqtt-client)
+![Number of Installations](http://iobroker.live/badges/mqtt-client-installed.svg) ![Number of Installations](http://iobroker.live/badges/mqtt-client-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.mqtt-client.svg)](https://www.npmjs.com/package/iobroker.mqtt-client)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.mqtt-client.svg)](https://www.npmjs.com/package/iobroker.mqtt-client)
-[![Dependency Status](https://img.shields.io/david/algar42/iobroker.mqtt-client.svg)](https://david-dm.org/algar42/iobroker.mqtt-client)
-[![Known Vulnerabilities](https://snyk.io/test/github/algar42/ioBroker.mqtt-client/badge.svg)](https://snyk.io/test/github/algar42/ioBroker.mqtt-client)
 
 [![NPM](https://nodei.co/npm/iobroker.mqtt-client.png?downloads=true)](https://nodei.co/npm/iobroker.mqtt-client/)
 
-**Tests:**: [![Travis-CI](http://img.shields.io/travis/algar42/ioBroker.mqtt-client/master.svg)](https://travis-ci.org/algar42/ioBroker.mqtt-client)
+## Adapter Settings
+![Adapter](img/settings.png)
 
-## mqtt-client adapter for ioBroker
+### on connect topic and message
+The ```on connect message``` is published to the ```on connect topic``` every time the client connects or reconnects to the server.
 
-Client to connect states to MQTT Broker
+### last will topic and message
+The ```last will message``` is published to the ```last will topic``` every time the client connects or reconnects to the server.
+The Server will store this message and send it to its subscribers when the client disconnects.
 
-## Developer manual
-This section is intended for the developer. It can be deleted later
+### subscriptions
+Comma separated list of topics that are not covered by existing states.
+Received messages are converted to states within the adapters namespace (e.g. mqtt.0) and subscribed.
+You can remove topics after all states have been created.
 
-### Getting started
+### publish prefix
+When publishing this will be prepended to all topics.
+Default is empty (no prefix).
 
-You are almost done, only a few steps left:
-1. Create a new repository on GitHub with the name `ioBroker.mqtt-client`
-1. Initialize the current folder as a new git repository:  
-	```bash
-	git init
-	git add .
-	git commit -m "Initial commit"
-	```
-1. Link your local repository with the one on GitHub:  
-	```bash
-	git remote add origin https://github.com/algar42/ioBroker.mqtt-client
-	```
+### subscribe prefix
+When subscribing this will be prepended to all topics.
+Default is empty (no prefix).
 
-1. Push all files to the GitHub repo:  
-	```bash
-	git push origin master
-	```
-1. Head over to [main.js](main.js) and start programming!
+## State Settings
+![State](img/dialog.png)
 
-### Scripts in `package.json`
-Several npm scripts are predefined for your convenience. You can run them using `npm run <scriptname>`
-| Script name | Description                                              |
-|-------------|----------------------------------------------------------|
-| `test:js`   | Executes the tests you defined in `*.test.js` files.     |
-| `test:package`    | Ensures your `package.json` and `io-package.json` are valid. |
-| `test` | Performs a minimal test run on package files and your tests. |
-| `coverage` | Generates code coverage using your test files. |
+### enabled
+Enables or disables the mqtt-client functionality for this state.
+Disabling will delete any mqtt-client settings from this state.
 
-### Writing tests
-When done right, testing code is invaluable, because it gives you the 
-confidence to change your code while knowing exactly if and when 
-something breaks. A good read on the topic of test-driven development 
-is https://hackernoon.com/introduction-to-test-driven-development-tdd-61a13bc92d92. 
-Although writing tests before the code might seem strange at first, but it has very 
-clear upsides.
+### topic
+The topic this state is published to and subscribed from.
+default: state-ID converted to a mqtt topic.
 
-The template provides you with basic tests for the adapter startup and package files.
-It is recommended that you add your own tests into the mix.
+### publish
+* ```enable``` state will be published
+* ```changes only``` state will only be published when its value changes
+* ```as object``` whole state will be published as object
+* ```qos``` see <http://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels>
+* ```retain``` see <http://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages>
 
-### Publishing the adapter
-See the documentation of [ioBroker.repositories](https://github.com/ioBroker/ioBroker.repositories#requirements-for-adapter-to-get-added-to-the-latest-repository).
+### subscribe
+* ```enable``` topic will be subscribed and state will be updated accordingly
+* ```changes only``` state will only be written when the value changed
+* ```as object``` messages will be interpreted as objects
+* ```qos``` see <http://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels>
+* ```ack``` on state updates the ack flag will be set accordingly
 
-### Test the adapter manually on a local ioBroker installation
-In order to install the adapter locally without publishing, the following steps are recommended:
-1. Create a tarball from your dev directory:  
-	```bash
-	npm pack
-	```
-1. Upload the resulting file to your ioBroker host
-1. Install it locally (The paths are different on Windows):
-	```bash
-	cd /opt/iobroker
-	npm i /path/to/tarball.tgz
-	```
+#### Note
+* when ack is set to true it will overwrite objects ack, see ```as object```
+* to prevent message loops, if both publish and subscribe are enabled ```changes only``` is always on for subscribe
 
-For later updates, the above procedure is not necessary. Just do the following:
-1. Overwrite the changed files in the adapter directory (`/opt/iobroker/node_modules/iobroker.mqtt-client`)
-1. Execute `iobroker upload mqtt-client` on the ioBroker host
+## TODO
+* test prefixes
+* connect/reconnect without clean session
 
 ## Changelog
+### 1.2.0 (2019-10-14)
+* (bluefox) Used MQTT 5.0
+* (bluefox) Support of js-controller 2.0 was added
 
-### 0.0.1
-* (algar42) initial release
+### 1.1.1 (2018-01-30)
+* (bluefox) small fixes
+
+### 1.1.0 (2017-12-30)
+* (bluefox) Translations
+* (bluefox) Udpate of MQTT module
+
+### 1.0.1 (2017-11-16)
+
+### 1.0.0 (2017-11-16)
+* (bluefox) Update io-package.json
+
+### 0.3.2 (2016-11-18)
+* (Pmant) fix initial object parsing
+* (Pmant) fix objects view
+
+### 0.3.1 (2016-11-16)
+* (Pmant) fix crash
+
+### 0.3.0 (2016-09-08)
+* (Pmant) add optional publish and subscribe prefixes
+
+### 0.2.5 (2016-09-08)
+* (Pmant) reduce logging -> debug
+
+### 0.2.0 (2016-09-08)
+* (Pmant) use new custom settings
+
+### 0.1.1 (2016-06-09)
+* (Pmant) fix possible loop
+
+### 0.1.0 (2016-06-08)
+* (Pmant) initial commit
 
 ## License
-MIT License
+The MIT License (MIT)
 
-Copyright (c) 2019 algar42 <igor.aleschenkov@gmail.com>
+Copyright (c) 2016-2019 Pmant
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -95,13 +113,13 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
