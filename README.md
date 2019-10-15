@@ -64,7 +64,6 @@ default: state-ID converted to a mqtt topic.
 
 ## Changelog
 ### 1.2.0 (2019-10-14)
-* (bluefox) Used MQTT 5.0
 * (bluefox) Support of js-controller 2.0 was added
 
 ### 1.1.1 (2018-01-30)
