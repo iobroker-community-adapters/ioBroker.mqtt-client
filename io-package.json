@@ -15,7 +15,7 @@
         },
         "news": {
             "1.2.0": {
-                "en": "Used MQTT 5.0\nSupport of js-controller 2.0 was added",
+                "en": "Support of js-controller 2.0 was added",
                 "de": "Verwendet MQTT 5.0\nUnterstützung von js-controller 2.0 wurde hinzugefügt",
                 "ru": "Используется MQTT 5.0\nДобавлена поддержка js-controller 2.0",
                 "pt": "MQTT 5.0 usado\nSuporte do js-controller 2.0 foi adicionado",
