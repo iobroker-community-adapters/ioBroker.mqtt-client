@@ -63,6 +63,10 @@ default: state-ID converted to a mqtt topic.
 * connect/reconnect without clean session
 
 ## Changelog
+### 1.2.1 (2019-10-17)
+* (algar42) Fix adapter restarting
+* (algar42) Fix mqtt issues
+
 ### 1.2.0 (2019-10-14)
 * (bluefox) Support of js-controller 2.0 was added
 
