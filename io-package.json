@@ -1,7 +1,8 @@
 {
-    "common": {
-        "name": "mqtt-client",
-        "title": "MQTT client",
+	"common": {
+		"name": "mqtt-client",
+		"title": "MQTT client",
+		"version": "1.2.1",
         "desc": {
             "en": "Syncing with MQTT Brokers",
             "de": "Synchronisierung mit MQTT-Brokern",
@@ -10,23 +11,20 @@
             "nl": "Synchroniseren met MQTT-makelaars",
             "fr": "Synchronisation avec les courtiers MQTT",
             "it": "Sincronizzazione con i broker MQTT",
-            "es": "Sincronización con intermediarios MQTT",
-            "pl": "Synchronizacja z brokerami MQTT",
-            "zh-cn": "与MQTT经纪人同步"
+            "es": "Sincronización con intermediarios MQTT"
         },
-        "version": "1.2.0",
         "news": {
-            "1.2.0": {
-                "en": "Used MQTT 5.0\nSupport of js-controller 2.0 was added",
-                "de": "Verwendet MQTT 5.0\nUnterstützung von js-controller 2.0 wurde hinzugefügt",
-                "ru": "Используется MQTT 5.0\nДобавлена поддержка js-controller 2.0",
-                "pt": "MQTT 5.0 usado\nSuporte do js-controller 2.0 foi adicionado",
-                "nl": "Gebruikt MQTT 5.0\nOndersteuning van js-controller 2.0 is toegevoegd",
-                "fr": "MQTT 5.0 d'occasion\nLe support de js-controller 2.0 a été ajouté",
-                "it": "Usato MQTT 5.0\nÈ stato aggiunto il supporto di js-controller 2.0",
-                "es": "MQTT 5.0 usado\nSe agregó soporte de js-controller 2.0",
-                "pl": "Używany MQTT 5.0\nDodano obsługę js-kontrolera 2.0",
-                "zh-cn": "二手MQTT 5.0\n添加了对js-controller 2.0的支持"
+            "1.2.1": {
+                "en": "Support of js-controller 2.0 was added",
+                "de": "Unterstützung von js-controller 2.0 wurde hinzugefügt",
+                "ru": "Добавлена поддержка js-controller 2.0",
+                "pt": "Suporte do js-controller 2.0 foi adicionado",
+                "nl": "Ondersteuning van js-controller 2.0 is toegevoegd",
+                "fr": "Le support de js-controller 2.0 a été ajouté",
+                "it": "È stato aggiunto il supporto di js-controller 2.0",
+                "es": "Se agregó soporte de js-controller 2.0",
+                "pl": "Dodano obsługę js-kontrolera 2.0",
+                "zh-cn": "添加了对js-controller 2.0的支持"
             },
             "1.1.1": {
                 "en": "small fixes",
@@ -44,37 +42,39 @@
                 "es": "Traducciones\nActualización del módulo MQTT"
             }
         },
-        "mode": "daemon",
-        "platform": "Javascript/Node.js",
-        "loglevel": "info",
-        "messagebox": false,
-        "keywords": [
+		"authors": [
+			"Pmant <patrickmo@gmx.de>",
+			"algar42 <igor.aleschenkov@gmail.com>"
+		],
+		"keywords": [
             "mqtt",
             "syncing",
             "data"
         ],
-		"main": "main.js",
-        "enabled": true,
-        "preserveSettings": "custom",
-        "supportCustoms": true,
-        "authors": [
-            "Pmant <patrickmo@gmx.de>"
-        ],
+        "main": "main.js",
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"icon": "mqtt-client.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
+		"readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "protocols",
+		"preserveSettings": "custom",
+		"compact": true,
         "materialize": true,
-        "compact": true,
-        "license": "MIT",
-        "readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
-        "icon": "mqtt-client.png",
-        "extIcon": "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
-        "type": "protocols",
-        "dependencies": [
-            {
-                "js-controller": ">=0.12.0"
-            }
-        ],
-        "stopTimeout": 10000
-    },
-    "native": {
+        "messagebox": true,
+        "subscribe": "messagebox",
+        "supportCustoms": true,
+        "supportStopInstance": true,
+		"dependencies": [
+			{
+                "js-controller": ">=1.5.14"
+			}
+		]
+	},
+	"native": {
         "host": "",
         "port": 1883,
         "ssl": false,
@@ -101,6 +101,17 @@
         "subQos": 0,
         "setAck": true
     },
+    "objects": [
+        {
+            "_id": "_design/mqttclient",
+            "language": "javascript",
+            "views": {
+                "state": {
+                    "map": "function(doc) {if (doc.type == 'state' && doc.common.custom) emit(doc._id, doc.common);}"
+                }
+            }
+        }
+    ],
 	"instanceObjects": [
         {
             "_id": "info",
@@ -123,16 +134,5 @@
             },
             "native": {}
         }
-	],
-    "objects": [
-        {
-            "_id": "_design/custom",
-            "language": "javascript",
-            "views": {
-                "state": {
-                    "map": "function(doc) { doc.type === 'state' && doc.common && doc.common.custom && emit(doc._id, doc.common.custom) }"
-                }
-            }
-        }
-    ]
+	]
 }
