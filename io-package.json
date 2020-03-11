@@ -103,16 +103,16 @@
     },
     "objects": [
         {
-            "_id": "_design/mqttclient",
+            "_id": "_design/custom",
             "language": "javascript",
             "views": {
                 "state": {
-                    "map": "function(doc) {if (doc.type == 'state' && doc.common.custom) emit(doc._id, doc.common);}"
+                    "map": "function(doc) { doc.type === 'state' && doc.common && doc.common.custom && emit(doc._id, doc.common.custom) }"
                 }
             }
         }
     ],
-	"instanceObjects": [
+    "instanceObjects": [
         {
             "_id": "info",
             "type": "channel",
@@ -134,5 +134,5 @@
             },
             "native": {}
         }
-	]
+    ]
 }
