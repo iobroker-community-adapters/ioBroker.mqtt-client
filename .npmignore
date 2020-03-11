@@ -1,12 +1,14 @@
 .git
 .idea
+.gitignore
+.npmignore
 node_modules/
 nbproject/
 .vs*/
 *.code-workspace
 Thumbs.db
 gulpfile.js
-
+iob_npm.done
 test/
 travis/
 .travis.yml
