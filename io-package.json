@@ -2,7 +2,6 @@
 	"common": {
 		"name": "mqtt-client",
 		"title": "MQTT client",
-		"version": "1.3.0",
         "desc": {
             "en": "Syncing with MQTT Brokers",
             "de": "Synchronisierung mit MQTT-Brokern",
@@ -15,7 +14,20 @@
             "pl": "Synchronizacja z brokerami MQTT",
             "zh-cn": "与MQTT经纪人同步"
         },
+        "version": "1.3.1",
         "news": {
+            "1.3.1": {
+              "en": "mqtt package moved back to 2.x",
+              "de": "Das mqtt-Paket wurde auf 2.x zurückgesetzt",
+              "ru": "пакет mqtt перенесен обратно в 2.x",
+              "pt": "Pacote mqtt retornado para 2.x",
+              "nl": "mqtt-pakket verplaatst naar 2.x",
+              "fr": "le package mqtt est revenu à 2.x",
+              "it": "Il pacchetto mqtt è tornato alla 2.x",
+              "es": "El paquete mqtt regresó a 2.x",
+              "pl": "pakiet mqtt został przeniesiony z powrotem do wersji 2.x",
+              "zh-cn": "mqtt软件包移回了2.x"
+            },
             "1.2.1": {
                 "en": "Support of js-controller 2.0 was added",
                 "de": "Unterstützung von js-controller 2.0 wurde hinzugefügt",

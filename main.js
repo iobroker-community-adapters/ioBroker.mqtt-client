@@ -1,27 +1,22 @@
 'use strict';
 
-/*
- * Created with @iobroker/create-adapter v1.17.0
- */
-
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-const mqtt = require('mqtt');
-//const process = require('process');
-let _context = {};
-_context.custom = {};
-_context.subTopics = {};
-_context.topic2id = {};
-_context.addTopics = {};
-_context.addedTopics = {};
+const mqtt  = require('mqtt');
+
+let _context = {
+	custom:      {},
+	subTopics:   {},
+	topic2id:    {},
+	addTopics:   {},
+	addedTopics: {},
+};
+
 let _subscribes = [];
 let _connected = false;
 let client = null;
 let adapterFinished = false;
-
-// Load your modules here, e.g.:
-// const fs = require("fs");
 
 class MqttClient extends utils.Adapter {
 
@@ -34,13 +29,12 @@ class MqttClient extends utils.Adapter {
 			...options,
 			name: 'mqtt-client',
 		});
-		this.on('ready', this.onReady.bind(this));
+		this.on('ready',        this.onReady.bind(this));
 		this.on('objectChange', this.onObjectChange.bind(this));
-		this.on('stateChange', this.onStateChange.bind(this));
-		this.on('message', this.onMessage.bind(this));
-		this.on('unload', this.onUnload.bind(this));
+		this.on('stateChange',  this.onStateChange.bind(this));
+		this.on('message',      this.onMessage.bind(this));
+		this.on('unload',       this.onUnload.bind(this));
 	}
-
 
 	connect() {
 		this.log.info('connected to broker');
@@ -67,14 +61,12 @@ class MqttClient extends utils.Adapter {
 
 		//initially subscribe to topics
 		if (Object.keys(subTopics).length) {
-			this.subscribe(subTopics, () => {
-				this.log.debug('subscribed to: ' + JSON.stringify(subTopics));
-			});
+			this.subscribe(subTopics, () =>
+				this.log.debug('subscribed to: ' + JSON.stringify(subTopics)));
 		}
 		if (Object.keys(addTopics).length) {
-			this.subscribe(addTopics, () => {
-				this.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics));
-			});
+			this.subscribe(addTopics, () =>
+				this.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics)));
 		}
 	}
 
@@ -108,6 +100,7 @@ class MqttClient extends utils.Adapter {
 		const addedTopics = _context.addedTopics;
 		msg = msg.toString();
 		this.log.debug('received message ' + msg);
+
 		//remove inbox prefix if exists
 		if (this.config.inbox && topic.substring(0, this.config.inbox.length) === this.config.inbox) {
 			topic = topic.substr(this.config.inbox.length + 1);
@@ -157,9 +150,8 @@ class MqttClient extends utils.Adapter {
 				subQos: 0,
 				setAck: true
 			};
-			this.setObjectNotExists(id, obj, () => {
-				this.log.debug('created and subscribed to new state: ' + id);
-			});
+			this.setObjectNotExists(id, obj, () =>
+				this.log.debug('created and subscribed to new state: ' + id));
 		} else {
 			this.log.debug('state already exists');
 		}
@@ -170,6 +162,7 @@ class MqttClient extends utils.Adapter {
 			try {
 				const obj = JSON.parse(msg);
 				this.log.debug(JSON.stringify(obj));
+
 				if (obj.hasOwnProperty('val')) {
 					const custom = _context.custom;
 					if (obj.hasOwnProperty('ts') && state && obj.ts <= state.ts) {
@@ -180,7 +173,7 @@ class MqttClient extends utils.Adapter {
 						this.log.debug('object lc not newer than current state lc: ' + msg);
 						return false;
 					}
-					//todo: !== correct???
+					// todo: !== correct???
 					if (this.config.inbox === this.config.outbox &&
 						custom[id].publish &&
 						!obj.hasOwnProperty('ts') &&
@@ -189,7 +182,7 @@ class MqttClient extends utils.Adapter {
 						this.log.debug('object value did not change (loop protection): ' + msg);
 						return false;
 					}
-					//todo: !== correct???
+					// todo: !== correct???
 					if (custom[id].subChangesOnly && obj.val !== state.val) {
 						this.log.debug('object value did not change: ' + msg);
 						return false;
@@ -225,8 +218,9 @@ class MqttClient extends utils.Adapter {
 					return false;
 				}
 			}
-			this.setForeignState(id, { val: this.stringToVal(custom, id, msg), ack: custom[id].setAck });
-			this.log.debug('value set to ' + JSON.stringify({ val: this.stringToVal(custom, id, msg), ack: custom[id].setAck }));
+			const _state = {val: this.stringToVal(custom, id, msg), ack: custom[id].setAck};
+			this.setForeignState(id, _state);
+			this.log.debug('value set to ' + JSON.stringify(_state));
 			return true;
 		});
 	}
@@ -246,11 +240,13 @@ class MqttClient extends utils.Adapter {
 			const message = settings.pubAsObject ? JSON.stringify(state) : this.val2String(state.val);
 
 			//add outgoing prefix
-			if (this.config.outbox) topic = this.config.outbox + '/' + topic;
+			if (this.config.outbox) {
+				topic = this.config.outbox + '/' + topic;
+			}
 
-			client.publish(topic, message, { qos: settings.qos, retain: settings.retain }, () => {
-				this.log.debug('succesfully published ' + id + ': ' + JSON.stringify({ topic: topic, message: message }));
-			});
+			client.publish(topic, message, { qos: settings.qos, retain: settings.retain }, () =>
+				this.log.debug('successfully published ' + id + ': ' + JSON.stringify({ topic: topic, message: message })));
+
 			return true;
 		}
 	}
@@ -276,9 +272,7 @@ class MqttClient extends utils.Adapter {
 	}
 
 	unsubscribe(topic, callback) {
-		if (client) {
-			client.unsubscribe(topic, callback);
-		}
+		client && client.unsubscribe(topic, callback);
 	}
 
 	iobSubscribe(id) {
@@ -298,15 +292,16 @@ class MqttClient extends utils.Adapter {
 	}
 
 	val2String(val) {
-		return (val === null) ? 'null' : (val === undefined ? 'undefined' : val.toString());
+		return val === null ? 'null' : (val === undefined ? 'undefined' : val.toString());
 	}
 
 	stringToVal(custom, id, val) {
 		if (val === 'undefined') return undefined;
 		if (val === 'null') return null;
 		if (!custom[id] || !custom[id].type || custom[id].type === 'string' || custom[id].type === 'mixed') return val;
+
 		if (custom[id].type === 'number') {
-			if (val === true || val === 'true') val = 1;
+			if (val === true  || val === 'true')  val = 1;
 			if (val === false || val === 'false') val = 0;
 			val = val.replace(',', '.');
 			val = parseFloat(val) || 0;
@@ -394,8 +389,8 @@ class MqttClient extends utils.Adapter {
 				const topic2id = _context.topic2id;
 				const addTopics = _context.addTopics;
 
-				const _url = ((!this.config.ssl) ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':' + this.config.password + '@') : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
-				const __url = ((!this.config.ssl) ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':*******************@') : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
+				const _url  = (!this.config.ssl ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':' + this.config.password + '@') : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
+				const __url = (!this.config.ssl ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':*******************@')          : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
 
 				this.objects.getObjectView('custom', 'state', {}, (err, doc) => {
 					const ids = [];
@@ -442,33 +437,33 @@ class MqttClient extends utils.Adapter {
 							this.log.info('Try to connect to ' + __url + ' with lwt "' + this.config.lastWillTopic + '"');
 
 							will = {
-								topic: this.config.lastWillTopic,
+								topic:   this.config.lastWillTopic,
 								payload: this.config.lastWillMessage,
-								qos: 2,
-								retain: true
+								qos:     2,
+								retain:  true
 							};
 						} else {
 							this.log.info('Try to connect to ' + __url);
 						}
 
 						client = mqtt.connect(_url, {
-							host: this.config.host,
-							port: this.config.port,
-							ssl: this.config.ssl,
+							host:            this.config.host,
+							port:            this.config.port,
+							ssl:             this.config.ssl,
 							reconnectPeriod: this.config.reconnectPeriod,
-							username: this.config.username,
-							password: this.config.password,
-							clientId: this.config.clientId,
-							clean: true,
+							username:        this.config.username,
+							password:        this.config.password,
+							clientId:        this.config.clientId,
+							clean:           true,
 							will
 						});
 
-						client.on('connect', this.connect.bind(this));
-						client.on('reconnect', this.reconnect.bind(this));
+						client.on('connect',    this.connect.bind(this));
+						client.on('reconnect',  this.reconnect.bind(this));
 						client.on('disconnect', this.disconnect.bind(this));
-						client.on('offline', this.offline.bind(this));
-						client.on('message', this.message.bind(this));
-						client.on('error', this.error.bind(this));
+						client.on('offline',    this.offline.bind(this));
+						client.on('message',    this.message.bind(this));
+						client.on('error',      this.error.bind(this));
 					});
 				});
 			}
@@ -490,23 +485,23 @@ class MqttClient extends utils.Adapter {
 	}
 
 	/**
- * Is called when adapter shuts down - callback has to be called under any circumstances!
- * @param {() => void} callback
- */
+	 * Is called when adapter shuts down - callback has to be called under any circumstances!
+	 * @param {() => void} callback
+	 */
 	finish(callback) {
 		if (adapterFinished) {
 			return;
 		}
 		this.log.info('cleaned everything up...');
-		if (client) client.end();
-		if (callback) setTimeout(callback, 200);
+		client && client.end();
+		callback && setTimeout(callback, 200);
 		adapterFinished = true;
 	}
 
 	/**
- * Is called when adapter shuts down - callback has to be called under any circumstances!
- * @param {() => void} callback
- */
+	 * Is called when adapter shuts down - callback has to be called under any circumstances!
+	 * @param {() => void} callback
+	 */
 	onUnload(callback) {
 		try {
 			this.finish(callback);
@@ -518,14 +513,14 @@ class MqttClient extends utils.Adapter {
 
 
 	/**
- * Is called if a subscribed object changes
- * @param {string} id
- * @param {ioBroker.Object | null | undefined} obj
- */
+	 * Is called if a subscribed object changes
+	 * @param {string} id
+	 * @param {ioBroker.Object | null | undefined} obj
+	 */
 	onObjectChange(id, obj) {
-		const custom = _context.custom;
+		const custom    = _context.custom;
 		const subTopics = _context.subTopics;
-		const topic2id = _context.topic2id;
+		const topic2id  = _context.topic2id;
 
 		if (obj && obj.common && obj.common.custom && obj.common.custom[this.namespace] && obj.common.custom[this.namespace].enabled) {
 			//const pubState = custom[id] ? custom[id].pubState : null;
@@ -587,10 +582,10 @@ class MqttClient extends utils.Adapter {
 	}
 
 	/**
- * Is called if a subscribed state changes
- * @param {string} id
- * @param {ioBroker.State | null | undefined} state
- */
+	 * Is called if a subscribed state changes
+	 * @param {string} id
+	 * @param {ioBroker.State | null | undefined} state
+	 */
 	onStateChange(id, state) {
 		const custom = _context.custom;
 
@@ -606,21 +601,22 @@ class MqttClient extends utils.Adapter {
 	}
 
 	/**
-  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-  * Using this method requires "common.message" property to be set to true in io-package.json
-  * @param {ioBroker.Message} obj
-*/
+	 * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
+	 * Using this method requires "common.message" property to be set to true in io-package.json
+	 * @param {ioBroker.Message} obj
+	 */
 	onMessage(obj) {
 		if (typeof obj === 'object' && obj.command) {
 			if (obj.command === 'stopInstance') {
 				// e.g. send email or pushover or whatever
 				this.log.info('Stop Instance command received...');
+
 				this.finish(() => {
 					this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-					setTimeout(() => { process.exit(0); }, 200);
+					setTimeout(() => this.terminate ? this.terminate() : process.exit(0), 200);
 				});
 				// Send response in callback if required
-				//if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
+				// if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
 			}
 		}
 	}
