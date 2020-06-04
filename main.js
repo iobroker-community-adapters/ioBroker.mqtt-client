@@ -10,7 +10,7 @@ let _context = {
 	subTopics:   {},
 	topic2id:    {},
 	addTopics:   {},
-	addedTopics: {},
+	ownTopics:   {},
 };
 
 let _subscribes = [];
@@ -57,15 +57,21 @@ class MqttClient extends utils.Adapter {
 		}
 
 		const subTopics = _context.subTopics;
+		const ownTopics = _context.ownTopics;
 		const addTopics = _context.addTopics;
 
 		//initially subscribe to topics
+		if (typeof this.config.prefixsubscriptions === "undefined") this.config.prefixsubscriptions = true;
 		if (Object.keys(subTopics).length) {
-			this.subscribe(subTopics, () =>
+			this.subscribe(subTopics, true, () =>
 				this.log.debug('subscribed to: ' + JSON.stringify(subTopics)));
 		}
+		if (Object.keys(ownTopics).length) {
+			this.subscribe(ownTopics, this.config.prefixsubscriptions, () =>
+				this.log.debug('subscribed to own topics: ' + JSON.stringify(ownTopics)));
+		}
 		if (Object.keys(addTopics).length) {
-			this.subscribe(addTopics, () =>
+			this.subscribe(addTopics, this.config.prefixsubscriptions, () =>
 				this.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics)));
 		}
 	}
@@ -97,7 +103,7 @@ class MqttClient extends utils.Adapter {
 	message(topic, msg) {
 		const custom = _context.custom;
 		const topic2id = _context.topic2id;
-		const addedTopics = _context.addedTopics;
+		const ownTopics = _context.ownTopics;
 		msg = msg.toString();
 		this.log.debug('received message ' + msg);
 
@@ -111,15 +117,18 @@ class MqttClient extends utils.Adapter {
 
 		this.log.debug('for id ' + id + '=>' + JSON.stringify(custom[id]));
 
-		if (topic2id[topic] && custom[id] && custom[id]) {
-
-			if (custom[id].subAsObject) {
-				this.setStateObj(id, msg);
+		if (custom[id]) {
+			if (topic2id[topic] && custom[id].subscribe) {
+				if (custom[id].subAsObject) {
+					this.setStateObj(id, msg);
+				} else {
+					this.setStateVal(id, msg);
+				}
 			} else {
-				this.setStateVal(id, msg);
+				this.log.debug('object not subscribed');
 			}
-		} else if (!addedTopics[topic]) {
-			addedTopics[topic] = null;
+		} else if (!ownTopics[topic]) {
+			ownTopics[topic] = null;
 			let obj = {
 				type: 'state',
 				role: 'text',
@@ -150,8 +159,10 @@ class MqttClient extends utils.Adapter {
 				subQos: 0,
 				setAck: true
 			};
-			this.setObjectNotExists(id, obj, () =>
-				this.log.debug('created and subscribed to new state: ' + id));
+			this.setObjectNotExists(id, obj, () => {
+				const _state = {val: msg, ack: true};
+				this.setForeignState(id, _state);
+				this.log.debug('created and subscribed to new state: ' + id);});
 		} else {
 			this.log.debug('state already exists');
 		}
@@ -238,9 +249,10 @@ class MqttClient extends utils.Adapter {
 			let topic = settings.topic;
 
 			const message = settings.pubAsObject ? JSON.stringify(state) : this.val2String(state.val);
+			const isOwn = (id.substring(0, this.namespace.length) === this.namespace) 
 
 			//add outgoing prefix
-			if (this.config.outbox) {
+			if (this.config.outbox && ((!isOwn) || this.config.prefixsubscriptions)) {
 				topic = this.config.outbox + '/' + topic;
 			}
 
@@ -251,11 +263,11 @@ class MqttClient extends utils.Adapter {
 		}
 	}
 
-	subscribe(topics, callback) {
+	subscribe(topics, addinbox, callback) {
 		if (client) {
 			let subTopics = {};
 
-			if (this.config.inbox) {
+			if (this.config.inbox && addinbox) {
 				//add inbox prefix to all subscriptions
 				const keys = Object.keys(topics);
 				for (let j = 0; j < keys.length; j++) {
@@ -266,13 +278,25 @@ class MqttClient extends utils.Adapter {
 				subTopics = topics;
 			}
 
-			//this.log.debug('Subscribed: ' + subTopics);
+			//const logkeys = Object.keys(subTopics);
+			//for (let j = 0; j < logkeys.length; j++) {
+			//	this.log.debug('Subscribed: ' + logkeys[j]);
+			//}
 			client.subscribe(subTopics, callback);
 		}
 	}
 
-	unsubscribe(topic, callback) {
-		client && client.unsubscribe(topic, callback);
+	unsubscribe(topic, addinbox, callback) {
+		if (client) {
+			let unsubTopic = topic;
+			if (this.config.inbox && addinbox) {
+				//add inbox prefix to all subscriptions
+				let unsubTopic = this.config.inbox + '/' + topic;
+			}
+
+			//this.log.debug('Unsubscribed: ' + unsubTopic);
+			client.unsubscribe(unsubTopic, callback);
+		}
 	}
 
 	iobSubscribe(id) {
@@ -384,8 +408,16 @@ class MqttClient extends utils.Adapter {
 			(!state || state.val) && this.setState('info.connection', false, true);
 
 			if (this.config.host && this.config.host !== '') {
+				// reset the context it will be rebuild hiere in main
+				_context.custom = {};
+				_context.subTopics = {};
+				_context.ownTopics = {};
+				_context.topic2id = {};
+				_context.addTopics = {};
+
 				const custom = _context.custom;
 				const subTopics = _context.subTopics;
+				const ownTopics = _context.ownTopics;
 				const topic2id = _context.topic2id;
 				const addTopics = _context.addTopics;
 
@@ -411,9 +443,14 @@ class MqttClient extends utils.Adapter {
 							this.log.debug('complete Custom: ' + JSON.stringify(custom));
 
 							this.checkSettings(id, custom[id], this.namespace, this.config.qos, this.config.subQos);
+							const isOwn = (id.substring(0, this.namespace.length) === this.namespace);
 
 							if (custom[id].subscribe) {
-								subTopics[custom[id].topic] = custom[id].subQos;
+								if (isOwn) {
+									ownTopics[custom[id].topic] = custom[id].subQos;
+								} else {
+									subTopics[custom[id].topic] = custom[id].subQos;
+								}
 								topic2id[custom[id].topic] = id;
 							}
 
@@ -473,8 +510,8 @@ class MqttClient extends utils.Adapter {
 	}
 
 	/**
-     * Is called when databases are this. and adapter received configuration.
-     */
+		 * Is called when databases are this. and adapter received configuration.
+		 */
 	async onReady() {
 
 		client = null;
@@ -511,7 +548,28 @@ class MqttClient extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * checks for a renamed topic and removes it if it exists
+	 * @param {string} id
+	 */
+	removeOldTopc(id) {
+		const custom    = _context.custom;
+		const subTopics = _context.subTopics;
+		const ownTopics = _context.ownTopics;
+		const topic2id  = _context.topic2id;
 
+		if (!topic2id[custom[id].topic]) {
+			let oldTopic = Object.keys(topic2id).find((topic)=>topic2id[topic]===id);
+			if (oldTopic) {
+				delete subTopics[oldTopic];
+				delete ownTopics[oldTopic];
+	    	const isOwn = (id.substring(0, this.namespace.length) === this.namespace);
+				this.unsubscribe(oldTopic, (!isOwn) || this.config.prefixsubscriptions, () =>
+					this.log.debug('unsubscribed renamed topic from ' + oldTopic));
+			}
+		}
+	}
+	
 	/**
 	 * Is called if a subscribed object changes
 	 * @param {string} id
@@ -520,6 +578,7 @@ class MqttClient extends utils.Adapter {
 	onObjectChange(id, obj) {
 		const custom    = _context.custom;
 		const subTopics = _context.subTopics;
+		const ownTopics = _context.ownTopics;
 		const topic2id  = _context.topic2id;
 
 		if (obj && obj.common && obj.common.custom && obj.common.custom[this.namespace] && obj.common.custom[this.namespace].enabled) {
@@ -534,21 +593,27 @@ class MqttClient extends utils.Adapter {
 
 
 			this.checkSettings(id, custom[id], this.namespace, this.config.qos, this.config.subQos);
-
+			this.removeOldTopc(id);
+			const isOwn = (id.substring(0, this.namespace.length) === this.namespace);
 			if (custom[id].subscribe) {
-				subTopics[custom[id].topic] = custom[id].subQos;
+				if (isOwn) {
+			    ownTopics[custom[id].topic] = custom[id].subQos;
+				} else {
+					subTopics[custom[id].topic] = custom[id].subQos;
+				}
 				topic2id[custom[id].topic] = id;
 				const sub = {};
 				sub[custom[id].topic] = custom[id].subQos;
 
-				this.subscribe(sub, () =>
+				this.subscribe(sub, (!isOwn) || this.config.prefixsubscriptions, () =>
 					this.log.info('subscribed to ' + JSON.stringify(sub)));
 			} else {
 				delete subTopics[custom[id].topic];
+				delete ownTopics[custom[id].topic];
 				delete topic2id[custom[id].topic];
 				this.iobUnsubscribe(id);
 
-				this.unsubscribe(custom[id].topic, () =>
+				this.unsubscribe(custom[id].topic, (!isOwn) || this.config.prefixsubscriptions, () =>
 					this.log.info('unsubscribed from ' + custom[id].topic));
 			}
 
@@ -560,20 +625,17 @@ class MqttClient extends utils.Adapter {
 				' (publish/subscribe:' + custom[id].publish.toString() +
 				'/' + custom[id].subscribe.toString() + ')');
 		} else if (custom[id]) {
+			const isOwn = (id.substring(0, this.namespace.length) === this.namespace);
+			this.removeOldTopc(id);
 			const topic = custom[id].topic;
 
-			this.unsubscribe(topic, () =>
+			this.unsubscribe(topic, isOwn || this.config.prefixsubscriptions, () =>
 				this.log.info('unsubscribed from ' + topic));
 
-			if (subTopics[custom[id].topic]) {
-				delete subTopics[custom[id].topic];
-			}
-			if (topic2id[custom[id].topic]) {
-				delete topic2id[custom[id].topic];
-			}
-			if (custom[id].publish) {
-				this.iobUnsubscribe(id);
-			}
+			delete subTopics[custom[id].topic];
+			delete ownTopics[custom[id].topic];
+			delete topic2id[custom[id].topic];
+			this.iobUnsubscribe(id);
 
 			delete custom[id];
 

@@ -16,18 +16,27 @@ The ```on connect message``` is published to the ```on connect topic``` every ti
 The ```last will message``` is published to the ```last will topic``` every time the client connects or reconnects to the server.
 The Server will store this message and send it to its subscribers when the client disconnects.
 
-### subscriptions
+### additional subscriptions
 Comma separated list of topics that are not covered by existing states.
 Received messages are converted to states within the adapters namespace (e.g. mqtt.0) and subscribed.
 You can remove topics after all states have been created.
 
+### use prefix for additional subscriptions
+This switch only has an effect if the subscribe prefix or publish prefix is specified.
+If acrivated the subscription prefix is added to each entry in the comma-separated list of additional subscriptions.
+If not activated no prefix is added on publishing and subscribing when to the objects in the same namespace (e.g. mqtt.0).
+This switch does not affect objects in all other namespaces.
+Default is acrivated.
+
 ### publish prefix
 When publishing this will be prepended to all topics.
 Default is empty (no prefix).
+See also use prefix for additional subscriptions
 
 ### subscribe prefix
 When subscribing this will be prepended to all topics.
 Default is empty (no prefix).
+See also use prefix for additional subscriptions
 
 ## State Settings
 ![State](img/dialog.png)

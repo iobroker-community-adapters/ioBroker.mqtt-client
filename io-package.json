@@ -99,6 +99,7 @@
         "lastWillTopic": "",
         "lastWillMessage": "",
         "subscriptions": "",
+        "prefixsubscriptions": true,
         "reconnectPeriod": 30000,
         "outbox": "",
         "inbox": "",
