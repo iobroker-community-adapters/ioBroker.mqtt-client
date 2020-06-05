@@ -629,7 +629,7 @@ class MqttClient extends utils.Adapter {
 			this.removeOldTopc(id);
 			const topic = custom[id].topic;
 
-			this.unsubscribe(topic, isOwn || this.config.prefixsubscriptions, () =>
+			this.unsubscribe(topic, (!isOwn) || this.config.prefixsubscriptions, () =>
 				this.log.info('unsubscribed from ' + topic));
 
 			delete subTopics[custom[id].topic];
