@@ -392,7 +392,7 @@ class MqttClient extends utils.Adapter {
 				const _url  = (!this.config.ssl ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':' + this.config.password + '@') : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
 				const __url = (!this.config.ssl ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':*******************@')          : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
 
-				this.objects.getObjectView('custom', 'state', {}, (err, doc) => {
+				this.getObjectView('custom', 'state', {}, (err, doc) => {
 					const ids = [];
 					if (doc && doc.rows) {
 						for (let i = 0, l = doc.rows.length; i < l; i++) {
