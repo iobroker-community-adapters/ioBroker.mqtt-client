@@ -1,7 +1,18 @@
 {
 	"common": {
 		"name": "mqtt-client",
-		"title": "MQTT client",
+		"titleLang": {
+          "en": "MQTT client",
+          "de": "MQTT-Client",
+          "ru": "MQTT Клиент",
+          "pt": "Cliente MQTT",
+          "nl": "MQTT-klant",
+          "fr": "Client MQTT",
+          "it": "Client MQTT",
+          "es": "Cliente MQTT",
+          "pl": "Klient MQTT",
+          "zh-cn": "MQTT客户端"
+        },
         "desc": {
             "en": "Syncing with MQTT Brokers",
             "de": "Synchronisierung mit MQTT-Brokern",
@@ -65,7 +76,6 @@
             "syncing",
             "data"
         ],
-        "main": "main.js",
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"icon": "mqtt-client.png",
@@ -85,7 +95,8 @@
 			{
                 "js-controller": ">=1.5.14"
 			}
-		]
+		],
+        "jsonCustom": true
 	},
 	"native": {
         "host": "",

@@ -1,0 +1,102 @@
+{
+  "items": {
+    "topic": {
+      "type": "topic",
+      "label": "Topic",
+      "help": "(without prefix)",
+      "sm": 12
+    },
+    "_publish": {
+      "newLine": true,
+      "type": "header",
+      "text": "publish",
+      "sm": 12
+    },
+    "publish": {
+      "newLine": true,
+      "label": "enabled",
+      "type": "checkbox",
+      "default": false,
+      "sm": 2
+    },
+    "pubChangesOnly": {
+      "disabled": "!data.publish",
+      "label": "changes only",
+      "type": "checkbox",
+      "default": false,
+      "sm": 3
+    },
+    "pubAsObject": {
+      "disabled": "!data.publish",
+      "label": "as object",
+      "type": "checkbox",
+      "default": false,
+      "sm": 2
+    },
+    "qos": {
+      "disabled": "!data.publish",
+      "label": "QoS",
+      "type": "select",
+      "default": false,
+      "options": [
+        {"label": "At most once - 0", "value": 0},
+        {"label": "At least once - 1", "value": 1},
+        {"label": "Exactly once - 2", "value": 2}
+      ],
+      "sm": 3
+    },
+    "retain": {
+      "disabled": "!data.publish",
+      "label": "retain",
+      "type": "checkbox",
+      "default": false,
+      "sm": 2
+    },
+    "_subscribe": {
+      "newLine": true,
+      "type": "header",
+      "text": "subscribe",
+      "sm": 12
+    },
+    "subscribe": {
+      "newLine": true,
+      "label": "enabled",
+      "type": "checkbox",
+      "default": false,
+      "sm": 2
+    },
+    "subChangesOnly": {
+      "disabled": "!data.subscribe",
+      "label": "changes only",
+      "type": "checkbox",
+      "default": false,
+      "sm": 3
+    },
+    "subAsObject": {
+      "disabled": "!data.subscribe",
+      "label": "as object",
+      "type": "checkbox",
+      "default": false,
+      "sm": 2
+    },
+    "subQos": {
+      "disabled": "!data.subscribe",
+      "label": "QoS",
+      "type": "select",
+      "default": false,
+      "options": [
+        {"label": "At most once - 0", "value": 0},
+        {"label": "At least once - 1", "value": 1},
+        {"label": "Exactly once - 2", "value": 2}
+      ],
+      "sm": 3
+    },
+    "setAck": {
+      "disabled": "!data.subscribe",
+      "label": "ack",
+      "type": "checkbox",
+      "default": false,
+      "sm": 2
+    }
+  }
+}
