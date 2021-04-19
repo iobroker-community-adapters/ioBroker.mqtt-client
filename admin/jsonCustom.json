@@ -1,4 +1,84 @@
 {
+  "i18n": {
+    "enabled": {
+      "en": "enabled",
+      "de": "aktiviert",
+      "ru": "включен",
+      "pt": "ativado",
+      "nl": "ingeschakeld",
+      "fr": "activée",
+      "it": "abilitato",
+      "es": "habilitado",
+      "pl": "aktywowany",
+      "zh-cn": "活性"
+    },
+    "changes only": {
+      "en": "changes only",
+      "de": "nur Änderungen",
+      "ru": "только изменения",
+      "pt": "muda apenas",
+      "nl": "alleen wijzigingen",
+      "fr": "changements seulement",
+      "it": "solo modifiche",
+      "es": "solo cambios",
+      "pl": "tylko zmiany",
+      "zh-cn": "仅更改"
+    },
+    "as object": {
+      "en": "as object",
+      "de": "als Objekt",
+      "ru": "как объект",
+      "pt": "como objeto",
+      "nl": "als object",
+      "fr": "comme objet",
+      "it": "come oggetto",
+      "es": "como objeto",
+      "pl": "jako przedmiot",
+      "zh-cn": "作为对象"
+    },
+    "without prefix": {
+      "en": "without prefix",
+      "de": "ohne Präfix",
+      "ru": "без префикса",
+      "pt": "sem prefixo",
+      "nl": "zonder voorvoegsel",
+      "fr": "sans préfixe",
+      "it": "senza prefisso",
+      "es": "sin prefijo",
+      "pl": "bez prefiksu",
+      "zh-cn": "无前缀"
+    },
+    "retain": {
+      "en": "retain",
+      "de": "retain",
+      "ru": "retain",
+      "pt": "retain",
+      "nl": "retain",
+      "fr": "retain",
+      "pl": "retain",
+      "zh-cn": "retain"
+    },
+    "publish": {
+      "en": "publish",
+      "de": "publish",
+      "ru": "publish",
+      "pt": "publish",
+      "nl": "publish",
+      "fr": "publish",
+      "pl": "publikować",
+      "zh-cn": "发布"
+    },
+    "QoS": {
+      "en": "QoS",
+      "de": "QoS",
+      "ru": "QoS",
+      "pt": "QoS",
+      "nl": "QoS",
+      "fr": "QoS",
+      "pl": "QoS",
+      "zh-cn": "QoS"
+    }
+  },
   "items": {
     "topic": {
       "type": "topic",
@@ -39,9 +119,18 @@
       "type": "select",
       "default": false,
       "options": [
-        {"label": "At most once - 0", "value": 0},
-        {"label": "At least once - 1", "value": 1},
-        {"label": "Exactly once - 2", "value": 2}
+        {
+          "label": "At most once - 0",
+          "value": 0
+        },
+        {
+          "label": "At least once - 1",
+          "value": 1
+        },
+        {
+          "label": "Exactly once - 2",
+          "value": 2
+        }
       ],
       "sm": 3
     },
@@ -85,9 +174,18 @@
       "type": "select",
       "default": false,
       "options": [
-        {"label": "At most once - 0", "value": 0},
-        {"label": "At least once - 1", "value": 1},
-        {"label": "Exactly once - 2", "value": 2}
+        {
+          "label": "At most once - 0",
+          "value": 0
+        },
+        {
+          "label": "At least once - 1",
+          "value": 1
+        },
+        {
+          "label": "Exactly once - 2",
+          "value": 2
+        }
       ],
       "sm": 3
     },
