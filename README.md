@@ -68,7 +68,7 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.3.2 (2021-04-19)
 * (bluefox) Added support of admin5
 
 ### 1.3.1 (2020-03-17)
