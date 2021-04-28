@@ -592,7 +592,7 @@ class MqttClient extends utils.Adapter {
 		if (custom[id]) {
 			custom[id].state = state;
 
-			if (custom[id].enabled && custom[id].publish &&
+			if (state && custom[id].enabled && custom[id].publish &&
 				// prevent republishing to same broker
 				state.from !== 'system.adapter.' + this.namespace) {
 				this.publish(id, state);
