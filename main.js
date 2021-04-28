@@ -251,6 +251,28 @@ class MqttClient extends utils.Adapter {
 		}
 	}
 
+	unpublish(id) {
+		if (client) {
+			const custom = _context.custom;
+			const settings = custom[id];
+			if (!settings) return false;
+
+			custom[id].pubState = null;
+			this.log.debug('unpublishing ' + id);
+
+			let topic = settings.topic;
+			//add outgoing prefix
+			if (this.config.outbox) {
+				topic = this.config.outbox + '/' + topic;
+			}
+
+			client.publish(topic, null, { qos: settings.qos, retain: false }, () =>
+				this.log.debug('successfully unpublished ' + id));
+
+			return true;
+		}
+	}
+
 	subscribe(topics, callback) {
 		if (client) {
 			let subTopics = {};
@@ -592,10 +614,14 @@ class MqttClient extends utils.Adapter {
 		if (custom[id]) {
 			custom[id].state = state;
 
-			if (state && custom[id].enabled && custom[id].publish &&
-				// prevent republishing to same broker
-				state.from !== 'system.adapter.' + this.namespace) {
-				this.publish(id, state);
+			if (custom[id].enabled && custom[id].publish) {
+				if (!state) {
+					// The state was deleted/expired, make sure it is no longer retained
+					this.unpublish(id);
+				} else if (state.from !== 'system.adapter.' + this.namespace) {
+					// prevent republishing to same broker
+					this.publish(id, state);
+				}
 			}
 		}
 	}
