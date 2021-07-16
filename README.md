@@ -72,6 +72,8 @@ default: state-ID converted to a mqtt topic.
 ### __WORK IN PROGRESS__
 * IMPORTANT: This adapter now required at least js-controller 2.0.0
 * (Apollon77) js-controller 3.3 optimizations
+* (AlCalzone) Unpublish expired states
+* (AlCalzone) Only handle stat values if state exists
 
 ### 1.3.2 (2021-04-19)
 * (bluefox) Added support of admin5
