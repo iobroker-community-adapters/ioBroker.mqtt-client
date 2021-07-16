@@ -68,6 +68,11 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
+
+### __WORK IN PROGRESS__
+* IMPORTANT: This adapter now required at least js-controller 2.0.0
+* (Apollon77) js-controller 3.3 optimizations
+
 ### 1.3.2 (2021-04-19)
 * (bluefox) Added support of admin5
 
@@ -122,7 +127,7 @@ default: state-ID converted to a mqtt topic.
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2016-2020 Pmant
+Copyright (c) 2016-2021 Pmant
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

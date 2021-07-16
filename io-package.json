@@ -66,7 +66,14 @@
             "1.1.1": {
                 "en": "small fixes",
                 "de": "kleine Ausbesserungen",
-                "ru": "небольшие исправления"
+                "ru": "небольшие исправления",
+                "pt": "pequenas correções",
+                "nl": "kleine reparaties",
+                "fr": "petites corrections",
+                "it": "piccole correzioni",
+                "es": "pequeñas correcciones",
+                "pl": "drobne poprawki",
+                "zh-cn": "小修正"
             },
             "1.1.0": {
                 "en": "Translations\nUpdate of MQTT module",
@@ -76,7 +83,9 @@
                 "nl": "vertaalwerk\nUpdate van de MQTT-module",
                 "fr": "Traductions\nMise à jour du module MQTT",
                 "it": "Traduzioni\nAggiornamento del modulo MQTT",
-                "es": "Traducciones\nActualización del módulo MQTT"
+                "es": "Traducciones\nActualización del módulo MQTT",
+                "pl": "Tłumaczenia\n",
+                "zh-cn": "翻译\n"
             }
         },
         "authors": [
@@ -105,10 +114,21 @@
         "supportStopInstance": true,
         "dependencies": [
             {
-                "js-controller": ">=1.5.14"
+                "js-controller": ">=2.0.0"
             }
         ],
-        "jsonCustom": true
+        "plugins": {
+            "sentry": {
+                "dsn": "https://0bce9946ef3348dc9ef31ee6442370f2@sentry.iobroker.net/142"
+            }
+        },
+        "adminUI": {
+            "custom": "json",
+            "config": "materialize"
+        },
+        "connectionType": "local",
+        "dataSource": "push",
+        "tier": 2
     },
     "native": {
         "host": "",
