@@ -44,7 +44,7 @@
   "main": "main.js",
   "scripts": {
     "release": "release-script",
-    "test:js": "mocha --opts test/mocha.custom.opts",
+    "test:js": "mocha --exit",
     "test:package": "mocha test/package --exit",
     "test:unit": "mocha test/unit --exit",
     "test:integration": "mocha test/integration --exit",
