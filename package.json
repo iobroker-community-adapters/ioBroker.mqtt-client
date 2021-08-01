@@ -17,7 +17,7 @@
     "url": "https://github.com/Pmant/ioBroker.mqtt-client"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.5.0",
+    "@iobroker/adapter-core": "^2.5.1",
     "mqtt": "^2.18.8"
   },
   "devDependencies": {
