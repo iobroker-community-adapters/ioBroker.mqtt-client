@@ -68,6 +68,10 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
+### __WORK IN PROGRESS__
+* IMPORTANT: This adapter now required at least js-controller 3.3.x
+* (Apollon77) Fix crash cases
+
 ### 1.4.1 (2022-01-26)
 * (bluefox) js-controller 3.3 optimizations
 
