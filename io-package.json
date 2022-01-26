@@ -1,6 +1,7 @@
 {
   "common": {
     "name": "mqtt-client",
+    "title": "MQTT client",
     "titleLang": {
       "en": "MQTT client",
       "de": "MQTT-Client",
@@ -25,19 +26,19 @@
       "pl": "Synchronizacja z brokerami MQTT",
       "zh-cn": "与MQTT经纪人同步"
     },
-    "version": "1.4.1",
+    "version": "1.5.0",
     "news": {
-      "1.4.1": {
-        "en": "js-controller 3.3 optimizations",
-        "de": "js-controller 3.3 Optimierungen",
-        "ru": "оптимизация js-контроллера 3.3",
-        "pt": "Otimizações do js-controller 3.3",
-        "nl": "js-controller 3.3 optimalisaties",
-        "fr": "optimisations js-controller 3.3",
-        "it": "js-controller 3.3 ottimizzazioni",
-        "es": "js-controller 3.3 optimizaciones",
-        "pl": "js-controller 3.3 optymalizacje",
-        "zh-cn": "js-controller 3.3 优化"
+      "1.5.0": {
+        "en": "IMPORTANT: This adapter now required at least js-controller 3.3.x\nFix crash cases",
+        "de": "WICHTIG: Dieser Adapter benötigt jetzt mindestens js-controller 3.3.x\nAbsturzfälle beheben",
+        "ru": "ВАЖНО: для этого адаптера теперь требуется как минимум js-controller 3.3.x\nИсправить случаи сбоев",
+        "pt": "IMPORTANTE: Este adaptador agora exigia pelo menos js-controller 3.3.x\nCorrigir casos de falha",
+        "nl": "BELANGRIJK: voor deze adapter was nu minimaal js-controller 3.3.x . vereist\nCrashgevallen oplossen",
+        "fr": "IMPORTANT : Cet adaptateur nécessite désormais au moins js-controller 3.3.x\nRésoudre les cas de crash",
+        "it": "IMPORTANTE: questo adattatore ora richiedeva almeno js-controller 3.3.x\nRisolvi i casi di crash",
+        "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 3.3.x\nSolucionar casos de bloqueo",
+        "pl": "WAŻNE: Ten adapter wymaga teraz przynajmniej kontrolera js 3.3.x\nNapraw przypadki awarii",
+        "zh-cn": "重要提示：此适配器现在至少需要 js-controller 3.3.x\n修复崩溃案例"
       },
       "1.4.0": {
         "en": "IMPORTANT: This adapter now required at least js-controller 2.0.0\njs-controller 3.3 optimizations\nUnpublish expired states\nOnly handle stat values if state exists",
@@ -181,6 +182,17 @@
     "subQos": 0,
     "setAck": true
   },
+  "objects": [
+    {
+      "_id": "_design/custom",
+      "language": "javascript",
+      "views": {
+        "state": {
+          "map": "function(doc) { doc.type === 'state' && doc.common && doc.common.custom && emit(doc._id, doc.common.custom) }"
+        }
+      }
+    }
+  ],
   "instanceObjects": [
     {
       "_id": "info",
