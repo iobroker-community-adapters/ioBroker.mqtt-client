@@ -68,7 +68,7 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.4.1 (2022-01-26)
 * (bluefox) js-controller 3.3 optimizations
 
 ### 1.4.0 (2021-07-16)
