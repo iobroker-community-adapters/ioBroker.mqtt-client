@@ -1,6 +1,7 @@
 {
     "common": {
         "name": "mqtt-client",
+        "title": "MQTT client",
         "titleLang": {
             "en": "MQTT client",
             "de": "MQTT-Client",
@@ -126,7 +127,7 @@
         "supportStopInstance": true,
         "dependencies": [
             {
-                "js-controller": ">=2.0.0"
+                "js-controller": ">=3.3.0"
             }
         ],
         "plugins": {

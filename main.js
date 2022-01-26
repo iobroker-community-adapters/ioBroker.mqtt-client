@@ -318,8 +318,8 @@ class MqttClient extends utils.Adapter {
 	}
 
 	stringToVal(custom, id, val) {
-		if (val === 'undefined') return undefined;
-		if (val === 'null') return null;
+		if (val === 'undefined' || val === undefined) return undefined;
+		if (val === 'null' || val === null) return null;
 		if (!custom[id] || !custom[id].type || custom[id].type === 'string' || custom[id].type === 'mixed') return val;
 
 		if (custom[id].type === 'number') {
@@ -414,7 +414,7 @@ class MqttClient extends utils.Adapter {
 				const _url  = (!this.config.ssl ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':' + this.config.password + '@') : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
 				const __url = (!this.config.ssl ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':*******************@')          : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
 
-				this.getObjectView('custom', 'state', {}, (err, doc) => {
+				this.getObjectView('system', 'custom', {}, (err, doc) => {
 					const ids = [];
 					if (doc && doc.rows) {
 						for (let i = 0, l = doc.rows.length; i < l; i++) {
