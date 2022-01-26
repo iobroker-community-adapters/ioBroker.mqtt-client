@@ -109,7 +109,7 @@ class MqttClient extends utils.Adapter {
 		//if topic2id[topic] does not exist automatically convert topic to id with guiding adapter namespace
 		const id = topic2id[topic] || this.convertTopic2ID(topic, this.namespace);
 
-		this.log.debug('for id ' + id + '=>' + JSON.stringify(custom[id]));
+		this.log.debug(`for id ${id}=>${JSON.stringify(custom[id])}`);
 
 		if (topic2id[topic] && custom[id] && custom[id]) {
 
@@ -245,7 +245,7 @@ class MqttClient extends utils.Adapter {
 			}
 
 			client.publish(topic, message, { qos: settings.qos, retain: settings.retain }, () =>
-				this.log.debug('successfully published ' + id + ': ' + JSON.stringify({ topic: topic, message: message })));
+				this.log.debug(`successfully published ${id}: ${JSON.stringify({topic: topic, message: message})}`));
 
 			return true;
 		}
@@ -318,9 +318,15 @@ class MqttClient extends utils.Adapter {
 	}
 
 	stringToVal(custom, id, val) {
-		if (val === 'undefined') return undefined;
-		if (val === 'null') return null;
-		if (!custom[id] || !custom[id].type || custom[id].type === 'string' || custom[id].type === 'mixed') return val;
+		if (val === 'undefined') {
+			return undefined;
+		}
+		if (val === 'null') {
+			return null;
+		}
+		if (!custom[id] || !custom[id].type || custom[id].type === 'string' || custom[id].type === 'mixed') {
+			return val;
+		}
 
 		if (custom[id].type === 'number') {
 			if (val === true  || val === 'true')  val = 1;
@@ -353,7 +359,9 @@ class MqttClient extends utils.Adapter {
 	}
 
 	convertTopic2ID(topic, namespace) {
-		if (!topic) return topic;
+		if (!topic) {
+			return topic;
+		}
 
 		//replace slashes with dots and spaces with underscores
 		topic = topic.replace(/\//g, '.').replace(/\s/g, '_');
@@ -411,10 +419,10 @@ class MqttClient extends utils.Adapter {
 				const topic2id = _context.topic2id;
 				const addTopics = _context.addTopics;
 
-				const _url  = (!this.config.ssl ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':' + this.config.password + '@') : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
-				const __url = (!this.config.ssl ? 'mqtt' : 'mqtts') + '://' + (this.config.username ? (this.config.username + ':*******************@')          : '') + this.config.host + (this.config.port ? (':' + this.config.port) : '') + '?clientId=' + this.config.clientId;
+				const _url  = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':' + this.config.password + '@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
+				const __url = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
 
-				this.getObjectView('custom', 'state', {}, (err, doc) => {
+				this.getObjectView('system', 'custom', {}, (err, doc) => {
 					const ids = [];
 					if (doc && doc.rows) {
 						for (let i = 0, l = doc.rows.length; i < l; i++) {
@@ -456,7 +464,7 @@ class MqttClient extends utils.Adapter {
 						let will = undefined;
 
 						if (this.config.lastWillTopic && this.config.lastWillMessage) {
-							this.log.info('Try to connect to ' + __url + ' with lwt "' + this.config.lastWillTopic + '"');
+							this.log.info(`Try to connect to ${__url} with lwt "${this.config.lastWillTopic}"`);
 
 							will = {
 								topic:   this.config.lastWillTopic,
@@ -578,9 +586,7 @@ class MqttClient extends utils.Adapter {
 				this.iobSubscribe(id);
 			}
 
-			this.log.info('enabled syncing of ' + id +
-				' (publish/subscribe:' + custom[id].publish.toString() +
-				'/' + custom[id].subscribe.toString() + ')');
+			this.log.info(`enabled syncing of ${id} (publish/subscribe:${custom[id].publish.toString()}/${custom[id].subscribe.toString()})`);
 		} else if (custom[id]) {
 			const topic = custom[id].topic;
 

@@ -126,7 +126,7 @@
         "supportStopInstance": true,
         "dependencies": [
             {
-                "js-controller": ">=2.0.0"
+                "js-controller": ">=3.3.0"
             }
         ],
         "plugins": {
@@ -169,17 +169,6 @@
         "subQos": 0,
         "setAck": true
     },
-    "objects": [
-        {
-            "_id": "_design/custom",
-            "language": "javascript",
-            "views": {
-                "state": {
-                    "map": "function(doc) { doc.type === 'state' && doc.common && doc.common.custom && emit(doc._id, doc.common.custom) }"
-                }
-            }
-        }
-    ],
     "instanceObjects": [
         {
             "_id": "info",
