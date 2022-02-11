@@ -14,7 +14,7 @@ The ```on connect message``` is published to the ```on connect topic``` every ti
 
 ### last will topic and message
 The ```last will message``` is published to the ```last will topic``` every time the client connects or reconnects to the server.
-The Server will store this message and send it to its subscribers when the client disconnects.
+The Server will store this message and send it to its subscribers when the client disconnects unexpectedly.
 
 ### subscriptions
 Comma separated list of topics that are not covered by existing states.
