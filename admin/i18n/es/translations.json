@@ -16,6 +16,8 @@
     "note": "La configuración del cliente MQTT se debe realizar para cada estado individualmente",
     "on connect message": "en conectar mensaje",
     "on connect topic": "sobre el tema de conexión",
+    "on disconnect message": "mensaje enviado al desconectar",
+    "on disconnect topic": "tema utilizado al desconectar",
     "password": "contraseña",
     "port": "Puerto",
     "prefix for publishing topics": "prefijo para publicar temas",

@@ -16,6 +16,8 @@
     "note": "MQTT-client settings must be done for every state individually",
     "on connect message": "On connect message",
     "on connect topic": "On connect topic",
+    "on disconnect message": "message sent when disconnecting",
+    "on disconnect topic": "topic used when disconnecting",
     "password": "Password",
     "port": "Port",
     "prefix for publishing topics": "Prefix for publishing topics",

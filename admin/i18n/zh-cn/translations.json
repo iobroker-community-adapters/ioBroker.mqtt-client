@@ -16,6 +16,8 @@
     "note": "必须为每个状态分别完成MQTT客户端设置",
     "on connect message": "在连接消息",
     "on connect topic": "关于连接主题",
+    "on disconnect message": "断开连接时发送的消息",
+    "on disconnect topic": "断开连接时使用的主题",
     "password": "密码",
     "port": "港口",
     "prefix for publishing topics": "发布主题的前缀",

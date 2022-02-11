@@ -16,6 +16,8 @@
     "note": "MQTT-client Einstellungen müssen für jeden State einzeln gemacht werden",
     "on connect message": "Meldung bei Verbindung",
     "on connect topic": "Topic bei Verbindung",
+    "on disconnect message": "Nachricht, die beim Trennen gesendet wird",
+    "on disconnect topic": "Topic, welches beim Trennen verwendet wird",
     "password": "Kennwort",
     "port": "Port",
     "prefix for publishing topics": "Prefix for publishing topics",
