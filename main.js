@@ -503,8 +503,8 @@ class MqttClient extends utils.Adapter {
 	}
 
 	/**
-     * Is called when databases are this. and adapter received configuration.
-     */
+	 * Is called when databases are this. and adapter received configuration.
+	 */
 	async onReady() {
 
 		client = null;
@@ -522,7 +522,7 @@ class MqttClient extends utils.Adapter {
 		if (adapterFinished) {
 			return;
 		}
-		if (this.config.onDisconnectTopic && this.config.onDisconnectMessage) {
+		if (client && this.config.onDisconnectTopic && this.config.onDisconnectMessage) {
 			const __url = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
 			let topic = this.config.onDisconnectTopic;
 			//add outgoing prefix
@@ -545,7 +545,7 @@ class MqttClient extends utils.Adapter {
 	 * @param {() => void} callback
 	 */
 	end(callback) {
-		this.log.info(`Disconnecting from ${__url}`);
+		this.log.info(`Disconnecting`);
 		client && client.end();
 		callback && setTimeout(callback, 200);
 		adapterFinished = true;
