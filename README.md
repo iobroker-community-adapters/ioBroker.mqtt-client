@@ -71,6 +71,10 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
+### __WORK IN PROGRESS__
+* (Pmant) fix LWT documentation
+* (Pmant) optionally publish a message when disconnecting gracefully
+
 ### 1.5.0 (2022-01-26)
 * IMPORTANT: This adapter now required at least js-controller 3.3.x
 * (Apollon77) Fix crash cases
