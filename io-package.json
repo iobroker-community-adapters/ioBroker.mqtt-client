@@ -164,6 +164,8 @@
     "password": "",
     "onConnectTopic": "",
     "onConnectMessage": "",
+    "onDisconnectTopic": "",
+    "onDisconnectMessage": "",
     "lastWillTopic": "",
     "lastWillMessage": "",
     "subscriptions": "",
