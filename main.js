@@ -13,10 +13,6 @@ let _context = {
 	addedTopics: {},
 };
 
-let _subscribes = [];
-let _connected = false;
-let client = null;
-let adapterFinished = false;
 
 class MqttClient extends utils.Adapter {
 
@@ -34,6 +30,10 @@ class MqttClient extends utils.Adapter {
 		this.on('stateChange',  this.onStateChange.bind(this));
 		this.on('message',      this.onMessage.bind(this));
 		this.on('unload',       this.onUnload.bind(this));
+		this._connected = false;
+		this.client = null;
+		this._subscribes = [];
+		this.adapterFinished = false;
 	}
 
 	connect() {
@@ -48,11 +48,11 @@ class MqttClient extends utils.Adapter {
 			let topic = this.config.onConnectTopic;
 
 			//add outgoing prefix
-			if (this.config.outbox) {
-				topic = this.config.outbox + '/' + topic;
+			if (this.config.outbox.trim()) {
+				topic = this.config.outbox.trim() + '/' + topic;
 			}
 
-			client.publish(topic, this.config.onConnectMessage, { qos: 2, retain: true }, () =>
+			this.client.publish(topic, this.config.onConnectMessage, { qos: 2, retain: true }, () =>
 				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onConnectMessage })));
 		}
 
@@ -64,6 +64,8 @@ class MqttClient extends utils.Adapter {
 			this.subscribe(subTopics, () =>
 				this.log.debug('subscribed to: ' + JSON.stringify(subTopics)));
 		}
+
+		this.log.debug(`subscribing to ${Object.keys(addTopics).length} additional topics: ${JSON.stringify(addTopics)}`);
 		if (Object.keys(addTopics).length) {
 			this.subscribe(addTopics, () =>
 				this.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics)));
@@ -75,16 +77,16 @@ class MqttClient extends utils.Adapter {
 	}
 
 	disconnect() {
-		if (_connected) {
-			_connected = false;
+		if (this._connected) {
+			this._connected = false;
 			this.setState('info.connection', false, true);
 		}
 		this.log.warn('disconnected from broker');
 	}
 
 	offline() {
-		if (_connected) {
-			_connected = false;
+		if (this._connected) {
+			this._connected = false;
 			this.setState('info.connection', false, true);
 		}
 		this.log.warn('client offline');
@@ -102,8 +104,8 @@ class MqttClient extends utils.Adapter {
 		this.log.debug('received message ' + msg);
 
 		//remove inbox prefix if exists
-		if (this.config.inbox && topic.substring(0, this.config.inbox.length) === this.config.inbox) {
-			topic = topic.substr(this.config.inbox.length + 1);
+		if (this.config.inbox.trim() && topic.substring(0, this.config.inbox.trim().length) === this.config.inbox.trim()) {
+			topic = topic.substr(this.config.inbox.trim().length + 1);
 		}
 
 		//if topic2id[topic] does not exist automatically convert topic to id with guiding adapter namespace
@@ -174,7 +176,7 @@ class MqttClient extends utils.Adapter {
 						return false;
 					}
 					// todo: !== correct???
-					if (this.config.inbox === this.config.outbox &&
+					if (this.config.inbox.trim() === this.config.outbox.trim() &&
 						custom[id].publish &&
 						!obj.hasOwnProperty('ts') &&
 						!obj.hasOwnProperty('lc') &&
@@ -210,7 +212,7 @@ class MqttClient extends utils.Adapter {
 
 			if (state && this.val2String(state.val) === msg) {
 				//this.log.debug('setVAL: ' + JSON.stringify(state) + '; value: ' + this.val2String(state.val) + '=> ' + msg);
-				if (this.config.inbox === this.config.outbox && custom[id].publish) {
+				if (this.config.inbox.trim() === this.config.outbox.trim() && custom[id].publish) {
 					this.log.debug('value did not change (loop protection)');
 					return false;
 				} else if (custom[id].subChangesOnly) {
@@ -226,7 +228,7 @@ class MqttClient extends utils.Adapter {
 	}
 
 	publish(id, state) {
-		if (client) {
+		if (this.client) {
 			const custom = _context.custom;
 			const settings = custom[id];
 			if (!settings || !state) return false;
@@ -240,11 +242,11 @@ class MqttClient extends utils.Adapter {
 			const message = settings.pubAsObject ? JSON.stringify(state) : this.val2String(state.val);
 
 			//add outgoing prefix
-			if (this.config.outbox) {
-				topic = this.config.outbox + '/' + topic;
+			if (this.config.outbox.trim()) {
+				topic = this.config.outbox.trim() + '/' + topic;
 			}
 
-			client.publish(topic, message, { qos: settings.qos, retain: settings.retain }, () =>
+			this.client.publish(topic, message, { qos: settings.qos, retain: settings.retain }, () =>
 				this.log.debug(`successfully published ${id}: ${JSON.stringify({topic: topic, message: message})}`));
 
 			return true;
@@ -252,7 +254,7 @@ class MqttClient extends utils.Adapter {
 	}
 
 	unpublish(id) {
-		if (client) {
+		if (this.client) {
 			const custom = _context.custom;
 			const settings = custom[id];
 			if (!settings) return false;
@@ -262,11 +264,11 @@ class MqttClient extends utils.Adapter {
 
 			let topic = settings.topic;
 			//add outgoing prefix
-			if (this.config.outbox) {
-				topic = this.config.outbox + '/' + topic;
+			if (this.config.outbox.trim()) {
+				topic = this.config.outbox.trim() + '/' + topic;
 			}
 
-			client.publish(topic, null, { qos: settings.qos, retain: false }, () =>
+			this.client.publish(topic, null, { qos: settings.qos, retain: false }, () =>
 				this.log.debug('successfully unpublished ' + id));
 
 			return true;
@@ -274,41 +276,42 @@ class MqttClient extends utils.Adapter {
 	}
 
 	subscribe(topics, callback) {
-		if (client) {
+		if (this.client) {
 			let subTopics = {};
 
-			if (this.config.inbox) {
-				//add inbox prefix to all subscriptions
-				const keys = Object.keys(topics);
-				for (let j = 0; j < keys.length; j++) {
-					const key = this.config.inbox + '/' + keys[j];
-					subTopics[key] = topics[keys[j]];
-				}
-			} else {
-				subTopics = topics;
+			for (const key of Object.keys(topics)) {
+				const key_final = this.config.inbox.trim() ? this.config.inbox.trim() + '/' + key : key;
+				subTopics[key_final] = {qos: topics[key_final]};
 			}
 
 			//this.log.debug('Subscribed: ' + subTopics);
-			client.subscribe(subTopics, callback);
+			this.log.debug(`trying to subscribe to ${Object.keys(subTopics).length} topics`);
+			this.client.subscribe(subTopics, (err, granted) => {
+				if (!err)
+					this.log.debug(`successfully subscribed to ${granted.length} topics`);
+				else
+					this.log.debug(`error subscribing to ${Object.keys(subTopics).length} topics`)
+				callback();
+			});
 		}
 	}
 
 	unsubscribe(topic, callback) {
-		client && client.unsubscribe(topic, callback);
+		this.client && this.client.unsubscribe(topic, callback);
 	}
 
 	iobSubscribe(id) {
-		if (!_subscribes.includes(id)) {
-			_subscribes.push(id);
-			_subscribes.sort();
+		if (!this._subscribes.includes(id)) {
+			this._subscribes.push(id);
+			this._subscribes.sort();
 			this.subscribeForeignStates(id);
 		}
 	}
 
 	iobUnsubscribe(id) {
-		const pos = _subscribes.indexOf(id);
+		const pos = this._subscribes.indexOf(id);
 		if (pos !== -1) {
-			_subscribes.splice(pos, 1);
+			this._subscribes.splice(pos, 1);
 			this.unsubscribeForeignStates(id);
 		}
 	}
@@ -452,14 +455,17 @@ class MqttClient extends utils.Adapter {
 								this.iobSubscribe(id);
 							}
 
-							this.log.info('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id].publish.toString() + '/' + custom[id].subscribe.toString() + ')');
+							this.log.debug('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id].publish.toString() + '/' + custom[id].subscribe.toString() + ')');
 						});
 
-						this.config.subscriptions && this.config.subscriptions.split(',').forEach(topic => {
-							if (topic && topic.trim()) {
-								addTopics[topic.trim()] = 0; // QoS
+						if (this.config.subscriptions) {
+							for (const topic of this.config.subscriptions.split(',')) {
+								if (topic && topic.trim()) {
+									addTopics[topic.trim()] = 0; // QoS
+								}
 							}
-						});
+						}
+						this.log.debug(`found ${Object.keys(addTopics).length} additional topic to subscribe to`);
 
 						let will = undefined;
 
@@ -476,7 +482,7 @@ class MqttClient extends utils.Adapter {
 							this.log.info('Try to connect to ' + __url);
 						}
 
-						client = mqtt.connect(_url, {
+						this.client = mqtt.connect(_url, {
 							host:            this.config.host,
 							port:            this.config.port,
 							ssl:             this.config.ssl,
@@ -488,12 +494,12 @@ class MqttClient extends utils.Adapter {
 							will
 						});
 
-						client.on('connect',    this.connect.bind(this));
-						client.on('reconnect',  this.reconnect.bind(this));
-						client.on('disconnect', this.disconnect.bind(this));
-						client.on('offline',    this.offline.bind(this));
-						client.on('message',    this.message.bind(this));
-						client.on('error',      this.error.bind(this));
+						this.client.on('connect',    this.connect.bind(this));
+						this.client.on('reconnect',  this.reconnect.bind(this));
+						this.client.on('disconnect', this.disconnect.bind(this));
+						this.client.on('offline',    this.offline.bind(this));
+						this.client.on('message',    this.message.bind(this));
+						this.client.on('error',      this.error.bind(this));
 					});
 				});
 			}
@@ -506,11 +512,6 @@ class MqttClient extends utils.Adapter {
 	 * Is called when databases are this. and adapter received configuration.
 	 */
 	async onReady() {
-
-		client = null;
-		_subscribes = [];
-		_connected = false;
-
 		this.main();
 	}
 
@@ -519,18 +520,18 @@ class MqttClient extends utils.Adapter {
 	 * @param {() => void} callback
 	 */
 	finish(callback) {
-		if (adapterFinished) {
+		if (this.adapterFinished) {
 			return;
 		}
-		if (client && this.config.onDisconnectTopic && this.config.onDisconnectMessage) {
+		if (this.client && this.config.onDisconnectTopic && this.config.onDisconnectMessage) {
 			const __url = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
 			let topic = this.config.onDisconnectTopic;
 			//add outgoing prefix
-			if (this.config.outbox) {
-				topic = this.config.outbox + '/' + topic;
+			if (this.config.outbox.trim()) {
+				topic = this.config.outbox.trim() + '/' + topic;
 			}
 			this.log.info(`Disconnecting from ${__url} with message "${this.config.onDisconnectMessage}" on topic "${topic}"`);
-			client.publish(topic, this.config.onDisconnectMessage, { qos: 2, retain: true }, () => {
+			this.client.publish(topic, this.config.onDisconnectMessage, { qos: 2, retain: true }, () => {
 				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onDisconnectTopic }));
 				this.end(callback);
 			});
@@ -546,9 +547,9 @@ class MqttClient extends utils.Adapter {
 	 */
 	end(callback) {
 		this.log.info(`Disconnecting`);
-		client && client.end();
+		this.client && this.client.end();
 		callback && setTimeout(callback, 200);
-		adapterFinished = true;
+		this.adapterFinished = true;
 	}
 
 	/**
@@ -595,26 +596,26 @@ class MqttClient extends utils.Adapter {
 				sub[custom[id].topic] = custom[id].subQos;
 
 				this.subscribe(sub, () =>
-					this.log.info('subscribed to ' + JSON.stringify(sub)));
+					this.log.debug('subscribed to ' + JSON.stringify(sub)));
 			} else {
 				delete subTopics[custom[id].topic];
 				delete topic2id[custom[id].topic];
 				this.iobUnsubscribe(id);
 
 				this.unsubscribe(custom[id].topic, () =>
-					this.log.info('unsubscribed from ' + custom[id].topic));
+					this.log.debug('unsubscribed from ' + custom[id].topic));
 			}
 
 			if (custom[id].enabled) {
 				this.iobSubscribe(id);
 			}
 
-			this.log.info(`enabled syncing of ${id} (publish/subscribe:${custom[id].publish.toString()}/${custom[id].subscribe.toString()})`);
+			this.log.debug(`enabled syncing of ${id} (publish/subscribe:${custom[id].publish.toString()}/${custom[id].subscribe.toString()})`);
 		} else if (custom[id]) {
 			const topic = custom[id].topic;
 
 			this.unsubscribe(topic, () =>
-				this.log.info('unsubscribed from ' + topic));
+				this.log.debug('unsubscribed from ' + topic));
 
 			if (subTopics[custom[id].topic]) {
 				delete subTopics[custom[id].topic];
@@ -628,7 +629,7 @@ class MqttClient extends utils.Adapter {
 
 			delete custom[id];
 
-			this.log.info('disabled syncing of ' + id);
+			this.log.debug('disabled syncing of ' + id);
 		}
 	}
 
