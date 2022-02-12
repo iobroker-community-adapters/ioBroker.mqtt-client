@@ -546,10 +546,12 @@ class MqttClient extends utils.Adapter {
 	 * @param {() => void} callback
 	 */
 	end(callback) {
-		this.log.info(`Disconnecting`);
-		this.client && this.client.end();
-		callback && setTimeout(callback, 200);
 		this.adapterFinished = true;
+		this.client && this.client.end(() => {
+			this.log.debug(`closed client`);
+			this.setState('info.connection', false, true);
+			callback && callback();
+		});
 	}
 
 	/**
