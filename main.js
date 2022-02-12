@@ -101,7 +101,6 @@ class MqttClient extends utils.Adapter {
 		const topic2id = _context.topic2id;
 		const addedTopics = _context.addedTopics;
 		msg = msg.toString();
-		this.log.debug('received message ' + msg);
 
 		//remove inbox prefix if exists
 		if (this.config.inbox.trim() && topic.substring(0, this.config.inbox.trim().length) === this.config.inbox.trim()) {
@@ -111,7 +110,7 @@ class MqttClient extends utils.Adapter {
 		//if topic2id[topic] does not exist automatically convert topic to id with guiding adapter namespace
 		const id = topic2id[topic] || this.convertTopic2ID(topic, this.namespace);
 
-		this.log.debug(`for id ${id}=>${JSON.stringify(custom[id])}`);
+		this.log.debug(`received message ${msg} for id ${id}=>${JSON.stringify(custom[id])}`);
 
 		if (topic2id[topic] && custom[id] && custom[id]) {
 
@@ -222,7 +221,7 @@ class MqttClient extends utils.Adapter {
 			}
 			const _state = {val: this.stringToVal(custom, id, msg), ack: custom[id].setAck};
 			this.setForeignState(id, _state);
-			this.log.debug('value set to ' + JSON.stringify(_state));
+			this.log.debug('value of ' + id + ' set to ' + JSON.stringify(_state));
 			return true;
 		});
 	}
