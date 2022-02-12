@@ -16,6 +16,8 @@
     "note": "MQTT-clientinstellingen moeten voor elke status afzonderlijk worden uitgevoerd",
     "on connect message": "bij verbinden bericht",
     "on connect topic": "bij connect topic",
+    "on disconnect message": "bericht verzonden bij loskoppelen",
+    "on disconnect topic": "onderwerp gebruikt bij het verbreken van de verbinding",
     "password": "wachtwoord",
     "port": "haven",
     "prefix for publishing topics": "voorvoegsel voor het publiceren van onderwerpen",

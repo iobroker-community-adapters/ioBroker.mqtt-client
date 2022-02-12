@@ -53,7 +53,7 @@ class MqttClient extends utils.Adapter {
 			}
 
 			client.publish(topic, this.config.onConnectMessage, { qos: 2, retain: true }, () =>
-				this.log.debug('succesfully published ' + JSON.stringify({ topic: topic, message: this.config.onConnectMessage })));
+				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onConnectMessage })));
 		}
 
 		const subTopics = _context.subTopics;
@@ -522,7 +522,30 @@ class MqttClient extends utils.Adapter {
 		if (adapterFinished) {
 			return;
 		}
-		this.log.info('cleaned everything up...');
+		if (this.config.onDisconnectTopic && this.config.onDisconnectMessage) {
+			const __url = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
+			let topic = this.config.onDisconnectTopic;
+			//add outgoing prefix
+			if (this.config.outbox) {
+				topic = this.config.outbox + '/' + topic;
+			}
+			this.log.info(`Disconnecting from ${__url} with message "${this.config.onDisconnectMessage}" on topic "${topic}"`);
+			client.publish(topic, this.config.onDisconnectMessage, { qos: 2, retain: true }, () => {
+				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onDisconnectTopic }));
+				this.end(callback);
+			});
+
+		} else {
+			this.end(callback);
+		}
+	}
+
+	/**
+	 * Is called when adapter shuts down - callback has to be called under any circumstances!
+	 * @param {() => void} callback
+	 */
+	end(callback) {
+		this.log.info(`Disconnecting from ${__url}`);
 		client && client.end();
 		callback && setTimeout(callback, 200);
 		adapterFinished = true;

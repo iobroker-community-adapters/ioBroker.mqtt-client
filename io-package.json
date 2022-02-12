@@ -1,219 +1,221 @@
 {
-  "common": {
-    "name": "mqtt-client",
-    "title": "MQTT client",
-    "titleLang": {
-      "en": "MQTT client",
-      "de": "MQTT-Client",
-      "ru": "MQTT Клиент",
-      "pt": "Cliente MQTT",
-      "nl": "MQTT-klant",
-      "fr": "Client MQTT",
-      "it": "Client MQTT",
-      "es": "Cliente MQTT",
-      "pl": "Klient MQTT",
-      "zh-cn": "MQTT客户端"
+    "common": {
+        "name": "mqtt-client",
+        "title": "MQTT client",
+        "titleLang": {
+            "en": "MQTT client",
+            "de": "MQTT-Client",
+            "ru": "MQTT Клиент",
+            "pt": "Cliente MQTT",
+            "nl": "MQTT-klant",
+            "fr": "Client MQTT",
+            "it": "Client MQTT",
+            "es": "Cliente MQTT",
+            "pl": "Klient MQTT",
+            "zh-cn": "MQTT客户端"
+        },
+        "desc": {
+            "en": "Syncing with MQTT Brokers",
+            "de": "Synchronisierung mit MQTT-Brokern",
+            "ru": "Синхронизация с брокерами MQTT",
+            "pt": "Sincronização com corretores da MQTT",
+            "nl": "Synchroniseren met MQTT-makelaars",
+            "fr": "Synchronisation avec les courtiers MQTT",
+            "it": "Sincronizzazione con i broker MQTT",
+            "es": "Sincronización con intermediarios MQTT",
+            "pl": "Synchronizacja z brokerami MQTT",
+            "zh-cn": "与MQTT经纪人同步"
+        },
+        "version": "1.5.0",
+        "news": {
+            "1.5.0": {
+                "en": "IMPORTANT: This adapter now required at least js-controller 3.3.x\nFix crash cases",
+                "de": "WICHTIG: Dieser Adapter benötigt jetzt mindestens js-controller 3.3.x\nAbsturzfälle beheben",
+                "ru": "ВАЖНО: для этого адаптера теперь требуется как минимум js-controller 3.3.x\nИсправить случаи сбоев",
+                "pt": "IMPORTANTE: Este adaptador agora exigia pelo menos js-controller 3.3.x\nCorrigir casos de falha",
+                "nl": "BELANGRIJK: voor deze adapter was nu minimaal js-controller 3.3.x . vereist\nCrashgevallen oplossen",
+                "fr": "IMPORTANT : Cet adaptateur nécessite désormais au moins js-controller 3.3.x\nRésoudre les cas de crash",
+                "it": "IMPORTANTE: questo adattatore ora richiedeva almeno js-controller 3.3.x\nRisolvi i casi di crash",
+                "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 3.3.x\nSolucionar casos de bloqueo",
+                "pl": "WAŻNE: Ten adapter wymaga teraz przynajmniej kontrolera js 3.3.x\nNapraw przypadki awarii",
+                "zh-cn": "重要提示：此适配器现在至少需要 js-controller 3.3.x\n修复崩溃案例"
+            },
+            "1.4.0": {
+                "en": "IMPORTANT: This adapter now required at least js-controller 2.0.0\njs-controller 3.3 optimizations\nUnpublish expired states\nOnly handle stat values if state exists",
+                "de": "WICHTIG: Dieser Adapter benötigt jetzt mindestens js-controller 2.0.0\njs-Controller 3.3 Optimierungen\nVeröffentlichung abgelaufener Staaten rückgängig machen\nBehandeln Sie Statistikwerte nur, wenn der Zustand existiert",
+                "ru": "ВАЖНО: для этого адаптера теперь требуется как минимум js-controller 2.0.0.\njs-controller 3.3 оптимизации\nОтменить публикацию состояний с истекшим сроком действия\nОбрабатывать значения статистики, только если состояние существует",
+                "pt": "IMPORTANTE: Este adaptador agora requer pelo menos js-controller 2.0.0\nOtimizações do js-controller 3.3\nCancelar a publicação de estados expirados\nSó lida com valores estatísticos se o estado existir",
+                "nl": "BELANGRIJK: voor deze adapter was nu minimaal js-controller 2.0.0 . vereist\njs-controller 3.3 optimalisaties\nPublicatie van verlopen status ongedaan maken\nAlleen stat-waarden verwerken als de status bestaat",
+                "fr": "IMPORTANT : cet adaptateur nécessite désormais au moins js-controller 2.0.0\njs-controller 3.3 optimisations\nAnnuler la publication des états expirés\nNe gérer les valeurs statistiques que si l'état existe",
+                "it": "IMPORTANTE: questo adattatore ora richiede almeno js-controller 2.0.0\nottimizzazioni js-controller 3.3\nAnnulla pubblicazione stati scaduti\nGestire i valori stat solo se lo stato esiste",
+                "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 2.0.0\nOptimizaciones de js-controller 3.3\nAnular la publicación de estados caducados\nSolo maneja valores de estadísticas si el estado existe",
+                "pl": "WAŻNE: Ten adapter wymaga teraz co najmniej kontrolera js 2.0.0\njs-controller 3.3 optymalizacje\nCofnij publikację stanów, które wygasły\nObsługuj tylko wartości statystyk, jeśli stan istnieje",
+                "zh-cn": "重要提示：此适配器现在至少需要 js-controller 2.0.0\njs-controller 3.3 优化\n取消发布过期状态\n如果状态存在，则仅处理统计值"
+            },
+            "1.3.2": {
+                "en": "Added support of admin5",
+                "de": "Unterstützung von admin5 hinzugefügt",
+                "ru": "Добавлена поддержка admin5",
+                "pt": "Adicionado suporte de admin5",
+                "nl": "Ondersteuning toegevoegd voor admin5",
+                "fr": "Ajout de la prise en charge d'admin5",
+                "it": "Aggiunto supporto di admin5",
+                "es": "Soporte agregado de admin5",
+                "pl": "Dodano obsługę admin5",
+                "zh-cn": "增加了对admin5的支持"
+            },
+            "1.3.1": {
+                "en": "mqtt package moved back to 2.x",
+                "de": "Das mqtt-Paket wurde auf 2.x zurückgesetzt",
+                "ru": "пакет mqtt перенесен обратно в 2.x",
+                "pt": "Pacote mqtt retornado para 2.x",
+                "nl": "mqtt-pakket verplaatst naar 2.x",
+                "fr": "le package mqtt est revenu à 2.x",
+                "it": "Il pacchetto mqtt è tornato alla 2.x",
+                "es": "El paquete mqtt regresó a 2.x",
+                "pl": "pakiet mqtt został przeniesiony z powrotem do wersji 2.x",
+                "zh-cn": "mqtt软件包移回了2.x"
+            },
+            "1.2.1": {
+                "en": "Support of js-controller 2.0 was added",
+                "de": "Unterstützung von js-controller 2.0 wurde hinzugefügt",
+                "ru": "Добавлена поддержка js-controller 2.0",
+                "pt": "Suporte do js-controller 2.0 foi adicionado",
+                "nl": "Ondersteuning van js-controller 2.0 is toegevoegd",
+                "fr": "Le support de js-controller 2.0 a été ajouté",
+                "it": "È stato aggiunto il supporto di js-controller 2.0",
+                "es": "Se agregó soporte de js-controller 2.0",
+                "pl": "Dodano obsługę js-kontrolera 2.0",
+                "zh-cn": "添加了对js-controller 2.0的支持"
+            },
+            "1.1.1": {
+                "en": "small fixes",
+                "de": "kleine Ausbesserungen",
+                "ru": "небольшие исправления",
+                "pt": "pequenas correções",
+                "nl": "kleine reparaties",
+                "fr": "petites corrections",
+                "it": "piccole correzioni",
+                "es": "pequeñas correcciones",
+                "pl": "drobne poprawki",
+                "zh-cn": "小修正"
+            },
+            "1.1.0": {
+                "en": "Translations\nUpdate of MQTT module",
+                "de": "Übersetzungen\nUpdate des MQTT-Moduls",
+                "ru": "Переводы\nОбновление модуля MQTT",
+                "pt": "Traduções\nAtualização do módulo MQTT",
+                "nl": "vertaalwerk\nUpdate van de MQTT-module",
+                "fr": "Traductions\nMise à jour du module MQTT",
+                "it": "Traduzioni\nAggiornamento del modulo MQTT",
+                "es": "Traducciones\nActualización del módulo MQTT",
+                "pl": "Tłumaczenia\n",
+                "zh-cn": "翻译\n"
+            }
+        },
+        "authors": [
+            "Pmant <patrickmo@gmx.de>",
+            "algar42 <igor.aleschenkov@gmail.com>"
+        ],
+        "keywords": [
+            "mqtt",
+            "syncing",
+            "data"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "icon": "mqtt-client.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
+        "readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "protocols",
+        "preserveSettings": "custom",
+        "compact": true,
+        "materialize": true,
+        "messagebox": true,
+        "supportCustoms": true,
+        "supportStopInstance": true,
+        "dependencies": [
+            {
+                "js-controller": ">=3.3.0"
+            }
+        ],
+        "plugins": {
+            "sentry": {
+                "dsn": "https://0bce9946ef3348dc9ef31ee6442370f2@sentry.iobroker.net/142"
+            }
+        },
+        "adminUI": {
+            "custom": "json",
+            "config": "materialize"
+        },
+        "connectionType": "local",
+        "dataSource": "push",
+        "tier": 2
     },
-    "desc": {
-      "en": "Syncing with MQTT Brokers",
-      "de": "Synchronisierung mit MQTT-Brokern",
-      "ru": "Синхронизация с брокерами MQTT",
-      "pt": "Sincronização com corretores da MQTT",
-      "nl": "Synchroniseren met MQTT-makelaars",
-      "fr": "Synchronisation avec les courtiers MQTT",
-      "it": "Sincronizzazione con i broker MQTT",
-      "es": "Sincronización con intermediarios MQTT",
-      "pl": "Synchronizacja z brokerami MQTT",
-      "zh-cn": "与MQTT经纪人同步"
+    "native": {
+        "host": "",
+        "port": 1883,
+        "ssl": false,
+        "clientId": "",
+        "username": "",
+        "password": "",
+        "onConnectTopic": "",
+        "onConnectMessage": "",
+        "onDisconnectTopic": "",
+        "onDisconnectMessage": "",
+        "lastWillTopic": "",
+        "lastWillMessage": "",
+        "subscriptions": "",
+        "reconnectPeriod": 30000,
+        "outbox": "",
+        "inbox": "",
+        "enabled": false,
+        "publish": false,
+        "pubChangesOnly": false,
+        "pubAsObject": false,
+        "qos": 0,
+        "retain": false,
+        "subscribe": false,
+        "subChangesOnly": false,
+        "subAsObject": false,
+        "subQos": 0,
+        "setAck": true
     },
-    "version": "1.5.0",
-    "news": {
-      "1.5.0": {
-        "en": "IMPORTANT: This adapter now required at least js-controller 3.3.x\nFix crash cases",
-        "de": "WICHTIG: Dieser Adapter benötigt jetzt mindestens js-controller 3.3.x\nAbsturzfälle beheben",
-        "ru": "ВАЖНО: для этого адаптера теперь требуется как минимум js-controller 3.3.x\nИсправить случаи сбоев",
-        "pt": "IMPORTANTE: Este adaptador agora exigia pelo menos js-controller 3.3.x\nCorrigir casos de falha",
-        "nl": "BELANGRIJK: voor deze adapter was nu minimaal js-controller 3.3.x . vereist\nCrashgevallen oplossen",
-        "fr": "IMPORTANT : Cet adaptateur nécessite désormais au moins js-controller 3.3.x\nRésoudre les cas de crash",
-        "it": "IMPORTANTE: questo adattatore ora richiedeva almeno js-controller 3.3.x\nRisolvi i casi di crash",
-        "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 3.3.x\nSolucionar casos de bloqueo",
-        "pl": "WAŻNE: Ten adapter wymaga teraz przynajmniej kontrolera js 3.3.x\nNapraw przypadki awarii",
-        "zh-cn": "重要提示：此适配器现在至少需要 js-controller 3.3.x\n修复崩溃案例"
-      },
-      "1.4.0": {
-        "en": "IMPORTANT: This adapter now required at least js-controller 2.0.0\njs-controller 3.3 optimizations\nUnpublish expired states\nOnly handle stat values if state exists",
-        "de": "WICHTIG: Dieser Adapter benötigt jetzt mindestens js-controller 2.0.0\njs-Controller 3.3 Optimierungen\nVeröffentlichung abgelaufener Staaten rückgängig machen\nBehandeln Sie Statistikwerte nur, wenn der Zustand existiert",
-        "ru": "ВАЖНО: для этого адаптера теперь требуется как минимум js-controller 2.0.0.\njs-controller 3.3 оптимизации\nОтменить публикацию состояний с истекшим сроком действия\nОбрабатывать значения статистики, только если состояние существует",
-        "pt": "IMPORTANTE: Este adaptador agora requer pelo menos js-controller 2.0.0\nOtimizações do js-controller 3.3\nCancelar a publicação de estados expirados\nSó lida com valores estatísticos se o estado existir",
-        "nl": "BELANGRIJK: voor deze adapter was nu minimaal js-controller 2.0.0 . vereist\njs-controller 3.3 optimalisaties\nPublicatie van verlopen status ongedaan maken\nAlleen stat-waarden verwerken als de status bestaat",
-        "fr": "IMPORTANT : cet adaptateur nécessite désormais au moins js-controller 2.0.0\njs-controller 3.3 optimisations\nAnnuler la publication des états expirés\nNe gérer les valeurs statistiques que si l'état existe",
-        "it": "IMPORTANTE: questo adattatore ora richiede almeno js-controller 2.0.0\nottimizzazioni js-controller 3.3\nAnnulla pubblicazione stati scaduti\nGestire i valori stat solo se lo stato esiste",
-        "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 2.0.0\nOptimizaciones de js-controller 3.3\nAnular la publicación de estados caducados\nSolo maneja valores de estadísticas si el estado existe",
-        "pl": "WAŻNE: Ten adapter wymaga teraz co najmniej kontrolera js 2.0.0\njs-controller 3.3 optymalizacje\nCofnij publikację stanów, które wygasły\nObsługuj tylko wartości statystyk, jeśli stan istnieje",
-        "zh-cn": "重要提示：此适配器现在至少需要 js-controller 2.0.0\njs-controller 3.3 优化\n取消发布过期状态\n如果状态存在，则仅处理统计值"
-      },
-      "1.3.2": {
-        "en": "Added support of admin5",
-        "de": "Unterstützung von admin5 hinzugefügt",
-        "ru": "Добавлена поддержка admin5",
-        "pt": "Adicionado suporte de admin5",
-        "nl": "Ondersteuning toegevoegd voor admin5",
-        "fr": "Ajout de la prise en charge d'admin5",
-        "it": "Aggiunto supporto di admin5",
-        "es": "Soporte agregado de admin5",
-        "pl": "Dodano obsługę admin5",
-        "zh-cn": "增加了对admin5的支持"
-      },
-      "1.3.1": {
-        "en": "mqtt package moved back to 2.x",
-        "de": "Das mqtt-Paket wurde auf 2.x zurückgesetzt",
-        "ru": "пакет mqtt перенесен обратно в 2.x",
-        "pt": "Pacote mqtt retornado para 2.x",
-        "nl": "mqtt-pakket verplaatst naar 2.x",
-        "fr": "le package mqtt est revenu à 2.x",
-        "it": "Il pacchetto mqtt è tornato alla 2.x",
-        "es": "El paquete mqtt regresó a 2.x",
-        "pl": "pakiet mqtt został przeniesiony z powrotem do wersji 2.x",
-        "zh-cn": "mqtt软件包移回了2.x"
-      },
-      "1.2.1": {
-        "en": "Support of js-controller 2.0 was added",
-        "de": "Unterstützung von js-controller 2.0 wurde hinzugefügt",
-        "ru": "Добавлена поддержка js-controller 2.0",
-        "pt": "Suporte do js-controller 2.0 foi adicionado",
-        "nl": "Ondersteuning van js-controller 2.0 is toegevoegd",
-        "fr": "Le support de js-controller 2.0 a été ajouté",
-        "it": "È stato aggiunto il supporto di js-controller 2.0",
-        "es": "Se agregó soporte de js-controller 2.0",
-        "pl": "Dodano obsługę js-kontrolera 2.0",
-        "zh-cn": "添加了对js-controller 2.0的支持"
-      },
-      "1.1.1": {
-        "en": "small fixes",
-        "de": "kleine Ausbesserungen",
-        "ru": "небольшие исправления",
-        "pt": "pequenas correções",
-        "nl": "kleine reparaties",
-        "fr": "petites corrections",
-        "it": "piccole correzioni",
-        "es": "pequeñas correcciones",
-        "pl": "drobne poprawki",
-        "zh-cn": "小修正"
-      },
-      "1.1.0": {
-        "en": "Translations\nUpdate of MQTT module",
-        "de": "Übersetzungen\nUpdate des MQTT-Moduls",
-        "ru": "Переводы\nОбновление модуля MQTT",
-        "pt": "Traduções\nAtualização do módulo MQTT",
-        "nl": "vertaalwerk\nUpdate van de MQTT-module",
-        "fr": "Traductions\nMise à jour du module MQTT",
-        "it": "Traduzioni\nAggiornamento del modulo MQTT",
-        "es": "Traducciones\nActualización del módulo MQTT",
-        "pl": "Tłumaczenia\n",
-        "zh-cn": "翻译\n"
-      }
-    },
-    "authors": [
-      "Pmant <patrickmo@gmx.de>",
-      "algar42 <igor.aleschenkov@gmail.com>"
-    ],
-    "keywords": [
-      "mqtt",
-      "syncing",
-      "data"
-    ],
-    "license": "MIT",
-    "platform": "Javascript/Node.js",
-    "icon": "mqtt-client.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
-    "readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
-    "loglevel": "info",
-    "mode": "daemon",
-    "type": "protocols",
-    "preserveSettings": "custom",
-    "compact": true,
-    "materialize": true,
-    "messagebox": true,
-    "supportCustoms": true,
-    "supportStopInstance": true,
-    "dependencies": [
-      {
-        "js-controller": ">=3.3.0"
-      }
-    ],
-    "plugins": {
-      "sentry": {
-        "dsn": "https://0bce9946ef3348dc9ef31ee6442370f2@sentry.iobroker.net/142"
-      }
-    },
-    "adminUI": {
-      "custom": "json",
-      "config": "materialize"
-    },
-    "connectionType": "local",
-    "dataSource": "push",
-    "tier": 2
-  },
-  "native": {
-    "host": "",
-    "port": 1883,
-    "ssl": false,
-    "clientId": "",
-    "username": "",
-    "password": "",
-    "onConnectTopic": "",
-    "onConnectMessage": "",
-    "lastWillTopic": "",
-    "lastWillMessage": "",
-    "subscriptions": "",
-    "reconnectPeriod": 30000,
-    "outbox": "",
-    "inbox": "",
-    "enabled": false,
-    "publish": false,
-    "pubChangesOnly": false,
-    "pubAsObject": false,
-    "qos": 0,
-    "retain": false,
-    "subscribe": false,
-    "subChangesOnly": false,
-    "subAsObject": false,
-    "subQos": 0,
-    "setAck": true
-  },
-  "objects": [
-    {
-      "_id": "_design/custom",
-      "language": "javascript",
-      "views": {
-        "state": {
-          "map": "function(doc) { doc.type === 'state' && doc.common && doc.common.custom && emit(doc._id, doc.common.custom) }"
+    "objects": [
+        {
+            "_id": "_design/custom",
+            "language": "javascript",
+            "views": {
+                "state": {
+                    "map": "function(doc) { doc.type === 'state' && doc.common && doc.common.custom && emit(doc._id, doc.common.custom) }"
+                }
+            }
         }
-      }
-    }
-  ],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "If connected to MQTT broker",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
+    ],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "If connected to MQTT broker",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

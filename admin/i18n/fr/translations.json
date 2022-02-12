@@ -16,6 +16,8 @@
     "note": "Les paramètres du client MQTT doivent être définis pour chaque état individuellement",
     "on connect message": "sur le message de connexion",
     "on connect topic": "sur le sujet de connexion",
+    "on disconnect message": "message envoyé lors de la déconnexion",
+    "on disconnect topic": "sujet utilisé lors de la déconnexion",
     "password": "mot de passe",
     "port": "Port",
     "prefix for publishing topics": "préfixe pour les sujets de publication",
