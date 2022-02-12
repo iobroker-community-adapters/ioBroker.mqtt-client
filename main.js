@@ -532,7 +532,7 @@ class MqttClient extends utils.Adapter {
 			}
 			this.log.info(`Disconnecting from ${__url} with message "${this.config.onDisconnectMessage}" on topic "${topic}"`);
 			this.client.publish(topic, this.config.onDisconnectMessage, { qos: 2, retain: true }, () => {
-				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onDisconnectTopic }));
+				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onDisconnectMessage }));
 				this.end(callback);
 			});
 
