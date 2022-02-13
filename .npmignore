@@ -1,0 +1,17 @@
+Gruntfile.js
+tasks
+node_modules
+.git
+test
+tmp
+.travis.yml
+appveyor.yml
+package-lock.json
+.vscode
+
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
