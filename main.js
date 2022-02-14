@@ -298,11 +298,11 @@ class MqttClient extends utils.Adapter {
 		this.client && this.client.unsubscribe(topic, callback);
 	}
 
-	iobSubscribe(id) {
+	iobSubscribe(id, callback) {
 		if (!this._subscribes.includes(id)) {
 			this._subscribes.push(id);
 			this._subscribes.sort();
-			this.subscribeForeignStates(id);
+			this.subscribeForeignStates(id, callback);
 		}
 	}
 
@@ -594,8 +594,9 @@ class MqttClient extends utils.Adapter {
 				const sub = {};
 				sub[custom[id].topic] = custom[id].subQos;
 
-				this.subscribe(sub, () =>
-					this.log.debug('subscribed to ' + JSON.stringify(sub)));
+				this.subscribe(sub, () => {
+					this.log.debug('subscribed to ' + JSON.stringify(sub));
+				});
 			} else {
 				delete subTopics[custom[id].topic];
 				delete topic2id[custom[id].topic];
@@ -606,8 +607,17 @@ class MqttClient extends utils.Adapter {
 			}
 
 			if (custom[id].enabled) {
-				this.iobSubscribe(id);
-
+				//subscribe to state changes
+				this.iobSubscribe(id, (err) => {
+					//publish state once
+					if (err)
+						return;
+					this.getState('info.connection', (err, state) => {
+						if (err)
+							return;
+						this.onStateChange(id, state);
+					});
+				});
 			}
 
 			this.log.debug(`enabled syncing of ${id} (publish/subscribe:${custom[id].publish.toString()}/${custom[id].subscribe.toString()})`);
