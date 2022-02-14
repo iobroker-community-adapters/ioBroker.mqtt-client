@@ -436,10 +436,9 @@ class MqttClient extends utils.Adapter {
 
 					// we need type of object
 					this.getObjects(this, ids, objs => {
-						Object.keys(objs).forEach(id => {
+						for (const id of Object.keys(objs)) {
 							custom[id] = objs[id].common.custom[this.namespace];
 							custom[id].type = objs[id].common.type;
-							this.log.debug('complete Custom: ' + JSON.stringify(custom));
 
 							this.checkSettings(id, custom[id], this.namespace, this.config.qos, this.config.subQos);
 
@@ -454,7 +453,8 @@ class MqttClient extends utils.Adapter {
 							}
 
 							this.log.debug('enabled syncing of ' + id + ' (publish/subscribe:' + custom[id].publish.toString() + '/' + custom[id].subscribe.toString() + ')');
-						});
+						}
+						this.log.debug('complete Custom: ' + JSON.stringify(custom));
 
 						if (this.config.subscriptions) {
 							for (const topic of this.config.subscriptions.split(',')) {
@@ -612,9 +612,10 @@ class MqttClient extends utils.Adapter {
 					//publish state once
 					if (err)
 						return;
-					this.getState('info.connection', (err, state) => {
-						if (err)
+					this.getForeignState(id, (err, state) => {
+						if (err || !state)
 							return;
+						this.log.debug(`publish ${id} once: ${JSON.stringify(state)}`);
 						this.onStateChange(id, state);
 					});
 				});
