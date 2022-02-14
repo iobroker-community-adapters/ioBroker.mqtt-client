@@ -6,11 +6,11 @@ const utils = require('@iobroker/adapter-core');
 const mqtt  = require('mqtt');
 
 let _context = {
-	custom:      {},
-	subTopics:   {},
-	topic2id:    {},
-	addTopics:   {},
-	addedTopics: {},
+	custom:      {}, //cache object's mqtt-client settings
+	subTopics:   {}, //subscribed mqtt topics
+	topic2id:    {}, //maps mqtt topics to ioBroker ids
+	addTopics:   {}, //additional mqtt topics to subscribe to
+	addedTopics: {}, //received mqtt topics that created a new object (addTopics)
 };
 
 
@@ -65,7 +65,6 @@ class MqttClient extends utils.Adapter {
 				this.log.debug('subscribed to: ' + JSON.stringify(subTopics)));
 		}
 
-		this.log.debug(`subscribing to ${Object.keys(addTopics).length} additional topics: ${JSON.stringify(addTopics)}`);
 		if (Object.keys(addTopics).length) {
 			this.subscribe(addTopics, () =>
 				this.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics)));
@@ -73,7 +72,7 @@ class MqttClient extends utils.Adapter {
 	}
 
 	reconnect() {
-		this.log.info('trying to reconnect to broker');
+		this.log.debug('trying to reconnect to broker');
 	}
 
 	disconnect() {
@@ -189,7 +188,7 @@ class MqttClient extends utils.Adapter {
 						return false;
 					}
 					if (custom[id].setAck) obj.ack = true;
-					if (obj && obj.from) delete obj.from;
+					delete obj.from;
 					this.setForeignState(id, obj);
 					this.log.debug('object set (as object) to ' + JSON.stringify(obj));
 					return true;
@@ -534,7 +533,6 @@ class MqttClient extends utils.Adapter {
 				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onDisconnectMessage }));
 				this.end(callback);
 			});
-
 		} else {
 			this.end(callback);
 		}
@@ -609,6 +607,7 @@ class MqttClient extends utils.Adapter {
 
 			if (custom[id].enabled) {
 				this.iobSubscribe(id);
+
 			}
 
 			this.log.debug(`enabled syncing of ${id} (publish/subscribe:${custom[id].publish.toString()}/${custom[id].subscribe.toString()})`);
@@ -618,12 +617,9 @@ class MqttClient extends utils.Adapter {
 			this.unsubscribe(topic, () =>
 				this.log.debug('unsubscribed from ' + topic));
 
-			if (subTopics[custom[id].topic]) {
-				delete subTopics[custom[id].topic];
-			}
-			if (topic2id[custom[id].topic]) {
-				delete topic2id[custom[id].topic];
-			}
+			delete subTopics[custom[id].topic];
+			delete topic2id[custom[id].topic]
+
 			if (custom[id].publish) {
 				this.iobUnsubscribe(id);
 			}
@@ -649,8 +645,7 @@ class MqttClient extends utils.Adapter {
 				if (!state) {
 					// The state was deleted/expired, make sure it is no longer retained
 					this.unpublish(id);
-				} else if (state.from !== 'system.adapter.' + this.namespace) {
-					// prevent republishing to same broker
+				} else if (state.from !== 'system.adapter.' + this.namespace) { // prevent republishing to same broker
 					this.publish(id, state);
 				}
 			}
