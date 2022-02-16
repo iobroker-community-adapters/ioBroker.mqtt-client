@@ -48,8 +48,8 @@ class MqttClient extends utils.Adapter {
 			let topic = this.config.onConnectTopic;
 
 			//add outgoing prefix
-			if (this.config.outbox.trim()) {
-				topic = this.config.outbox.trim() + '/' + topic;
+			if (this.config.outbox) {
+				topic = this.config.outbox + '/' + topic;
 			}
 
 			this.client.publish(topic, this.config.onConnectMessage, { qos: 2, retain: true }, () =>
@@ -102,8 +102,8 @@ class MqttClient extends utils.Adapter {
 		msg = msg.toString();
 
 		//remove inbox prefix if exists
-		if (this.config.inbox.trim() && topic.substring(0, this.config.inbox.trim().length) === this.config.inbox.trim()) {
-			topic = topic.substr(this.config.inbox.trim().length + 1);
+		if (this.config.inbox && topic.substring(0, this.config.inbox.length) === this.config.inbox) {
+			topic = topic.substr(this.config.inbox.length + 1);
 		}
 
 		//if topic2id[topic] does not exist automatically convert topic to id with guiding adapter namespace
@@ -174,7 +174,7 @@ class MqttClient extends utils.Adapter {
 						return false;
 					}
 					// todo: !== correct???
-					if (this.config.inbox.trim() === this.config.outbox.trim() &&
+					if (this.config.inbox === this.config.outbox &&
 						custom[id].publish &&
 						!obj.hasOwnProperty('ts') &&
 						!obj.hasOwnProperty('lc') &&
@@ -210,7 +210,7 @@ class MqttClient extends utils.Adapter {
 
 			if (state && this.val2String(state.val) === msg) {
 				//this.log.debug('setVAL: ' + JSON.stringify(state) + '; value: ' + this.val2String(state.val) + '=> ' + msg);
-				if (this.config.inbox.trim() === this.config.outbox.trim() && custom[id].publish) {
+				if (this.config.inbox === this.config.outbox && custom[id].publish) {
 					this.log.debug('value did not change (loop protection)');
 					return false;
 				} else if (custom[id].subChangesOnly) {
@@ -240,8 +240,8 @@ class MqttClient extends utils.Adapter {
 			const message = settings.pubAsObject ? JSON.stringify(state) : this.val2String(state.val);
 
 			//add outgoing prefix
-			if (this.config.outbox.trim()) {
-				topic = this.config.outbox.trim() + '/' + topic;
+			if (this.config.outbox) {
+				topic = this.config.outbox + '/' + topic;
 			}
 
 			this.client.publish(topic, message, { qos: settings.qos, retain: settings.retain }, () =>
@@ -262,8 +262,8 @@ class MqttClient extends utils.Adapter {
 
 			let topic = settings.topic;
 			//add outgoing prefix
-			if (this.config.outbox.trim()) {
-				topic = this.config.outbox.trim() + '/' + topic;
+			if (this.config.outbox) {
+				topic = this.config.outbox + '/' + topic;
 			}
 
 			this.client.publish(topic, null, { qos: settings.qos, retain: false }, () =>
@@ -278,7 +278,7 @@ class MqttClient extends utils.Adapter {
 			let subTopics = {};
 
 			for (const key of Object.keys(topics)) {
-				const key_final = this.config.inbox.trim() ? this.config.inbox.trim() + '/' + key : key;
+				const key_final = this.config.inbox ? this.config.inbox + '/' + key : key;
 				subTopics[key_final] = {qos: topics[key_final]};
 			}
 
@@ -414,6 +414,9 @@ class MqttClient extends utils.Adapter {
 		this.getState('info.connection', (err, state) => {
 			(!state || state.val) && this.setState('info.connection', false, true);
 
+			this.config.inbox = this.config.inbox.trim();
+			this.config.outbox = this.config.outbox.trim();
+
 			if (this.config.host && this.config.host !== '') {
 				const custom = _context.custom;
 				const subTopics = _context.subTopics;
@@ -525,8 +528,8 @@ class MqttClient extends utils.Adapter {
 			const __url = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
 			let topic = this.config.onDisconnectTopic;
 			//add outgoing prefix
-			if (this.config.outbox.trim()) {
-				topic = this.config.outbox.trim() + '/' + topic;
+			if (this.config.outbox) {
+				topic = this.config.outbox + '/' + topic;
 			}
 			this.log.info(`Disconnecting from ${__url} with message "${this.config.onDisconnectMessage}" on topic "${topic}"`);
 			this.client.publish(topic, this.config.onDisconnectMessage, { qos: 2, retain: true }, () => {
