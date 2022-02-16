@@ -111,14 +111,14 @@ class MqttClient extends utils.Adapter {
 
 		this.log.debug(`received message ${msg} for id ${id}=>${JSON.stringify(custom[id])}`);
 
-		if (topic2id[topic] && custom[id] && custom[id]) {
-
+		if (topic2id[topic] && custom[id] && custom[id].subscribe) {
 			if (custom[id].subAsObject) {
 				this.setStateObj(id, msg);
 			} else {
 				this.setStateVal(id, msg);
 			}
 		} else if (!addedTopics[topic]) {
+			//prevents object from being recreated while first creation has not finished
 			addedTopics[topic] = null;
 			let obj = {
 				type: 'state',
@@ -152,6 +152,7 @@ class MqttClient extends utils.Adapter {
 			};
 			this.setObjectNotExists(id, obj, () =>
 				this.log.debug('created and subscribed to new state: ' + id));
+				//onObjectChange should now receive this object
 		} else {
 			this.log.debug('state already exists');
 		}
