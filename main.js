@@ -610,11 +610,11 @@ class MqttClient extends utils.Adapter {
 					this.log.debug('unsubscribed from ' + custom[id].topic));
 			}
 
-			if (custom[id].enabled) {
+			if (custom[id].enabled) { //@todo should this be .subscribe?
 				//subscribe to state changes
 				this.iobSubscribe(id, (err) => {
 					//publish state once
-					if (err)
+					if (err || !custom[id].publish)
 						return;
 					this.getForeignState(id, (err, state) => {
 						if (err || !state)
