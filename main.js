@@ -424,8 +424,9 @@ class MqttClient extends utils.Adapter {
 				const topic2id = _context.topic2id;
 				const addTopics = _context.addTopics;
 
-				const _url  = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':' + this.config.password + '@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
-				const __url = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
+				const protocol = '' + (this.config.websocket ? 'ws' : 'mqtt') + (this.config.ssl ? 's' : '');
+				const _url  = `${protocol}://${this.config.username ? (this.config.username + ':' + this.config.password + '@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
+				const __url = `${protocol}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
 
 				this.getObjectView('system', 'custom', {}, (err, doc) => {
 					const ids = [];
@@ -487,7 +488,9 @@ class MqttClient extends utils.Adapter {
 						this.client = mqtt.connect(_url, {
 							host:            this.config.host,
 							port:            this.config.port,
+							protocolVersion: this.config.mqttVersion,
 							ssl:             this.config.ssl,
+							rejectUnauthorized: this.config.rejectUnauthorized,
 							reconnectPeriod: this.config.reconnectPeriod,
 							username:        this.config.username,
 							password:        this.config.password,
