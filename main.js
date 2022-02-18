@@ -424,8 +424,9 @@ class MqttClient extends utils.Adapter {
 				const topic2id = _context.topic2id;
 				const addTopics = _context.addTopics;
 
-				const _url  = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':' + this.config.password + '@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
-				const __url = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
+				const protocol = '' + (this.config.websocket ? 'ws' : 'mqtt') + (this.config.ssl ? 's' : '');
+				const _url  = `${protocol}://${this.config.username ? (this.config.username + ':' + this.config.password + '@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
+				const __url = `${protocol}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
 
 				this.getObjectView('system', 'custom', {}, (err, doc) => {
 					const ids = [];
@@ -472,7 +473,7 @@ class MqttClient extends utils.Adapter {
 						let will = undefined;
 
 						if (this.config.lastWillTopic && this.config.lastWillMessage) {
-							this.log.info(`Try to connect to ${__url} with lwt "${this.config.lastWillTopic}"`);
+							this.log.info(`Try to connect to ${__url}, protocol version ${this.config.mqttVersion} with lwt "${this.config.lastWillTopic}"`);
 
 							will = {
 								topic:   this.config.lastWillTopic,
@@ -483,18 +484,28 @@ class MqttClient extends utils.Adapter {
 						} else {
 							this.log.info('Try to connect to ' + __url);
 						}
-
-						this.client = mqtt.connect(_url, {
-							host:            this.config.host,
-							port:            this.config.port,
-							ssl:             this.config.ssl,
-							reconnectPeriod: this.config.reconnectPeriod,
-							username:        this.config.username,
-							password:        this.config.password,
-							clientId:        this.config.clientId,
-							clean:           true,
-							will
-						});
+						const mqttVersion = Number.parseInt(this.config.mqttVersion || 4);
+						try {
+							this.client = mqtt.connect(_url, {
+								host:            this.config.host,
+								port:            this.config.port,
+								protocolVersion: mqttVersion,
+								ssl:             this.config.ssl,
+								rejectUnauthorized: this.config.rejectUnauthorized,
+								reconnectPeriod: this.config.reconnectPeriod,
+								username:        this.config.username,
+								password:        this.config.password,
+								clientId:        this.config.clientId,
+								clean:           true,
+								will
+							});
+						} catch (e) {
+							this.log.error(e);
+							this.finish(() => {
+								setTimeout(() => this.terminate ? this.terminate() : process.exit(0), 200);
+							});
+							return;
+						}
 
 						this.client.on('connect',    this.connect.bind(this));
 						this.client.on('reconnect',  this.reconnect.bind(this));
@@ -526,13 +537,12 @@ class MqttClient extends utils.Adapter {
 			return;
 		}
 		if (this.client && this.config.onDisconnectTopic && this.config.onDisconnectMessage) {
-			const __url = `${!this.config.ssl ? 'mqtt' : 'mqtts'}://${this.config.username ? (this.config.username + ':*******************@') : ''}${this.config.host}${this.config.port ? (':' + this.config.port) : ''}?clientId=${this.config.clientId}`;
 			let topic = this.config.onDisconnectTopic;
 			//add outgoing prefix
 			if (this.config.outbox) {
 				topic = this.config.outbox + '/' + topic;
 			}
-			this.log.info(`Disconnecting from ${__url} with message "${this.config.onDisconnectMessage}" on topic "${topic}"`);
+			this.log.info(`Disconnecting with message "${this.config.onDisconnectMessage}" on topic "${topic}"`);
 			this.client.publish(topic, this.config.onDisconnectMessage, { qos: 2, retain: true }, () => {
 				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onDisconnectMessage }));
 				this.end(callback);
