@@ -355,8 +355,8 @@ class MqttClient extends utils.Adapter {
 			topic = id;
 		}
 
-		//replace dots with slashes and underscores with spaces
-		topic = topic.replace(/\./g, '/').replace(/_/g, ' ');
+		//replace dots with slashes
+		topic = topic.replace(/\./g, '/');
 		return topic;
 	}
 
@@ -365,17 +365,13 @@ class MqttClient extends utils.Adapter {
 			return topic;
 		}
 
-		//replace slashes with dots and spaces with underscores
-		topic = topic.replace(/\//g, '.').replace(/\s/g, '_');
+		//replace slashes with dots
+		topic = topic.replace(/\//g, '.');
 
 		//replace guiding and trailing dot
 		if (topic[0] === '.') topic = topic.substring(1);
 		if (topic[topic.length - 1] === '.') topic = topic.substring(0, topic.length - 1);
 
-		//add namespace to id if exists
-		//if (namespace && namespace !== '') {
-		//	topic = namespace + '.' + topic;
-		//}
 		return topic;
 	}
 
