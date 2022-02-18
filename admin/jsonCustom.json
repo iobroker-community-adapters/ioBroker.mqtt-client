@@ -1,9 +1,10 @@
 {
   "items": {
     "topic": {
-      "type": "topic",
+      "type": "text",
       "label": "Topic",
       "help": "(without prefix)",
+      "defaultFunc": "customObj._id.indexOf('mqtt-client.') === 0 ? customObj._id.substring(14).replace(/\\./g, '/') : customObj._id.replace(/\\./g, '/')",
       "sm": 12
     },
     "_publish": {
