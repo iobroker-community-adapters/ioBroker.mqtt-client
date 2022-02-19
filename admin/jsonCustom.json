@@ -4,6 +4,7 @@
       "type": "text",
       "label": "Topic",
       "help": "(without prefix)",
+      "noMultiEdit": true,
       "defaultFunc": "customObj._id.indexOf('mqtt-client.') === 0 ? customObj._id.substring(14).replace(/\\./g, '/') : customObj._id.replace(/\\./g, '/')",
       "sm": 12
     },
