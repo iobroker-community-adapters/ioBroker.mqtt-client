@@ -71,6 +71,9 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
+### __WORK IN PROGRESS__
+* (Pmant) preparation for 2.0.0 
+
 ### 1.6.0 (2022-02-19)
 * (Pmant) add option to select protocol version
 * (Pmant) add websocket support
