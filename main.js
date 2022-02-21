@@ -360,6 +360,21 @@ class MqttClient extends utils.Adapter {
 		return topic;
 	}
 
+	convertID2TopicLegacy(id, namespace) {
+		let topic;
+
+		//if necessary remove namespace before converting, e.g. "mqtt-client.0..."
+		if (namespace && id.substring(0, namespace.length) === namespace) {
+			topic = id.substring(namespace.length + 1);
+		} else {
+			topic = id;
+		}
+
+		//replace dots with slashes and underscores with spaces
+		topic = topic.replace(/\./g, '/').replace(/_/g, ' ');
+		return topic;
+	}
+
 	convertTopic2ID(topic, namespace) {
 		if (!topic) {
 			return topic;
@@ -440,6 +455,14 @@ class MqttClient extends utils.Adapter {
 						for (const id of Object.keys(objs)) {
 							custom[id] = objs[id].common.custom[this.namespace];
 							custom[id].type = objs[id].common.type;
+
+							//enforce saving of topic for legacy objects
+							if (!custom[id].topic || typeof custom[id].topic !== 'string' || custom[id].topic.trim() === '') {
+								custom[id].topic = this.convertID2TopicLegacy(id, this.namespace);
+								objs[id].common.custom[this.namespace].topic = custom[id].topic;
+								this.log.debug('inserting topic into legacy object: ' + id);
+								this.extendForeignObject(id, {common: objs[id].common});
+							}
 
 							this.checkSettings(id, custom[id], this.namespace, this.config.qos, this.config.subQos);
 
