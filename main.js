@@ -471,7 +471,7 @@ class MqttClient extends utils.Adapter {
 							this.log.info(`Try to connect to ${__url}, protocol version ${this.config.mqttVersion} with lwt "${this.config.lastWillTopic}"`);
 
 							will = {
-								topic:   this.config.lastWillTopic,
+								topic:   this.topicAddPrefix(this.config.lastWillTopic),
 								payload: this.config.lastWillMessage,
 								qos:     2,
 								retain:  true
