@@ -47,12 +47,7 @@ class MqttClient extends utils.Adapter {
 		if (this.config.onConnectTopic && this.config.onConnectMessage) {
 			let topic = this.config.onConnectTopic;
 
-			//add outgoing prefix
-			if (this.config.outbox) {
-				topic = this.config.outbox + '/' + topic;
-			}
-
-			this.client.publish(topic, this.config.onConnectMessage, { qos: 2, retain: true }, () =>
+			this.client.publish(this.topicAddPrefixOut(topic), this.config.onConnectMessage, { qos: 2, retain: true }, () =>
 				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onConnectMessage })));
 		}
 
@@ -101,10 +96,7 @@ class MqttClient extends utils.Adapter {
 		const addedTopics = _context.addedTopics;
 		msg = msg.toString();
 
-		//remove inbox prefix if exists
-		if (this.config.inbox && topic.substring(0, this.config.inbox.length) === this.config.inbox) {
-			topic = topic.substr(this.config.inbox.length + 1);
-		}
+		topic = this.topicRemovePrefixIn(topic);
 
 		//if topic2id[topic] does not exist automatically convert topic to id with guiding adapter namespace
 		const id = topic2id[topic] || this.convertTopic2ID(topic, this.namespace);
@@ -226,7 +218,7 @@ class MqttClient extends utils.Adapter {
 		});
 	}
 
-	publish(id, state) {
+	publishState(id, state) {
 		if (this.client) {
 			const custom = _context.custom;
 			const settings = custom[id];
@@ -240,16 +232,28 @@ class MqttClient extends utils.Adapter {
 
 			const message = settings.pubAsObject ? JSON.stringify(state) : this.val2String(state.val);
 
-			//add outgoing prefix
-			if (this.config.outbox) {
-				topic = this.config.outbox + '/' + topic;
-			}
-
-			this.client.publish(topic, message, { qos: settings.qos, retain: settings.retain }, () =>
+			this.client.publish(this.topicAddPrefixOut(topic), message, { qos: settings.qos, retain: settings.retain }, () =>
 				this.log.debug(`successfully published ${id}: ${JSON.stringify({topic: topic, message: message})}`));
 
 			return true;
 		}
+	}
+
+	topicAddPrefixOut(topic) {
+		//add outgoing prefix
+		return topic = this.config.outbox ? this.config.outbox + '/' + topic : topic;
+	}
+
+	topicAddPrefixIn(topic) {
+		//add outgoing prefix
+		return topic = this.config.inbox ? this.config.inbox + '/' + topic : topic;
+	}
+
+	topicRemovePrefixIn(topic) {
+		if (this.config.inbox && topic.substring(0, this.config.inbox.length) === this.config.inbox) {
+			topic = topic.substr(this.config.inbox.length + 1);
+		}
+		return topic;
 	}
 
 	unpublish(id) {
@@ -262,12 +266,8 @@ class MqttClient extends utils.Adapter {
 			this.log.debug('unpublishing ' + id);
 
 			let topic = settings.topic;
-			//add outgoing prefix
-			if (this.config.outbox) {
-				topic = this.config.outbox + '/' + topic;
-			}
 
-			this.client.publish(topic, null, { qos: settings.qos, retain: false }, () =>
+			this.client.publish(this.topicAddPrefixOut(topic), null, { qos: settings.qos, retain: false }, () =>
 				this.log.debug('successfully unpublished ' + id));
 
 			return true;
@@ -279,12 +279,11 @@ class MqttClient extends utils.Adapter {
 			let subTopics = {};
 
 			for (const key of Object.keys(topics)) {
-				const key_final = this.config.inbox ? this.config.inbox + '/' + key : key;
-				subTopics[key_final] = {qos: topics[key_final]};
+				subTopics[this.topicAddPrefixIn(key)] = {qos: topics[key]};
 			}
 
 			//this.log.debug('Subscribed: ' + subTopics);
-			this.log.debug(`trying to subscribe to ${Object.keys(subTopics).length} topics`);
+			this.log.debug(`trying to subscribe to ${Object.keys(subTopics).length} topics: ` + JSON.stringify(subTopics));
 			this.client.subscribe(subTopics, (err, granted) => {
 				if (!err)
 					this.log.debug(`successfully subscribed to ${granted.length} topics`);
@@ -296,7 +295,7 @@ class MqttClient extends utils.Adapter {
 	}
 
 	unsubscribe(topic, callback) {
-		this.client && this.client.unsubscribe(topic, callback);
+		this.client && this.client.unsubscribe(this.topicAddPrefixIn(topic), callback);
 	}
 
 	iobSubscribe(id, callback) {
@@ -476,7 +475,7 @@ class MqttClient extends utils.Adapter {
 							this.log.info(`Try to connect to ${__url}, protocol version ${this.config.mqttVersion} with lwt "${this.config.lastWillTopic}"`);
 
 							will = {
-								topic:   this.config.lastWillTopic,
+								topic:   this.topicAddPrefixOut(this.config.lastWillTopic),
 								payload: this.config.lastWillMessage,
 								qos:     2,
 								retain:  true
@@ -538,12 +537,9 @@ class MqttClient extends utils.Adapter {
 		}
 		if (this.client && this.config.onDisconnectTopic && this.config.onDisconnectMessage) {
 			let topic = this.config.onDisconnectTopic;
-			//add outgoing prefix
-			if (this.config.outbox) {
-				topic = this.config.outbox + '/' + topic;
-			}
+
 			this.log.info(`Disconnecting with message "${this.config.onDisconnectMessage}" on topic "${topic}"`);
-			this.client.publish(topic, this.config.onDisconnectMessage, { qos: 2, retain: true }, () => {
+			this.client.publish(this.topicAddPrefixOut(topic), this.config.onDisconnectMessage, { qos: 2, retain: true }, () => {
 				this.log.debug('successfully published ' + JSON.stringify({ topic: topic, message: this.config.onDisconnectMessage }));
 				this.end(callback);
 			});
@@ -671,7 +667,7 @@ class MqttClient extends utils.Adapter {
 					// The state was deleted/expired, make sure it is no longer retained
 					this.unpublish(id);
 				} else if (state.from !== 'system.adapter.' + this.namespace) { // prevent republishing to same broker
-					this.publish(id, state);
+					this.publishState(id, state);
 				}
 			}
 		}
