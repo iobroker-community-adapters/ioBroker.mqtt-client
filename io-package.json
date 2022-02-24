@@ -26,8 +26,20 @@
       "pl": "Synchronizacja z brokerami MQTT",
       "zh-cn": "与MQTT经纪人同步"
     },
-    "version": "1.6.0",
+    "version": "1.6.1",
     "news": {
+      "1.6.1": {
+        "en": "fix subscriptions\nfix unsubscribing\nuse prefix for LWT topic",
+        "de": "Abonnements reparieren\nAbmeldung beheben\nPräfix für LWT-Thema verwenden",
+        "ru": "исправить подписки\nисправить отписку\nиспользовать префикс для темы LWT",
+        "pt": "corrigir assinaturas\ncorrigir cancelamento de inscrição\nuse prefixo para tópico LWT",
+        "nl": "abonnementen repareren\nafmelden oplossen\ngebruik prefix voor LWT-onderwerp",
+        "fr": "corriger les abonnements\ncorriger la désinscription\nutiliser le préfixe pour le sujet LWT",
+        "it": "correggere gli abbonamenti\ncorreggere l'annullamento dell'iscrizione\nusa il prefisso per l'argomento LWT",
+        "es": "arreglar suscripciones\ncorregir la cancelación de la suscripción\nuse el prefijo para el tema LWT",
+        "pl": "napraw subskrypcje\nnapraw rezygnację z subskrypcji\nużyj prefiksu dla tematu LWT",
+        "zh-cn": "修复订阅\n修复退订\n使用 LWT 主题的前缀"
+      },
       "1.6.0": {
         "en": "add option to select protocol version\nadd websocket support\npublish values once on enabling publishing\nUpgrade to MQTT version 4 (resolves many connection issues)\nfix LWT documentation\noptionally publish a message when disconnecting gracefully",
         "de": "Option hinzufügen, um die Protokollversion auszuwählen\nWebsocket-Unterstützung hinzufügen\nveröffentlichen Sie Werte einmal beim Aktivieren der Veröffentlichung\nUpgrade auf MQTT Version 4 (behebt viele Verbindungsprobleme)\nLWT-Dokumentation korrigiert\nVeröffentlichen Sie optional eine Nachricht, wenn Sie die Verbindung ordnungsgemäß trennen",
@@ -99,18 +111,6 @@
         "es": "Se agregó soporte de js-controller 2.0",
         "pl": "Dodano obsługę js-kontrolera 2.0",
         "zh-cn": "添加了对js-controller 2.0的支持"
-      },
-      "1.1.1": {
-        "en": "small fixes",
-        "de": "kleine Ausbesserungen",
-        "ru": "небольшие исправления",
-        "pt": "pequenas correções",
-        "nl": "kleine reparaties",
-        "fr": "petites corrections",
-        "it": "piccole correzioni",
-        "es": "pequeñas correcciones",
-        "pl": "drobne poprawki",
-        "zh-cn": "小修正"
       }
     },
     "authors": [

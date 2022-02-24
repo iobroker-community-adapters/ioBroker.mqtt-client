@@ -71,7 +71,7 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.6.1 (2022-02-24)
 * (Pmant) fix subscriptions
 * (Pmant) fix unsubscribing
 * (Pmant) use prefix for LWT topic
