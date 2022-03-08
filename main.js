@@ -203,15 +203,15 @@ class MqttClient extends utils.Adapter {
 
 			if (state && this.val2String(state.val) === msg) {
 				//this.log.debug('setVAL: ' + JSON.stringify(state) + '; value: ' + this.val2String(state.val) + '=> ' + msg);
-				if (this.config.inbox === this.config.outbox && custom[id].publish) {
+				if (this.config.inbox === this.config.outbox && custom[id] && custom[id].publish) {
 					this.log.debug('value did not change (loop protection)');
 					return false;
-				} else if (custom[id].subChangesOnly) {
+				} else if (custom[id] && custom[id].subChangesOnly) {
 					this.log.debug('value did not change');
 					return false;
 				}
 			}
-			const _state = {val: this.stringToVal(custom, id, msg), ack: custom[id].setAck};
+			const _state = {val: this.stringToVal(custom, id, msg), ack: custom[id] && custom[id].setAck};
 			this.setForeignState(id, _state);
 			this.log.debug('value of ' + id + ' set to ' + JSON.stringify(_state));
 			return true;
@@ -332,7 +332,7 @@ class MqttClient extends utils.Adapter {
 		if (custom[id].type === 'number') {
 			if (val === true  || val === 'true')  val = 1;
 			if (val === false || val === 'false') val = 0;
-			val = val.replace(',', '.');
+			val = val.toString().replace(',', '.');
 			val = parseFloat(val) || 0;
 			return val;
 		}
@@ -613,7 +613,7 @@ class MqttClient extends utils.Adapter {
 				this.iobUnsubscribe(id);
 
 				this.unsubscribe(custom[id].topic, () =>
-					this.log.debug('unsubscribed from ' + custom[id].topic));
+					custom[id] && this.log.debug('unsubscribed from ' + custom[id].topic));
 			}
 
 			if (custom[id].enabled) { //@todo should this be .subscribe?
