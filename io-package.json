@@ -26,8 +26,20 @@
       "pl": "Synchronizacja z brokerami MQTT",
       "zh-cn": "与MQTT经纪人同步"
     },
-    "version": "1.6.1",
+    "version": "1.6.2",
     "news": {
+      "1.6.2": {
+        "en": "Prevent potential crash cases reported by Sentry",
+        "de": "Verhindern Sie potenzielle Absturzfälle, die von Sentry gemeldet werden",
+        "ru": "Предотвратите потенциальные случаи сбоев, о которых сообщает Sentry.",
+        "pt": "Prevenir possíveis casos de acidente relatados pelo Sentinela",
+        "nl": "Voorkom mogelijke crashgevallen gemeld door Sentry",
+        "fr": "Prévenir les cas de crash potentiels signalés par Sentry",
+        "it": "Prevenire potenziali casi di crash segnalati da Sentry",
+        "es": "Evitar posibles casos de accidentes informados por Sentry",
+        "pl": "Zapobiegaj potencjalnym przypadkom awarii zgłaszanych przez Sentry",
+        "zh-cn": "防止 Sentry 报告的潜在崩溃案例"
+      },
       "1.6.1": {
         "en": "fix subscriptions\nfix unsubscribing\nuse prefix for LWT topic",
         "de": "Abonnements reparieren\nAbmeldung beheben\nPräfix für LWT-Thema verwenden",
@@ -99,18 +111,6 @@
         "es": "El paquete mqtt regresó a 2.x",
         "pl": "pakiet mqtt został przeniesiony z powrotem do wersji 2.x",
         "zh-cn": "mqtt软件包移回了2.x"
-      },
-      "1.2.1": {
-        "en": "Support of js-controller 2.0 was added",
-        "de": "Unterstützung von js-controller 2.0 wurde hinzugefügt",
-        "ru": "Добавлена поддержка js-controller 2.0",
-        "pt": "Suporte do js-controller 2.0 foi adicionado",
-        "nl": "Ondersteuning van js-controller 2.0 is toegevoegd",
-        "fr": "Le support de js-controller 2.0 a été ajouté",
-        "it": "È stato aggiunto il supporto di js-controller 2.0",
-        "es": "Se agregó soporte de js-controller 2.0",
-        "pl": "Dodano obsługę js-kontrolera 2.0",
-        "zh-cn": "添加了对js-controller 2.0的支持"
       }
     },
     "authors": [
