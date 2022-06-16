@@ -332,7 +332,9 @@ class MqttClient extends utils.Adapter {
 		if (custom[id].type === 'number') {
 			if (val === true  || val === 'true')  val = 1;
 			if (val === false || val === 'false') val = 0;
-			val = val.toString().replace(',', '.');
+			if (typeof val.toString === 'function') {
+				val = val.toString().replace(',', '.');
+			}
 			val = parseFloat(val) || 0;
 			return val;
 		}
