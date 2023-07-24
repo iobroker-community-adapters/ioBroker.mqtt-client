@@ -26,5 +26,6 @@
     "retain": "retain",
     "ssl": "SSL",
     "username": "Имя пользователя",
-    "without prefix": "без префикса"
+    "without prefix": "без префикса",
+    "rejectUnauthorized": "Применение подписанных сертификатов"
 }

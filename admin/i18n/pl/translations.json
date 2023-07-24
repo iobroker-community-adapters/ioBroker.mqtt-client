@@ -26,5 +26,6 @@
     "retain": "retain",
     "ssl": "SSL",
     "username": "Nazwa Użytkownika",
-    "without prefix": "bez prefiksu"
+    "without prefix": "bez prefiksu",
+    "rejectUnauthorized": "Wymuszaj podpisane certyfikaty"
 }
