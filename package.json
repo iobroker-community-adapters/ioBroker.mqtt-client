@@ -6,7 +6,7 @@
     "author": "Pmant <patrickmo@gmx.de>",
     "name": "patrickmo"
   },
-  "homepage": "https://github.com/Pmant/ioBroker.mqtt-client",
+  "homepage": "https://github.com/iobroker-community-adapters/ioBroker.mqtt-client",
   "license": "MIT",
   "keywords": [
     "mqtt",
@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Pmant/ioBroker.mqtt-client"
+    "url": "https://github.com/iobroker-community-adapters/ioBroker.mqtt-client"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.8",
@@ -63,7 +63,7 @@
     "translate": "translate-adapter"
   },
   "bugs": {
-    "url": "https://github.com/Pmant/ioBroker.mqtt-client"
+    "url": "https://github.com/iobroker-community-adapters/ioBroker.mqtt-client"
   },
   "readmeFilename": "README.md"
 }
