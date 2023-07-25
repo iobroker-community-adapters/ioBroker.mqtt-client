@@ -71,6 +71,9 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
+### __WORK IN PROGRESS__
+* (DutchmanNL) Option to allow self-signed certificates in adapter settings added.
+
 ### 1.6.3 (2022-06-16)
 * (Apollon77) Prevent potential crash cases reported by Sentry
 
