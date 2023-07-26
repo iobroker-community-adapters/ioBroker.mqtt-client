@@ -71,7 +71,7 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.6.4 (2023-07-26)
 * (DutchmanNL) Option to allow self-signed certificates in adapter settings added.
 
 ### 1.6.3 (2022-06-16)
