@@ -321,11 +321,18 @@ class MqttClient extends utils.Adapter {
         this.client && this.client.unsubscribe(this.topicAddPrefixIn(topic), callback);
     }
 
-    iobSubscribe(id, callback) {
+    async iobSubscribe(id, callback) {
         if (!this._subscribes.includes(id)) {
             this._subscribes.push(id);
             this._subscribes.sort();
-            this.subscribeForeignStates(id, callback);
+            try {
+                await this.subscribeForeignStatesAsync(id);
+            } catch (e) {
+                this.log.error(`Cannot subscribe to "${id}": ${e.message}`);
+            }
+            if (typeof callback === 'function') {
+                callback();
+            }
         }
     }
 
@@ -465,7 +472,7 @@ class MqttClient extends utils.Adapter {
 
                 this.getObjectView('system', 'custom', {}, (err, doc) => {
                     const ids = [];
-                    if (doc && doc.rows) {
+                    if (doc?.rows) {
                         for (let i = 0, l = doc.rows.length; i < l; i++) {
                             const cust = doc.rows[i].value;
                             if (cust && cust[this.namespace] && cust[this.namespace].enabled) {
@@ -663,7 +670,6 @@ class MqttClient extends utils.Adapter {
             }
 
             if (custom[id].enabled) {
-                //@todo should this be .subscribe?
                 //subscribe to state changes
                 this.iobSubscribe(id, err => {
                     //publish state once
