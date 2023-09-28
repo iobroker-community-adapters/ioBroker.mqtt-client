@@ -71,7 +71,7 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.6.5 (2023-09-28)
 * (foxriver76) prevent crash cases on invalid subscribe
 
 ### 1.6.4 (2023-07-26)

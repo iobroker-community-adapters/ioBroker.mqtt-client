@@ -1,6 +1,6 @@
 {
   "name": "iobroker.mqtt-client",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "Client to connect states to MQTT Broker",
   "author": {
     "author": "Pmant <patrickmo@gmx.de>",

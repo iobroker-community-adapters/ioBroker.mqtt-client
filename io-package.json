@@ -26,8 +26,21 @@
       "pl": "Synchronizacja z brokerami MQTT",
       "zh-cn": "与MQTT经纪人同步"
     },
-    "version": "1.6.4",
+    "version": "1.6.5",
     "news": {
+      "1.6.5": {
+        "en": "prevent crash cases on invalid subscribe",
+        "de": "verhindern crash-fälle bei ungültiger anmeldung",
+        "ru": "предотвратить случаи аварии на недействительной подписке",
+        "pt": "prevenir casos de acidente em assinatura inválida",
+        "nl": "verhinder crash gevallen op invalide subschrijving",
+        "fr": "prévenir les cas de crash sur les abonnés invalides",
+        "it": "prevenire casi di crash su abbonamento non valido",
+        "es": "evitar los casos de fallo en invalidez",
+        "pl": "zapobieganie wypadków w przypadku nielegalnego subskrypcji",
+        "uk": "запобігання аварійних випадків на недійсній підписці",
+        "zh-cn": "防止无效同意的事故"
+      },
       "1.6.4": {
         "en": "Option to allow self-signed certificates in adapter settings added.",
         "de": "Option, um selbst signierte Zertifikate in Adaptereinstellungen hinzuzufügen.",
@@ -100,18 +113,6 @@
         "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 3.3.x\nSolucionar casos de bloqueo",
         "pl": "WAŻNE: Ten adapter wymaga teraz przynajmniej kontrolera js 3.3.x\nNapraw przypadki awarii",
         "zh-cn": "重要提示：此适配器现在至少需要 js-controller 3.3.x\n修复崩溃案例"
-      },
-      "1.4.0": {
-        "en": "IMPORTANT: This adapter now required at least js-controller 2.0.0\njs-controller 3.3 optimizations\nUnpublish expired states\nOnly handle stat values if state exists",
-        "de": "WICHTIG: Dieser Adapter benötigt jetzt mindestens js-controller 2.0.0\njs-Controller 3.3 Optimierungen\nVeröffentlichung abgelaufener Staaten rückgängig machen\nBehandeln Sie Statistikwerte nur, wenn der Zustand existiert",
-        "ru": "ВАЖНО: для этого адаптера теперь требуется как минимум js-controller 2.0.0.\njs-controller 3.3 оптимизации\nОтменить публикацию состояний с истекшим сроком действия\nОбрабатывать значения статистики, только если состояние существует",
-        "pt": "IMPORTANTE: Este adaptador agora requer pelo menos js-controller 2.0.0\nOtimizações do js-controller 3.3\nCancelar a publicação de estados expirados\nSó lida com valores estatísticos se o estado existir",
-        "nl": "BELANGRIJK: voor deze adapter was nu minimaal js-controller 2.0.0 . vereist\njs-controller 3.3 optimalisaties\nPublicatie van verlopen status ongedaan maken\nAlleen stat-waarden verwerken als de status bestaat",
-        "fr": "IMPORTANT : cet adaptateur nécessite désormais au moins js-controller 2.0.0\njs-controller 3.3 optimisations\nAnnuler la publication des états expirés\nNe gérer les valeurs statistiques que si l'état existe",
-        "it": "IMPORTANTE: questo adattatore ora richiede almeno js-controller 2.0.0\nottimizzazioni js-controller 3.3\nAnnulla pubblicazione stati scaduti\nGestire i valori stat solo se lo stato esiste",
-        "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 2.0.0\nOptimizaciones de js-controller 3.3\nAnular la publicación de estados caducados\nSolo maneja valores de estadísticas si el estado existe",
-        "pl": "WAŻNE: Ten adapter wymaga teraz co najmniej kontrolera js 2.0.0\njs-controller 3.3 optymalizacje\nCofnij publikację stanów, które wygasły\nObsługuj tylko wartości statystyk, jeśli stan istnieje",
-        "zh-cn": "重要提示：此适配器现在至少需要 js-controller 2.0.0\njs-controller 3.3 优化\n取消发布过期状态\n如果状态存在，则仅处理统计值"
       }
     },
     "authors": [
