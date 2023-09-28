@@ -1,5 +1,5 @@
 const path = require('path');
-const {tests, utils} = require('@iobroker/testing');
+const { tests, utils } = require('@iobroker/testing');
 const { expect } = require('chai');
 
 // Run tests
@@ -26,7 +26,9 @@ tests.unit(path.join(__dirname, '..'), {
                     }
                 }
             },
-            native: {/* ... */},
+            native: {
+                /* ... */
+            }
         },
         {
             _id: 'test.0.object2',
@@ -41,15 +43,17 @@ tests.unit(path.join(__dirname, '..'), {
                     }
                 }
             },
-            native: {/* ... */},
+            native: {
+                /* ... */
+            }
         }
     ],
 
     // Optionally define which states need to exist in the states DB
     // You can set all properties that are usually available on a state
     predefinedStates: {
-        'test.0.object1': {val: true, ack: false},
-        'test.0.object2': {val: 2, ack: false, ts: 1},
+        'test.0.object1': { val: true, ack: false },
+        'test.0.object2': { val: 2, ack: false, ts: 1 }
     },
 
     // If the startup tests need require specific behavior of the mocks
@@ -57,25 +61,29 @@ tests.unit(path.join(__dirname, '..'), {
     // you can define the behavior here. This method is called before every predefined test
     defineMockBehavior(database, adapter) {
         adapter.getObjectView = (schema, type, options, callback) =>
-            callback && callback(null, [{
-                id: 'test.0.object1',
-                value: {
-                    'mqtt-client.0': {
-                        enabled: true,
-                        publish: true,
-                        subscribe: true
+            callback &&
+            callback(null, [
+                {
+                    id: 'test.0.object1',
+                    value: {
+                        'mqtt-client.0': {
+                            enabled: true,
+                            publish: true,
+                            subscribe: true
+                        }
+                    }
+                },
+                {
+                    id: 'test.0.object2',
+                    value: {
+                        'mqtt-client.0': {
+                            enabled: true,
+                            publish: true,
+                            subscribe: true
+                        }
                     }
                 }
-            }, {
-                id: 'test.0.object2',
-                value: {
-                    'mqtt-client.0': {
-                        enabled: true,
-                        publish: true,
-                        subscribe: true
-                    }
-                }
-            }]);
+            ]);
         // or
         adapter.objects.getUserGroup.returns('a string');
     },
@@ -84,7 +92,7 @@ tests.unit(path.join(__dirname, '..'), {
     // If you need predefined objects etc. here, you need to take care of it yourself
     defineAdditionalTests() {
         // Create mocks and asserts
-        const { adapter, database }  = utils.unit.createMocks();
+        const { adapter, database } = utils.unit.createMocks();
         const { assertObjectExists } = utils.unit.createAsserts(database, adapter);
 
         describe('test start', () => {
@@ -98,11 +106,11 @@ tests.unit(path.join(__dirname, '..'), {
             it('works', () => {
                 // Create an object in the fake db we will use in this test
                 const theObject = {
-                    _id: "test.0.whatever",
-                    type: "state",
+                    _id: 'test.0.whatever',
+                    type: 'state',
                     common: {
-                        role: "whatever",
-                    },
+                        role: 'whatever'
+                    }
                 };
 
                 database.publishObject(theObject);
@@ -113,5 +121,5 @@ tests.unit(path.join(__dirname, '..'), {
                 expect(database.hasObject(theObject._id)).to.be.true;
             });
         });
-    },
+    }
 });
