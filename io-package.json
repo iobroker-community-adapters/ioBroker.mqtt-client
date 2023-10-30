@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mqtt-client",
-    "version": "1.6.5",
+    "version": "1.7.0",
     "news": {
+      "1.7.0": {
+        "en": "Dependencies have been updated\nAdapter requires nodejs 16 now",
+        "de": "Abhängigkeiten wurden aktualisiert\nAdapter benötigt jetzt Nodejs 16",
+        "ru": "В зависимости были обновлены\nАдаптер требует nodejs 16 сейчас",
+        "pt": "As dependências foram atualizadas\nAdapter requer nodejs 16 agora",
+        "nl": "Afhankelijkheid\nAdapter vereist nodej 16 nu",
+        "fr": "Les dépendances ont été mises à jour\nAdaptateur nécessite nodejs 16 maintenant",
+        "it": "Le dipendenze sono state aggiornate\nAdattatore richiede nodejs 16 ora",
+        "es": "Se han actualizado las dependencias\nAdaptador requiere nodejs 16 ahora",
+        "pl": "Zależności zostały zaktualizowane\nAdapter wymaga już 16 węzłów",
+        "uk": "Оновлено залежність\nАдаптер вимагає nodejs 16 тепер",
+        "zh-cn": "已更新了属地\n道歉现在需要16个不听众。"
+      },
       "1.6.5": {
         "en": "prevent crash cases on invalid subscribe",
         "de": "verhindern crash-fälle bei ungültiger anmeldung",
@@ -76,18 +89,6 @@
         "es": "agregar opción para seleccionar la versión del protocolo\nañadir soporte websocket\npublicar valores una vez al habilitar la publicación\nActualice a MQTT versión 4 (resuelve muchos problemas de conexión)\ncorregir la documentación de LWT\nopcionalmente, publique un mensaje cuando se desconecte correctamente",
         "pl": "dodaj opcję wyboru wersji protokołu\ndodaj obsługę gniazda sieciowego\nopublikuj wartości raz po włączeniu publikowania\nUaktualnij do MQTT w wersji 4 (rozwiązuje wiele problemów z połączeniem)\nnaprawić dokumentację LWT\nopcjonalnie opublikuj wiadomość przy wdzięcznym rozłączeniu",
         "zh-cn": "添加选项以选择协议版本\n添加 websocket 支持\n在启用发布时发布值一次\n升级到 MQTT 版本 4（解决了许多连接问题）\n修复 LWT 文档\n可以选择在正常断开连接时发布消息"
-      },
-      "1.5.0": {
-        "en": "IMPORTANT: This adapter now required at least js-controller 3.3.x\nFix crash cases",
-        "de": "WICHTIG: Dieser Adapter benötigt jetzt mindestens js-controller 3.3.x\nAbsturzfälle beheben",
-        "ru": "ВАЖНО: для этого адаптера теперь требуется как минимум js-controller 3.3.x\nИсправить случаи сбоев",
-        "pt": "IMPORTANTE: Este adaptador agora exigia pelo menos js-controller 3.3.x\nCorrigir casos de falha",
-        "nl": "BELANGRIJK: voor deze adapter was nu minimaal js-controller 3.3.x . vereist\nCrashgevallen oplossen",
-        "fr": "IMPORTANT : Cet adaptateur nécessite désormais au moins js-controller 3.3.x\nRésoudre les cas de crash",
-        "it": "IMPORTANTE: questo adattatore ora richiedeva almeno js-controller 3.3.x\nRisolvi i casi di crash",
-        "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 3.3.x\nSolucionar casos de bloqueo",
-        "pl": "WAŻNE: Ten adapter wymaga teraz przynajmniej kontrolera js 3.3.x\nNapraw przypadki awarii",
-        "zh-cn": "重要提示：此适配器现在至少需要 js-controller 3.3.x\n修复崩溃案例"
       }
     },
     "titleLang": {
@@ -138,9 +139,9 @@
     "connectionType": "local",
     "dataSource": "push",
     "adminUI": {
-        "custom": "json",
-        "config": "materialize"
-      },
+      "custom": "json",
+      "config": "materialize"
+    },
     "tier": 2,
     "materialize": true,
     "messagebox": true,
@@ -148,15 +149,15 @@
     "supportStopInstance": true,
     "preserveSettings": "custom",
     "dependencies": [
-        {
-          "js-controller": ">=4.0.24"
-        }
-      ],
-      "globalDependencies": [
-        {
-          "admin": ">=5.1.13"
-        }
-      ],
+      {
+        "js-controller": ">=4.0.24"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
+      }
+    ],
     "plugins": {
       "sentry": {
         "dsn": "https://0bce9946ef3348dc9ef31ee6442370f2@sentry.iobroker.net/142"

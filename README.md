@@ -87,7 +87,7 @@ default: state-ID converted to a mqtt topic.
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.7.0 (2023-10-30)
 
 * (mcm1957) Dependencies have been updated
 * (mcm1957) Adapter requires nodejs 16 now
