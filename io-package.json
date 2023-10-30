@@ -1,31 +1,6 @@
 {
   "common": {
     "name": "mqtt-client",
-    "title": "MQTT client",
-    "titleLang": {
-      "en": "MQTT client",
-      "de": "MQTT-Client",
-      "ru": "MQTT Клиент",
-      "pt": "Cliente MQTT",
-      "nl": "MQTT-klant",
-      "fr": "Client MQTT",
-      "it": "Client MQTT",
-      "es": "Cliente MQTT",
-      "pl": "Klient MQTT",
-      "zh-cn": "MQTT客户端"
-    },
-    "desc": {
-      "en": "Syncing with MQTT Brokers",
-      "de": "Synchronisierung mit MQTT-Brokern",
-      "ru": "Синхронизация с брокерами MQTT",
-      "pt": "Sincronização com corretores da MQTT",
-      "nl": "Synchroniseren met MQTT-makelaars",
-      "fr": "Synchronisation avec les courtiers MQTT",
-      "it": "Sincronizzazione con i broker MQTT",
-      "es": "Sincronización con intermediarios MQTT",
-      "pl": "Synchronizacja z brokerami MQTT",
-      "zh-cn": "与MQTT经纪人同步"
-    },
     "version": "1.6.5",
     "news": {
       "1.6.5": {
@@ -115,7 +90,32 @@
         "zh-cn": "重要提示：此适配器现在至少需要 js-controller 3.3.x\n修复崩溃案例"
       }
     },
+    "titleLang": {
+      "en": "MQTT client",
+      "de": "MQTT-Client",
+      "ru": "MQTT Клиент",
+      "pt": "Cliente MQTT",
+      "nl": "MQTT-klant",
+      "fr": "Client MQTT",
+      "it": "Client MQTT",
+      "es": "Cliente MQTT",
+      "pl": "Klient MQTT",
+      "zh-cn": "MQTT客户端"
+    },
+    "desc": {
+      "en": "Syncing with MQTT Brokers",
+      "de": "Synchronisierung mit MQTT-Brokern",
+      "ru": "Синхронизация с брокерами MQTT",
+      "pt": "Sincronização com corretores da MQTT",
+      "nl": "Synchroniseren met MQTT-makelaars",
+      "fr": "Synchronisation avec les courtiers MQTT",
+      "it": "Sincronizzazione con i broker MQTT",
+      "es": "Sincronización con intermediarios MQTT",
+      "pl": "Synchronizacja z brokerami MQTT",
+      "zh-cn": "与MQTT经纪人同步"
+    },
     "authors": [
+      "iobroker-community-adapters <mcm57@gmx.at>",
       "Pmant <patrickmo@gmx.de>",
       "algar42 <igor.aleschenkov@gmail.com>"
     ],
@@ -126,6 +126,7 @@
     ],
     "license": "MIT",
     "platform": "Javascript/Node.js",
+    "main": "main.js",
     "icon": "mqtt-client.png",
     "enabled": true,
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.mqtt-client/master/admin/mqtt-client.png",
@@ -133,29 +134,34 @@
     "loglevel": "info",
     "mode": "daemon",
     "type": "protocols",
-    "preserveSettings": "custom",
     "compact": true,
+    "connectionType": "local",
+    "dataSource": "push",
+    "adminUI": {
+        "custom": "json",
+        "config": "materialize"
+      },
+    "tier": 2,
     "materialize": true,
     "messagebox": true,
     "supportCustoms": true,
     "supportStopInstance": true,
+    "preserveSettings": "custom",
     "dependencies": [
-      {
-        "js-controller": ">=3.3.0"
-      }
-    ],
+        {
+          "js-controller": ">=4.0.24"
+        }
+      ],
+      "globalDependencies": [
+        {
+          "admin": ">=5.1.13"
+        }
+      ],
     "plugins": {
       "sentry": {
         "dsn": "https://0bce9946ef3348dc9ef31ee6442370f2@sentry.iobroker.net/142"
       }
-    },
-    "adminUI": {
-      "custom": "json",
-      "config": "materialize"
-    },
-    "connectionType": "local",
-    "dataSource": "push",
-    "tier": 2
+    }
   },
   "native": {
     "host": "",
