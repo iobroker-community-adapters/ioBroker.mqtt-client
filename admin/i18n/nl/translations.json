@@ -26,5 +26,6 @@
     "retain": "retain",
     "ssl": "SSL",
     "username": "gebruikersnaam",
-    "without prefix": "zonder voorvoegsel"
+    "without prefix": "zonder voorvoegsel",
+    "rejectUnauthorized": "Ondertekende certificaten afdwingen"
 }

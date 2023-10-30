@@ -1,33 +1,34 @@
 {
   "common": {
     "name": "mqtt-client",
-    "title": "MQTT client",
-    "titleLang": {
-      "en": "MQTT client",
-      "de": "MQTT-Client",
-      "ru": "MQTT Клиент",
-      "pt": "Cliente MQTT",
-      "nl": "MQTT-klant",
-      "fr": "Client MQTT",
-      "it": "Client MQTT",
-      "es": "Cliente MQTT",
-      "pl": "Klient MQTT",
-      "zh-cn": "MQTT客户端"
-    },
-    "desc": {
-      "en": "Syncing with MQTT Brokers",
-      "de": "Synchronisierung mit MQTT-Brokern",
-      "ru": "Синхронизация с брокерами MQTT",
-      "pt": "Sincronização com corretores da MQTT",
-      "nl": "Synchroniseren met MQTT-makelaars",
-      "fr": "Synchronisation avec les courtiers MQTT",
-      "it": "Sincronizzazione con i broker MQTT",
-      "es": "Sincronización con intermediarios MQTT",
-      "pl": "Synchronizacja z brokerami MQTT",
-      "zh-cn": "与MQTT经纪人同步"
-    },
-    "version": "1.6.3",
+    "version": "1.6.5",
     "news": {
+      "1.6.5": {
+        "en": "prevent crash cases on invalid subscribe",
+        "de": "verhindern crash-fälle bei ungültiger anmeldung",
+        "ru": "предотвратить случаи аварии на недействительной подписке",
+        "pt": "prevenir casos de acidente em assinatura inválida",
+        "nl": "verhinder crash gevallen op invalide subschrijving",
+        "fr": "prévenir les cas de crash sur les abonnés invalides",
+        "it": "prevenire casi di crash su abbonamento non valido",
+        "es": "evitar los casos de fallo en invalidez",
+        "pl": "zapobieganie wypadków w przypadku nielegalnego subskrypcji",
+        "uk": "запобігання аварійних випадків на недійсній підписці",
+        "zh-cn": "防止无效同意的事故"
+      },
+      "1.6.4": {
+        "en": "Option to allow self-signed certificates in adapter settings added.",
+        "de": "Option, um selbst signierte Zertifikate in Adaptereinstellungen hinzuzufügen.",
+        "ru": "Возможность позволить самоподписанные сертификаты в настройках адаптера добавлены.",
+        "pt": "Opção para permitir certificados auto-assinados em configurações de adaptador adicionado.",
+        "nl": "Optie om zelf toegewezen certificaten toe te voegen in adapter settings.",
+        "fr": "Option pour permettre des certificats autosignés dans les réglages d'adaptateur ajoutés.",
+        "it": "Opzione per consentire certificati auto-firmati nelle impostazioni dell'adattatore aggiunto.",
+        "es": "Opción para permitir certificados auto-firmados en ajustes de adaptador añadidos.",
+        "pl": "Opcjonalnie dodaje certyfikaty w ustawieniach adapterów.",
+        "uk": "Для того, щоб дозволити собі сертифікати в налаштуваннях адаптера.",
+        "zh-cn": "备选案文是允许在适应环境中自发证书。."
+      },
       "1.6.3": {
         "en": "Prevent potential crash cases reported by Sentry",
         "de": "Verhindern potenzielle Crashfälle gemeldet von Sentry",
@@ -87,33 +88,34 @@
         "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 3.3.x\nSolucionar casos de bloqueo",
         "pl": "WAŻNE: Ten adapter wymaga teraz przynajmniej kontrolera js 3.3.x\nNapraw przypadki awarii",
         "zh-cn": "重要提示：此适配器现在至少需要 js-controller 3.3.x\n修复崩溃案例"
-      },
-      "1.4.0": {
-        "en": "IMPORTANT: This adapter now required at least js-controller 2.0.0\njs-controller 3.3 optimizations\nUnpublish expired states\nOnly handle stat values if state exists",
-        "de": "WICHTIG: Dieser Adapter benötigt jetzt mindestens js-controller 2.0.0\njs-Controller 3.3 Optimierungen\nVeröffentlichung abgelaufener Staaten rückgängig machen\nBehandeln Sie Statistikwerte nur, wenn der Zustand existiert",
-        "ru": "ВАЖНО: для этого адаптера теперь требуется как минимум js-controller 2.0.0.\njs-controller 3.3 оптимизации\nОтменить публикацию состояний с истекшим сроком действия\nОбрабатывать значения статистики, только если состояние существует",
-        "pt": "IMPORTANTE: Este adaptador agora requer pelo menos js-controller 2.0.0\nOtimizações do js-controller 3.3\nCancelar a publicação de estados expirados\nSó lida com valores estatísticos se o estado existir",
-        "nl": "BELANGRIJK: voor deze adapter was nu minimaal js-controller 2.0.0 . vereist\njs-controller 3.3 optimalisaties\nPublicatie van verlopen status ongedaan maken\nAlleen stat-waarden verwerken als de status bestaat",
-        "fr": "IMPORTANT : cet adaptateur nécessite désormais au moins js-controller 2.0.0\njs-controller 3.3 optimisations\nAnnuler la publication des états expirés\nNe gérer les valeurs statistiques que si l'état existe",
-        "it": "IMPORTANTE: questo adattatore ora richiede almeno js-controller 2.0.0\nottimizzazioni js-controller 3.3\nAnnulla pubblicazione stati scaduti\nGestire i valori stat solo se lo stato esiste",
-        "es": "IMPORTANTE: este adaptador ahora requiere al menos js-controller 2.0.0\nOptimizaciones de js-controller 3.3\nAnular la publicación de estados caducados\nSolo maneja valores de estadísticas si el estado existe",
-        "pl": "WAŻNE: Ten adapter wymaga teraz co najmniej kontrolera js 2.0.0\njs-controller 3.3 optymalizacje\nCofnij publikację stanów, które wygasły\nObsługuj tylko wartości statystyk, jeśli stan istnieje",
-        "zh-cn": "重要提示：此适配器现在至少需要 js-controller 2.0.0\njs-controller 3.3 优化\n取消发布过期状态\n如果状态存在，则仅处理统计值"
-      },
-      "1.3.2": {
-        "en": "Added support of admin5",
-        "de": "Unterstützung von admin5 hinzugefügt",
-        "ru": "Добавлена поддержка admin5",
-        "pt": "Adicionado suporte de admin5",
-        "nl": "Ondersteuning toegevoegd voor admin5",
-        "fr": "Ajout de la prise en charge d'admin5",
-        "it": "Aggiunto supporto di admin5",
-        "es": "Soporte agregado de admin5",
-        "pl": "Dodano obsługę admin5",
-        "zh-cn": "增加了对admin5的支持"
       }
     },
+    "titleLang": {
+      "en": "MQTT client",
+      "de": "MQTT-Client",
+      "ru": "MQTT Клиент",
+      "pt": "Cliente MQTT",
+      "nl": "MQTT-klant",
+      "fr": "Client MQTT",
+      "it": "Client MQTT",
+      "es": "Cliente MQTT",
+      "pl": "Klient MQTT",
+      "zh-cn": "MQTT客户端"
+    },
+    "desc": {
+      "en": "Syncing with MQTT Brokers",
+      "de": "Synchronisierung mit MQTT-Brokern",
+      "ru": "Синхронизация с брокерами MQTT",
+      "pt": "Sincronização com corretores da MQTT",
+      "nl": "Synchroniseren met MQTT-makelaars",
+      "fr": "Synchronisation avec les courtiers MQTT",
+      "it": "Sincronizzazione con i broker MQTT",
+      "es": "Sincronización con intermediarios MQTT",
+      "pl": "Synchronizacja z brokerami MQTT",
+      "zh-cn": "与MQTT经纪人同步"
+    },
     "authors": [
+      "iobroker-community-adapters <mcm57@gmx.at>",
       "Pmant <patrickmo@gmx.de>",
       "algar42 <igor.aleschenkov@gmail.com>"
     ],
@@ -124,36 +126,42 @@
     ],
     "license": "MIT",
     "platform": "Javascript/Node.js",
+    "main": "main.js",
     "icon": "mqtt-client.png",
     "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/Pmant/ioBroker.mqtt-client/master/admin/mqtt-client.png",
-    "readme": "https://github.com/Pmant/ioBroker.mqtt-client/blob/master/README.md",
+    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.mqtt-client/master/admin/mqtt-client.png",
+    "readme": "https://github.com/iobroker-community-adapters/ioBroker.mqtt-client/blob/master/README.md",
     "loglevel": "info",
     "mode": "daemon",
     "type": "protocols",
-    "preserveSettings": "custom",
     "compact": true,
+    "connectionType": "local",
+    "dataSource": "push",
+    "adminUI": {
+        "custom": "json",
+        "config": "materialize"
+      },
+    "tier": 2,
     "materialize": true,
     "messagebox": true,
     "supportCustoms": true,
     "supportStopInstance": true,
+    "preserveSettings": "custom",
     "dependencies": [
-      {
-        "js-controller": ">=3.3.0"
-      }
-    ],
+        {
+          "js-controller": ">=4.0.24"
+        }
+      ],
+      "globalDependencies": [
+        {
+          "admin": ">=5.1.13"
+        }
+      ],
     "plugins": {
       "sentry": {
         "dsn": "https://0bce9946ef3348dc9ef31ee6442370f2@sentry.iobroker.net/142"
       }
-    },
-    "adminUI": {
-      "custom": "json",
-      "config": "materialize"
-    },
-    "connectionType": "local",
-    "dataSource": "push",
-    "tier": 2
+    }
   },
   "native": {
     "host": "",

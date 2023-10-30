@@ -26,5 +26,6 @@
     "retain": "retain",
     "ssl": "SSL协议",
     "username": "用户名",
-    "without prefix": "无前缀"
+    "without prefix": "无前缀",
+    "rejectUnauthorized": "强制执行签名证书"
 }
