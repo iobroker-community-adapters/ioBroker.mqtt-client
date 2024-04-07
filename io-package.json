@@ -116,7 +116,7 @@
       "zh-cn": "与MQTT经纪人同步"
     },
     "authors": [
-      "iobroker-community-adapters <mcm57@gmx.at>",
+      "mcm1957 <mcm57@gmx.at>",
       "Pmant <patrickmo@gmx.de>",
       "algar42 <igor.aleschenkov@gmail.com>"
     ],
@@ -125,7 +125,10 @@
       "syncing",
       "data"
     ],
-    "license": "MIT",
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
     "platform": "Javascript/Node.js",
     "main": "main.js",
     "icon": "mqtt-client.png",
@@ -133,6 +136,7 @@
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.mqtt-client/master/admin/mqtt-client.png",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.mqtt-client/blob/master/README.md",
     "loglevel": "info",
+    "tier": 1,
     "mode": "daemon",
     "type": "protocols",
     "compact": true,
@@ -142,7 +146,6 @@
       "custom": "json",
       "config": "materialize"
     },
-    "tier": 2,
     "materialize": true,
     "messagebox": true,
     "supportCustoms": true,
@@ -150,7 +153,7 @@
     "preserveSettings": "custom",
     "dependencies": [
       {
-        "js-controller": ">=4.0.24"
+        "js-controller": ">=5.0.0"
       }
     ],
     "globalDependencies": [
