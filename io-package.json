@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mqtt-client",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "news": {
+      "1.8.0": {
+        "en": "Adapter requires node.js 18 and js-controller >= 5 now\nDependencies have been updated",
+        "de": "Adapter benötigt node.js 18 und js-controller >= 5 jetzt\nAbhängigkeiten wurden aktualisiert",
+        "ru": "Адаптер требует node.js 18 и js-controller >= 5 сейчас\nЗависимость обновлена",
+        "pt": "Adapter requer node.js 18 e js-controller >= 5 agora\nAs dependências foram atualizadas",
+        "nl": "Adapter vereist node.js 18 en js-controller Nu 5\nAfhankelijkheden zijn bijgewerkt",
+        "fr": "Adaptateur nécessite node.js 18 et js-controller >= 5 maintenant\nLes dépendances ont été actualisées",
+        "it": "Adattatore richiede node.js 18 e js-controller >= 5 ora\nLe dipendenze sono state aggiornate",
+        "es": "Adaptador requiere node.js 18 y js-controller √= 5 ahora\nSe han actualizado las dependencias",
+        "pl": "Adapter wymaga node.js 18 i sterownika js- > = 5 teraz\nZaktualizowano zależności",
+        "uk": "Адаптер вимагає node.js 18 і js-controller >= 5 тепер\nЗалежність було оновлено",
+        "zh-cn": "适配器需要节点.js 18和js控制器 QQ 现在5号\n依赖关系已更新"
+      },
       "1.7.0": {
         "en": "Dependencies have been updated\nAdapter requires nodejs 16 now",
         "de": "Abhängigkeiten wurden aktualisiert\nAdapter benötigt jetzt Nodejs 16",
@@ -77,18 +90,6 @@
         "es": "arreglar suscripciones\ncorregir la cancelación de la suscripción\nuse el prefijo para el tema LWT",
         "pl": "napraw subskrypcje\nnapraw rezygnację z subskrypcji\nużyj prefiksu dla tematu LWT",
         "zh-cn": "修复订阅\n修复退订\n使用 LWT 主题的前缀"
-      },
-      "1.6.0": {
-        "en": "add option to select protocol version\nadd websocket support\npublish values once on enabling publishing\nUpgrade to MQTT version 4 (resolves many connection issues)\nfix LWT documentation\noptionally publish a message when disconnecting gracefully",
-        "de": "Option hinzufügen, um die Protokollversion auszuwählen\nWebsocket-Unterstützung hinzufügen\nveröffentlichen Sie Werte einmal beim Aktivieren der Veröffentlichung\nUpgrade auf MQTT Version 4 (behebt viele Verbindungsprobleme)\nLWT-Dokumentation korrigiert\nVeröffentlichen Sie optional eine Nachricht, wenn Sie die Verbindung ordnungsgemäß trennen",
-        "ru": "добавить опцию для выбора версии протокола\nдобавить поддержку вебсокетов\nопубликовать значения один раз при включении публикации\nОбновление до MQTT версии 4 (решает многие проблемы с подключением)\nисправить документацию LWT\nопционально опубликовать сообщение при изящном отключении",
-        "pt": "adicionar opção para selecionar a versão do protocolo\nadicionar suporte a websocket\npublicar valores uma vez ao habilitar a publicação\nAtualize para o MQTT versão 4 (resolve muitos problemas de conexão)\ncorrigir a documentação do LWT\nopcionalmente, publique uma mensagem ao desconectar normalmente",
-        "nl": "optie toevoegen om protocolversie te selecteren\nwebsocket-ondersteuning toevoegen\nwaarden eenmalig publiceren bij het inschakelen van publicatie\nUpgrade naar MQTT versie 4 (lost veel verbindingsproblemen op)\nLWT-documentatie repareren\noptioneel een bericht publiceren bij het netjes loskoppelen",
-        "fr": "ajouter une option pour sélectionner la version du protocole\najouter la prise en charge des websockets\npublier les valeurs une fois lors de l'activation de la publication\nMise à niveau vers MQTT version 4 (résout de nombreux problèmes de connexion)\ncorriger la documentation LWT\néventuellement publier un message lors de la déconnexion gracieuse",
-        "it": "aggiungi l'opzione per selezionare la versione del protocollo\naggiungi il supporto per WebSocket\npubblicare i valori una volta all'abilitazione della pubblicazione\nAggiornamento a MQTT versione 4 (risolve molti problemi di connessione)\ncorreggere la documentazione LWT\nfacoltativamente, pubblicare un messaggio durante la disconnessione regolare",
-        "es": "agregar opción para seleccionar la versión del protocolo\nañadir soporte websocket\npublicar valores una vez al habilitar la publicación\nActualice a MQTT versión 4 (resuelve muchos problemas de conexión)\ncorregir la documentación de LWT\nopcionalmente, publique un mensaje cuando se desconecte correctamente",
-        "pl": "dodaj opcję wyboru wersji protokołu\ndodaj obsługę gniazda sieciowego\nopublikuj wartości raz po włączeniu publikowania\nUaktualnij do MQTT w wersji 4 (rozwiązuje wiele problemów z połączeniem)\nnaprawić dokumentację LWT\nopcjonalnie opublikuj wiadomość przy wdzięcznym rozłączeniu",
-        "zh-cn": "添加选项以选择协议版本\n添加 websocket 支持\n在启用发布时发布值一次\n升级到 MQTT 版本 4（解决了许多连接问题）\n修复 LWT 文档\n可以选择在正常断开连接时发布消息"
       }
     },
     "titleLang": {
