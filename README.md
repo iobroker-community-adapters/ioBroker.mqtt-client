@@ -88,6 +88,7 @@ default: state-ID converted to a mqtt topic.
 -->
 ## Changelog
 ### __WORK IN PROGRESS__
+* (klein0r) Password is now encrypted - you have to re-renter your password in instance settings!
 * (klein0r) Use jsonConfig instead of materialize (for instance settings)
 
 ### 1.8.0 (2024-04-07)
