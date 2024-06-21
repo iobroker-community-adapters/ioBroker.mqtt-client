@@ -65,7 +65,8 @@
         "it": "Prevenire potenziali casi di crash segnalati da Sentry",
         "es": "Prevent potential accident cases reported by Sentry",
         "pl": "Prevent potential collisions (ang.)",
-        "zh-cn": "Sentry所报告的预防潜在事故"
+        "zh-cn": "Sentry所报告的预防潜在事故",
+        "uk": "Запобігайте потенційним випадкам збоїв, про які повідомляє Sentry"
       },
       "1.6.2": {
         "en": "Prevent potential crash cases reported by Sentry",
@@ -77,7 +78,8 @@
         "it": "Prevenire potenziali casi di crash segnalati da Sentry",
         "es": "Evitar posibles casos de accidentes informados por Sentry",
         "pl": "Zapobiegaj potencjalnym przypadkom awarii zgłaszanych przez Sentry",
-        "zh-cn": "防止 Sentry 报告的潜在崩溃案例"
+        "zh-cn": "防止 Sentry 报告的潜在崩溃案例",
+        "uk": "Запобігайте потенційним випадкам збоїв, про які повідомляє Sentry"
       },
       "1.6.1": {
         "en": "fix subscriptions\nfix unsubscribing\nuse prefix for LWT topic",
@@ -89,7 +91,8 @@
         "it": "correggere gli abbonamenti\ncorreggere l'annullamento dell'iscrizione\nusa il prefisso per l'argomento LWT",
         "es": "arreglar suscripciones\ncorregir la cancelación de la suscripción\nuse el prefijo para el tema LWT",
         "pl": "napraw subskrypcje\nnapraw rezygnację z subskrypcji\nużyj prefiksu dla tematu LWT",
-        "zh-cn": "修复订阅\n修复退订\n使用 LWT 主题的前缀"
+        "zh-cn": "修复订阅\n修复退订\n使用 LWT 主题的前缀",
+        "uk": "виправити підписки\nвиправити відмову від підписки\nвикористовуйте префікс для теми LWT"
       }
     },
     "titleLang": {
@@ -102,6 +105,7 @@
       "it": "Client MQTT",
       "es": "Cliente MQTT",
       "pl": "Klient MQTT",
+      "uk": "Клієнт MQTT",
       "zh-cn": "MQTT客户端"
     },
     "desc": {
@@ -114,6 +118,7 @@
       "it": "Sincronizzazione con i broker MQTT",
       "es": "Sincronización con intermediarios MQTT",
       "pl": "Synchronizacja z brokerami MQTT",
+      "uk": "Синхронізація з MQTT Brokers",
       "zh-cn": "与MQTT经纪人同步"
     },
     "authors": [
@@ -131,7 +136,6 @@
       "type": "free"
     },
     "platform": "Javascript/Node.js",
-    "main": "main.js",
     "icon": "mqtt-client.png",
     "enabled": true,
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.mqtt-client/master/admin/mqtt-client.png",
@@ -147,7 +151,6 @@
       "custom": "json",
       "config": "materialize"
     },
-    "materialize": true,
     "messagebox": true,
     "supportCustoms": true,
     "supportStopInstance": true,
@@ -205,7 +208,19 @@
       "_id": "info",
       "type": "channel",
       "common": {
-        "name": "Information"
+        "name": {
+          "en": "Information",
+          "de": "Informationen",
+          "ru": "Информация",
+          "pt": "Informação",
+          "nl": "Informatie",
+          "fr": "Informations",
+          "it": "Informazioni",
+          "es": "Información",
+          "pl": "Informacje",
+          "uk": "Інформація",
+          "zh-cn": "资料"
+        }
       },
       "native": {}
     },
@@ -213,9 +228,21 @@
       "_id": "info.connection",
       "type": "state",
       "common": {
-        "role": "indicator.connected",
-        "name": "If connected to MQTT broker",
+        "name": {
+          "en": "Connected to MQTT broker",
+          "de": "Mit MQTT-Broker verbunden",
+          "ru": "Подключен к брокеру MQTT",
+          "pt": "Conectado ao corretor MQTT",
+          "nl": "Verbonden met MQTT-makelaar",
+          "fr": "Connecté au courtier MQTT",
+          "it": "Collegato al broker MQTT",
+          "es": "Conectado al bróker de MQTT",
+          "pl": "Połączony z pośrednikiem MQTT",
+          "uk": "Підключення до брокера MQTT",
+          "zh-cn": "已连接到 MQTT 经纪人"
+        },
         "type": "boolean",
+        "role": "indicator.connected",
         "read": true,
         "write": false,
         "def": false
