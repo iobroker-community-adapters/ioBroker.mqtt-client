@@ -1,10 +1,5 @@
 'use strict';
 
-// disable errors  Do not access Object.prototype method 'hasOwnProperty' from target object
-/* eslint-disable no-prototype-builtins */
-
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 const mqtt = require('mqtt');
 
@@ -17,24 +12,22 @@ const _context = {
 };
 
 class MqttClient extends utils.Adapter {
-    /**
-     * @param {Partial<ioBroker.AdapterOptions>} [options={}]
-     */
-
     constructor(options) {
         super({
             ...options,
             name: 'mqtt-client'
         });
+
+        this._connected = false;
+        this.client = null;
+        this._subscribes = [];
+        this.adapterFinished = false;
+
         this.on('ready', this.onReady.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
-        this._connected = false;
-        this.client = null;
-        this._subscribes = [];
-        this.adapterFinished = false;
     }
 
     connect() {
@@ -163,13 +156,13 @@ class MqttClient extends utils.Adapter {
                 const obj = JSON.parse(msg);
                 this.log.debug(JSON.stringify(obj));
 
-                if (obj.hasOwnProperty('val')) {
+                if (Object.prototype.hasOwnProperty.call(obj, 'val')) {
                     const custom = _context.custom;
-                    if (obj.hasOwnProperty('ts') && state && obj.ts <= state.ts) {
+                    if (Object.prototype.hasOwnProperty.call(obj, 'ts') && state && obj.ts <= state.ts) {
                         this.log.debug('object ts not newer than current state ts: ' + msg);
                         return false;
                     }
-                    if (obj.hasOwnProperty('lc') && state && obj.lc < state.lc) {
+                    if (Object.prototype.hasOwnProperty.call(obj, 'lc') && state && obj.lc < state.lc) {
                         this.log.debug('object lc not newer than current state lc: ' + msg);
                         return false;
                     }
@@ -177,8 +170,8 @@ class MqttClient extends utils.Adapter {
                     if (
                         this.config.inbox === this.config.outbox &&
                         custom[id].publish &&
-                        !obj.hasOwnProperty('ts') &&
-                        !obj.hasOwnProperty('lc') &&
+                        !Object.prototype.hasOwnProperty.call(obj, 'ts') &&
+                        !Object.prototype.hasOwnProperty.call(obj, 'lc') &&
                         obj.val !== state.val
                     ) {
                         this.log.debug('object value did not change (loop protection): ' + msg);
@@ -391,7 +384,7 @@ class MqttClient extends utils.Adapter {
         let topic;
 
         //if necessary remove namespace before converting, e.g. "mqtt-client.0..."
-        if (namespace && id.substring(0, namespace.length) === namespace) {
+        if (id.startsWith(namespace)) {
             topic = id.substring(namespace.length + 1);
         } else {
             topic = id;
@@ -465,7 +458,7 @@ class MqttClient extends utils.Adapter {
                 const topic2id = _context.topic2id;
                 const addTopics = _context.addTopics;
 
-                const protocol = '' + (this.config.websocket ? 'ws' : 'mqtt') + (this.config.ssl ? 's' : '');
+                const protocol = `${this.config.websocket ? 'ws' : 'mqtt'}${this.config.ssl ? 's' : ''}`;
                 const _url = `${protocol}://${
                     this.config.username ? this.config.username + ':' + this.config.password + '@' : ''
                 }${this.config.host}${this.config.port ? ':' + this.config.port : ''}?clientId=${this.config.clientId}`;
