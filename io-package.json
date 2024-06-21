@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mqtt-client",
-    "version": "1.8.0",
+    "version": "2.0.0",
     "news": {
+      "2.0.0": {
+        "en": "(klein0r) Password is now encrypted - you have to re-renter your password in instance settings!\n(klein0r) Use jsonConfig instead of materialize (for instance settings)",
+        "de": "(klein0r) Passwort ist jetzt verschlüsselt - Sie müssen Ihr Passwort in Instanzeinstellungen neugeben!\n(klein0r) Verwenden Sie jsonConfig anstelle von materialisieren (z.B. Einstellungen)",
+        "ru": "(klein0r) Пароль теперь зашифрован - вы должны повторно набрать свой пароль в настройках экземпляра!\n(клеин0р) Используйте jsonConfig вместо материализации (например, настройки)",
+        "pt": "(klein0r) A senha agora está criptografada - você tem que voltar a digitar sua senha em configurações de instância!\n(klein0r) Use jsonConfig em vez de materializar (por exemplo, configurações)",
+        "nl": "(klein0r) Wachtwoord wordt nu versleuteld - u moet uw wachtwoord opnieuw verwisselen in instantie instellingen!\n(klein0r) jsonConfig gebruiken in plaats van materialiseren (bijvoorbeeld instellingen)",
+        "fr": "(klein0r) Le mot de passe est maintenant chiffré - vous devez re-louer votre mot de passe dans les paramètres d'instance!\n(klein0r) Utiliser jsonConfig au lieu de se matérialiser (par exemple paramètres)",
+        "it": "(klein0r) La password è ora crittografata - è necessario ripristinare la password nelle impostazioni delle istanze!\n(Klein0r) Utilizzare jsonConfig invece di materializzare (per esempio impostazioni)",
+        "es": "(klein0r) La contraseña está ahora encriptada - tiene que volver a introducir su contraseña en los ajustes de instancia!\n(klein0r) Utilice jsonConfig en lugar de materializar (por ejemplo, ajustes)",
+        "pl": "(klein0r) Hasło jest teraz zaszyfrowane - musisz ponownie wypożyczyć hasło na przykład w ustawieniach!\n(klein0r) Użyj jsonConfig zamiast materializować (na przykład ustawienia)",
+        "uk": "(klein0r) Пароль тепер зашифрований - ви повинні повторно опрацювати пароль в налаштуваннях екземпляра!\n(klein0r) Використовуйте jsonConfig замість матеріалізації (наприклад, налаштування)",
+        "zh-cn": "(klein0r) 密码现已加密 - 您必须在实例设置中重新租赁您的密码 !\n(鸣笛0r) 使用jsonConfig 代替实现( 例如设置)"
+      },
       "1.8.0": {
         "en": "Adapter requires node.js 18 and js-controller >= 5 now\nDependencies have been updated",
         "de": "Adapter benötigt node.js 18 und js-controller >= 5 jetzt\nAbhängigkeiten wurden aktualisiert",
@@ -80,19 +93,6 @@
         "pl": "Zapobiegaj potencjalnym przypadkom awarii zgłaszanych przez Sentry",
         "zh-cn": "防止 Sentry 报告的潜在崩溃案例",
         "uk": "Запобігайте потенційним випадкам збоїв, про які повідомляє Sentry"
-      },
-      "1.6.1": {
-        "en": "fix subscriptions\nfix unsubscribing\nuse prefix for LWT topic",
-        "de": "Abonnements reparieren\nAbmeldung beheben\nPräfix für LWT-Thema verwenden",
-        "ru": "исправить подписки\nисправить отписку\nиспользовать префикс для темы LWT",
-        "pt": "corrigir assinaturas\ncorrigir cancelamento de inscrição\nuse prefixo para tópico LWT",
-        "nl": "abonnementen repareren\nafmelden oplossen\ngebruik prefix voor LWT-onderwerp",
-        "fr": "corriger les abonnements\ncorriger la désinscription\nutiliser le préfixe pour le sujet LWT",
-        "it": "correggere gli abbonamenti\ncorreggere l'annullamento dell'iscrizione\nusa il prefisso per l'argomento LWT",
-        "es": "arreglar suscripciones\ncorregir la cancelación de la suscripción\nuse el prefijo para el tema LWT",
-        "pl": "napraw subskrypcje\nnapraw rezygnację z subskrypcji\nużyj prefiksu dla tematu LWT",
-        "zh-cn": "修复订阅\n修复退订\n使用 LWT 主题的前缀",
-        "uk": "виправити підписки\nвиправити відмову від підписки\nвикористовуйте префікс для теми LWT"
       }
     },
     "titleLang": {
