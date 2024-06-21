@@ -172,7 +172,49 @@
       "sentry": {
         "dsn": "https://0bce9946ef3348dc9ef31ee6442370f2@sentry.iobroker.net/142"
       }
-    }
+    },
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<2.0.0",
+            "newVersion>=2.0.0"
+          ]
+        },
+        "title": {
+          "en": "Passwords are now stored encrypted",
+          "de": "Passwörter werden jetzt verschlüsselt gespeichert",
+          "ru": "Пароли теперь хранятся зашифрованными",
+          "pt": "As senhas são agora armazenadas criptografadas",
+          "nl": "Wachtwoorden worden nu versleuteld opgeslagen",
+          "fr": "Les mots de passe sont maintenant stockés cryptés",
+          "it": "Le password sono ora memorizzate crittografate",
+          "es": "Las contraseñas ahora se almacenan encriptadas",
+          "pl": "Hasła są teraz przechowywane zaszyfrowane",
+          "uk": "Паролі тепер зберігаються зашифровані",
+          "zh-cn": "密码现已加密"
+        },
+        "text": {
+          "en": "You have to re-renter your MQTT password (if used) after the adapter upgrade. Open the instance configuration, enter your password and safe the configuration. The password is stored encrypted afterwards.",
+          "de": "Sie müssen Ihr MQTT-Passwort (falls verwendet) nach dem Adapter-Upgrade neu eingeben. Öffnen Sie die Instanzkonfiguration, geben Sie Ihr Passwort ein und sichern Sie die Konfiguration. Das Passwort wird danach verschlüsselt gespeichert.",
+          "ru": "Вы должны повторно нанять свой пароль MQTT (если используется) после обновления адаптера. Откройте настройку экземпляра, введите пароль и обезопасите конфигурацию. После этого пароль зашифрован.",
+          "pt": "Você tem que reinserir sua senha MQTT (se usado) após a atualização do adaptador. Abra a configuração da instância, insira sua senha e proteja a configuração. A senha é armazenada criptografada depois.",
+          "nl": "U moet uw MQTT-wachtwoord (indien gebruikt) na de upgrade van de adapter opnieuw verhuren. Open de instantieconfiguratie, voer uw wachtwoord in en beveilig de configuratie. Het wachtwoord wordt daarna versleuteld opgeslagen.",
+          "fr": "Vous devez renouveler votre mot de passe MQTT (si utilisé) après la mise à niveau de l'adaptateur. Ouvrez la configuration de l'instance, entrez votre mot de passe et sécurisez la configuration. Le mot de passe est enregistré crypté par la suite.",
+          "it": "È necessario ripristinare la password MQTT (se utilizzata) dopo l'aggiornamento dell'adattatore. Aprire la configurazione dell'istanza, inserire la password e proteggere la configurazione. La password viene archiviata successivamente.",
+          "es": "Usted tiene que volver a introducir su contraseña MQTT (si se utiliza) después de la actualización del adaptador. Abra la configuración de instancia, introduzca su contraseña y asegúrese de la configuración. La contraseña se almacena encriptada después.",
+          "pl": "Po aktualizacji adaptera należy ponownie wypożyczyć hasło MQTT (jeśli jest używane). Otwórz konfigurację instancji, wprowadź hasło i zabezpiecz konfigurację. Hasło jest później zapisywane.",
+          "uk": "Після оновлення адаптера потрібно переоцінити пароль MQTT (якщо використовується) Відкрийте налаштування екземпляра, введіть пароль і встановіть налаштування. Зашифрований паролем після.",
+          "zh-cn": "在适配器升级后,您必须重新租赁您的 MQTT 密码( 如果使用) 。 打开实例配置, 输入密码并安全配置 。 密码在之后被加密 ."
+        },
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
+      }
+    ]
   },
   "protectedNative": [
     "username",
