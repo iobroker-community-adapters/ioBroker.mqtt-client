@@ -1,0 +1,167 @@
+{
+    "i18n": true,
+    "type": "tabs",
+    "iconPosition": "top",
+    "items": {
+        "_general": {
+            "type": "panel",
+            "label": "General settings",
+            "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48IS0tISBGb250IEF3ZXNvbWUgUHJvIDYuNC4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlIChDb21tZXJjaWFsIExpY2Vuc2UpIENvcHlyaWdodCAyMDIzIEZvbnRpY29ucywgSW5jLiAtLT48cGF0aCBkPSJNNDk1LjkgMTY2LjZjMy4yIDguNyAuNSAxOC40LTYuNCAyNC42bC00My4zIDM5LjRjMS4xIDguMyAxLjcgMTYuOCAxLjcgMjUuNHMtLjYgMTcuMS0xLjcgMjUuNGw0My4zIDM5LjRjNi45IDYuMiA5LjYgMTUuOSA2LjQgMjQuNmMtNC40IDExLjktOS43IDIzLjMtMTUuOCAzNC4zbC00LjcgOC4xYy02LjYgMTEtMTQgMjEuNC0yMi4xIDMxLjJjLTUuOSA3LjItMTUuNyA5LjYtMjQuNSA2LjhsLTU1LjctMTcuN2MtMTMuNCAxMC4zLTI4LjIgMTguOS00NCAyNS40bC0xMi41IDU3LjFjLTIgOS4xLTkgMTYuMy0xOC4yIDE3LjhjLTEzLjggMi4zLTI4IDMuNS00Mi41IDMuNXMtMjguNy0xLjItNDIuNS0zLjVjLTkuMi0xLjUtMTYuMi04LjctMTguMi0xNy44bC0xMi41LTU3LjFjLTE1LjgtNi41LTMwLjYtMTUuMS00NC0yNS40TDgzLjEgNDI1LjljLTguOCAyLjgtMTguNiAuMy0yNC41LTYuOGMtOC4xLTkuOC0xNS41LTIwLjItMjIuMS0zMS4ybC00LjctOC4xYy02LjEtMTEtMTEuNC0yMi40LTE1LjgtMzQuM2MtMy4yLTguNy0uNS0xOC40IDYuNC0yNC42bDQzLjMtMzkuNEM2NC42IDI3My4xIDY0IDI2NC42IDY0IDI1NnMuNi0xNy4xIDEuNy0yNS40TDIyLjQgMTkxLjJjLTYuOS02LjItOS42LTE1LjktNi40LTI0LjZjNC40LTExLjkgOS43LTIzLjMgMTUuOC0zNC4zbDQuNy04LjFjNi42LTExIDE0LTIxLjQgMjIuMS0zMS4yYzUuOS03LjIgMTUuNy05LjYgMjQuNS02LjhsNTUuNyAxNy43YzEzLjQtMTAuMyAyOC4yLTE4LjkgNDQtMjUuNGwxMi41LTU3LjFjMi05LjEgOS0xNi4zIDE4LjItMTcuOEMyMjcuMyAxLjIgMjQxLjUgMCAyNTYgMHMyOC43IDEuMiA0Mi41IDMuNWM5LjIgMS41IDE2LjIgOC43IDE4LjIgMTcuOGwxMi41IDU3LjFjMTUuOCA2LjUgMzAuNiAxNS4xIDQ0IDI1LjRsNTUuNy0xNy43YzguOC0yLjggMTguNi0uMyAyNC41IDYuOGM4LjEgOS44IDE1LjUgMjAuMiAyMi4xIDMxLjJsNC43IDguMWM2LjEgMTEgMTEuNCAyMi40IDE1LjggMzQuM3pNMjU2IDMzNmE4MCA4MCAwIDEgMCAwLTE2MCA4MCA4MCAwIDEgMCAwIDE2MHoiLz48L3N2Zz4=",
+            "items": {
+                "host": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 10,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "host"
+                },
+                "port": {
+                    "type": "port",
+                    "sm": 2,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "port"
+                },
+                "mqttVersion": {
+                    "type": "select",
+                    "options": [
+                        {
+                            "label": "3",
+                            "value": 3
+                        },
+                        {
+                            "label": "4",
+                            "value": 4
+                        },
+                        {
+                            "label": "5",
+                            "value": 5
+                        }
+                    ],
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "mqttVersion"
+                },
+                "websocket": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "Websocket"
+                },
+                "ssl": {
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "ssl"
+                },
+                "rejectUnauthorized": {
+                    "hidden": "!data.ssl",
+                    "type": "checkbox",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "rejectUnauthorized"
+                },
+                "clientId": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "Client ID"
+                },
+                "username": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "username"
+                },
+                "password": {
+                    "type": "password",
+                    "repeat": false,
+                    "visible": true,
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "password"
+                },
+                "_headerCustomOptions": {
+                    "newLine": true,
+                    "type": "header",
+                    "size": 2,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "text": "Custom options"
+                },
+                "onConnectTopic": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "onConnectTopic"
+                },
+                "onConnectMessage": {
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "onConnectMessage"
+                },
+                "onDisconnectTopic": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "onDisconnectTopic"
+                },
+                "onDisconnectMessage": {
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "onDisconnectMessage"
+                },
+                "lastWillTopic": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "lastWillTopic"
+                },
+                "lastWillMessage": {
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "lastWillMessage"
+                },
+                "inbox": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "inbox"
+                },
+                "outbox": {
+                    "type": "text",
+                    "sm": 12,
+                    "md": 4,
+                    "lg": 4,
+                    "label": "outbox"
+                }
+            }
+        }
+    }
+}

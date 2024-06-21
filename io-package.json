@@ -124,12 +124,15 @@
     "authors": [
       "mcm1957 <mcm57@gmx.at>",
       "Pmant <patrickmo@gmx.de>",
-      "algar42 <igor.aleschenkov@gmail.com>"
+      "algar42 <igor.aleschenkov@gmail.com>",
+      "Matthias Kleine <info@haus-automatisierung.com>"
     ],
     "keywords": [
       "mqtt",
       "syncing",
-      "data"
+      "data",
+      "subscribe",
+      "publish"
     ],
     "licenseInformation": {
       "license": "MIT",
@@ -149,7 +152,7 @@
     "dataSource": "push",
     "adminUI": {
       "custom": "json",
-      "config": "materialize"
+      "config": "json"
     },
     "messagebox": true,
     "supportCustoms": true,
@@ -171,13 +174,20 @@
       }
     }
   },
+  "protectedNative": [
+    "username",
+    "password"
+  ],
+  "encryptedNative": [
+    "password"
+  ],
   "native": {
     "host": "",
     "port": 1883,
+    "mqttVersion": 4,
+    "websocket": false,
     "ssl": false,
     "rejectUnauthorized": true,
-    "websocket": false,
-    "mqttVersion": 4,
     "clientId": "",
     "username": "",
     "password": "",
