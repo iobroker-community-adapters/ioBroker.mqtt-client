@@ -30,5 +30,7 @@
     "rejectUnauthorized": "Примусове виконання підписаних сертифікатів",
     "Custom options": "Спеціальні параметри",
     "MQTT Version": "Версія MQTT",
-    "Use websockets": "Використовуйте веб-сокети"
+    "Use websockets": "Використовуйте веб-сокети",
+    "Topic must not start with /": "Тема не повинна починатися з /",
+    "Topic must not end with /": "Тема не повинна закінчуватися на /"
 }

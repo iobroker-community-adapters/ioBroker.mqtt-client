@@ -30,5 +30,7 @@
     "rejectUnauthorized": "Ondertekende certificaten afdwingen",
     "Custom options": "Aangepaste opties",
     "MQTT Version": "MQTT-versie",
-    "Use websockets": "Gebruik websockets"
+    "Use websockets": "Gebruik websockets",
+    "Topic must not start with /": "Onderwerp mag niet beginnen met /",
+    "Topic must not end with /": "Onderwerp mag niet eindigen op /"
 }

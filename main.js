@@ -255,12 +255,12 @@ class MqttClient extends utils.Adapter {
 
     topicAddPrefixOut(topic) {
         //add outgoing prefix
-        return (topic = this.config.outbox ? this.config.outbox + '/' + topic : topic);
+        return this.config.outbox ? `${this.config.outbox}/${topic}` : topic;
     }
 
     topicAddPrefixIn(topic) {
         //add outgoing prefix
-        return (topic = this.config.inbox ? this.config.inbox + '/' + topic : topic);
+        return this.config.inbox ? `${this.config.inbox}/${topic}` : topic;
     }
 
     topicRemovePrefixIn(topic) {

@@ -30,5 +30,7 @@
     "rejectUnauthorized": "强制执行签名证书",
     "Custom options": "自定义选项",
     "MQTT Version": "MQTT版本",
-    "Use websockets": "使用网络套接字"
+    "Use websockets": "使用网络套接字",
+    "Topic must not start with /": "主题不得以 / 开头",
+    "Topic must not end with /": "主题不得以 / 结尾"
 }

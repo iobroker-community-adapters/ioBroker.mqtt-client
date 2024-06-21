@@ -30,5 +30,7 @@
     "rejectUnauthorized": "Applica i certificati firmati",
     "Custom options": "Opzioni personalizzate",
     "MQTT Version": "Versione MQTT",
-    "Use websockets": "Usa i websocket"
+    "Use websockets": "Usa i websocket",
+    "Topic must not start with /": "L'argomento non deve iniziare con /",
+    "Topic must not end with /": "L'argomento non deve terminare con /"
 }

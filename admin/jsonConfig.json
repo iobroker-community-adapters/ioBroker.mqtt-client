@@ -107,7 +107,10 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "on connect topic"
+                    "label": "on connect topic",
+                    "validator": "!data.onConnectTopic.startsWith('/')",
+                    "validatorErrorText": "Topic must not start with /",
+                    "validatorNoSaveOnError": true
                 },
                 "onConnectMessage": {
                     "type": "text",
@@ -122,7 +125,10 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "on disconnect topic"
+                    "label": "on disconnect topic",
+                    "validator": "!data.onDisconnectTopic.startsWith('/')",
+                    "validatorErrorText": "Topic must not start with /",
+                    "validatorNoSaveOnError": true
                 },
                 "onDisconnectMessage": {
                     "type": "text",
@@ -137,7 +143,10 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "last will topic"
+                    "label": "last will topic",
+                    "validator": "!data.lastWillTopic.startsWith('/')",
+                    "validatorErrorText": "Topic must not start with /",
+                    "validatorNoSaveOnError": true
                 },
                 "lastWillMessage": {
                     "type": "text",
@@ -152,14 +161,20 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "prefix for subscribing topics"
+                    "label": "prefix for subscribing topics",
+                    "validator": "!data.inbox.endsWith('/')",
+                    "validatorErrorText": "Topic must not end with /",
+                    "validatorNoSaveOnError": true
                 },
                 "outbox": {
                     "type": "text",
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "prefix for publishing topics"
+                    "label": "prefix for publishing topics",
+                    "validator": "!data.outbox.endsWith('/')",
+                    "validatorErrorText": "Topic must not end with /",
+                    "validatorNoSaveOnError": true
                 },
                 "subscriptions": {
                     "type": "chips",
