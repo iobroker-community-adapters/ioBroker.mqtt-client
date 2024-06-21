@@ -27,5 +27,8 @@
     "ssl": "SSL",
     "username": "gebruikersnaam",
     "without prefix": "zonder voorvoegsel",
-    "rejectUnauthorized": "Ondertekende certificaten afdwingen"
+    "rejectUnauthorized": "Ondertekende certificaten afdwingen",
+    "Custom options": "Aangepaste opties",
+    "MQTT Version": "MQTT-versie",
+    "Use websockets": "Gebruik websockets"
 }

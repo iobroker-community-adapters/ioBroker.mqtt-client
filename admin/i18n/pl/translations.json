@@ -27,5 +27,8 @@
     "ssl": "SSL",
     "username": "Nazwa Użytkownika",
     "without prefix": "bez prefiksu",
-    "rejectUnauthorized": "Wymuszaj podpisane certyfikaty"
+    "rejectUnauthorized": "Wymuszaj podpisane certyfikaty",
+    "Custom options": "Opcje niestandardowe",
+    "MQTT Version": "Wersja MQTT",
+    "Use websockets": "Skorzystaj z websocketów"
 }

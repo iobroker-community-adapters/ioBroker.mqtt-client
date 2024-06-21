@@ -42,7 +42,7 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "mqttVersion"
+                    "label": "MQTT Version"
                 },
                 "websocket": {
                     "newLine": true,
@@ -50,7 +50,7 @@
                     "sm": 4,
                     "md": 4,
                     "lg": 4,
-                    "label": "Websocket"
+                    "label": "Use websockets"
                 },
                 "ssl": {
                     "type": "checkbox",
@@ -107,14 +107,14 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "onConnectTopic"
+                    "label": "on connect topic"
                 },
                 "onConnectMessage": {
                     "type": "text",
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "onConnectMessage"
+                    "label": "on disconnect message"
                 },
                 "onDisconnectTopic": {
                     "newLine": true,
@@ -122,14 +122,14 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "onDisconnectTopic"
+                    "label": "on disconnect topic"
                 },
                 "onDisconnectMessage": {
                     "type": "text",
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "onDisconnectMessage"
+                    "label": "on disconnect message"
                 },
                 "lastWillTopic": {
                     "newLine": true,
@@ -137,14 +137,14 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "lastWillTopic"
+                    "label": "last will topic"
                 },
                 "lastWillMessage": {
                     "type": "text",
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "lastWillMessage"
+                    "label": "last will message"
                 },
                 "inbox": {
                     "newLine": true,
@@ -152,14 +152,22 @@
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "inbox"
+                    "label": "prefix for subscribing topics"
                 },
                 "outbox": {
                     "type": "text",
                     "sm": 12,
                     "md": 4,
                     "lg": 4,
-                    "label": "outbox"
+                    "label": "prefix for publishing topics"
+                },
+                "subscriptions": {
+                    "type": "chips",
+                    "label": "additional subscriptions",
+                    "delimiter": ",",
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12
                 }
             }
         }

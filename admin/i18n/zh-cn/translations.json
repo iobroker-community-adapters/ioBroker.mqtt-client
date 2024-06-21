@@ -27,5 +27,8 @@
     "ssl": "SSL协议",
     "username": "用户名",
     "without prefix": "无前缀",
-    "rejectUnauthorized": "强制执行签名证书"
+    "rejectUnauthorized": "强制执行签名证书",
+    "Custom options": "自定义选项",
+    "MQTT Version": "MQTT版本",
+    "Use websockets": "使用网络套接字"
 }

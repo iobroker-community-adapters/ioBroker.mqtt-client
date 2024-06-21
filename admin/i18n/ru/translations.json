@@ -27,5 +27,8 @@
     "ssl": "SSL",
     "username": "Имя пользователя",
     "without prefix": "без префикса",
-    "rejectUnauthorized": "Применение подписанных сертификатов"
+    "rejectUnauthorized": "Применение подписанных сертификатов",
+    "Custom options": "Пользовательские параметры",
+    "MQTT Version": "MQTT-версия",
+    "Use websockets": "Используйте веб-сокеты"
 }
