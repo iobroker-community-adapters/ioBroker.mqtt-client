@@ -9,6 +9,7 @@
     "_publish": {
       "newLine": true,
       "type": "header",
+      "size": 2,
       "text": "publish",
       "sm": 12
     },
@@ -64,6 +65,7 @@
     "_subscribe": {
       "newLine": true,
       "type": "header",
+      "size": 2,
       "text": "subscribe",
       "sm": 12
     },
