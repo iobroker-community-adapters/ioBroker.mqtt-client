@@ -1,7 +1,7 @@
 {
   "items": {
     "topic": {
-      "type": "topic",
+      "type": "text",
       "label": "Topic",
       "help": "(without prefix)",
       "sm": 12
