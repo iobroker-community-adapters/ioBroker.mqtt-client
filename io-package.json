@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mqtt-client",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "news": {
+      "2.0.1": {
+        "en": "Added missing information in configuration dialog\nFixed type of port configuration to avoid conflicts",
+        "de": "Fehlende Informationen im Konfigurationsdialog hinzugefügt\nFeste Art der Port-Konfiguration, um Konflikte zu vermeiden",
+        "ru": "Добавить недостающую информацию в диалог конфигурации\nФиксированный тип конфигурации порта, чтобы избежать конфликтов",
+        "pt": "Adicionada informação em falta na caixa de diálogo de configuração\nTipo fixo de configuração de porta para evitar conflitos",
+        "nl": "Ontbrekende informatie toegevoegd in configuratiedialoog\nVast type poortconfiguratie om conflicten te voorkomen",
+        "fr": "Ajout des informations manquantes dans la boîte de dialogue de configuration\nType de configuration de port fixe pour éviter les conflits",
+        "it": "Aggiunto le informazioni mancanti nella finestra di dialogo di configurazione\nTipo fisso di configurazione della porta per evitare conflitti",
+        "es": "Añadido información faltante en el diálogo de configuración\nTipo fijo de configuración portuaria para evitar conflictos",
+        "pl": "Dodano brakujące informacje w oknie konfiguracji\nPoprawiony typ konfiguracji portu w celu uniknięcia konfliktów",
+        "uk": "Додано відсутні дані в діалоговому вікні конфігурації\nВиправлено тип конфігурації порту, щоб уникнути конфліктів",
+        "zh-cn": "在配置对话框中添加缺失的信息\n避免冲突的固定类型端口配置"
+      },
       "2.0.0": {
         "en": "(klein0r) Password is now encrypted - you have to re-renter your password in instance settings!\n(klein0r) Use jsonConfig instead of materialize (for instance settings)",
         "de": "(klein0r) Passwort ist jetzt verschlüsselt - Sie müssen Ihr Passwort in Instanzeinstellungen neugeben!\n(klein0r) Verwenden Sie jsonConfig anstelle von materialisieren (z.B. Einstellungen)",
@@ -79,19 +92,6 @@
         "es": "Prevent potential accident cases reported by Sentry",
         "pl": "Prevent potential collisions (ang.)",
         "zh-cn": "Sentry所报告的预防潜在事故",
-        "uk": "Запобігайте потенційним випадкам збоїв, про які повідомляє Sentry"
-      },
-      "1.6.2": {
-        "en": "Prevent potential crash cases reported by Sentry",
-        "de": "Verhindern Sie potenzielle Absturzfälle, die von Sentry gemeldet werden",
-        "ru": "Предотвратите потенциальные случаи сбоев, о которых сообщает Sentry.",
-        "pt": "Prevenir possíveis casos de acidente relatados pelo Sentinela",
-        "nl": "Voorkom mogelijke crashgevallen gemeld door Sentry",
-        "fr": "Prévenir les cas de crash potentiels signalés par Sentry",
-        "it": "Prevenire potenziali casi di crash segnalati da Sentry",
-        "es": "Evitar posibles casos de accidentes informados por Sentry",
-        "pl": "Zapobiegaj potencjalnym przypadkom awarii zgłaszanych przez Sentry",
-        "zh-cn": "防止 Sentry 报告的潜在崩溃案例",
         "uk": "Запобігайте потенційним випадкам збоїв, про які повідомляє Sentry"
       }
     },
