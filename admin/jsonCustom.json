@@ -4,35 +4,55 @@
       "type": "text",
       "label": "Topic",
       "help": "(without prefix)",
-      "sm": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "_publish": {
       "newLine": true,
       "type": "header",
       "size": 2,
       "text": "publish",
-      "sm": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "publish": {
       "newLine": true,
       "label": "enabled",
       "type": "checkbox",
       "default": false,
-      "sm": 2
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "pubChangesOnly": {
       "disabled": "!data.publish",
       "label": "changes only",
       "type": "checkbox",
       "default": false,
-      "sm": 3
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "pubAsObject": {
       "disabled": "!data.publish",
       "label": "as object",
       "type": "checkbox",
       "default": false,
-      "sm": 2
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "qos": {
       "disabled": "!data.publish",
@@ -53,42 +73,66 @@
           "value": 2
         }
       ],
-      "sm": 3
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "retain": {
       "disabled": "!data.publish",
       "label": "retain",
       "type": "checkbox",
       "default": false,
-      "sm": 2
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "_subscribe": {
       "newLine": true,
       "type": "header",
       "size": 2,
       "text": "subscribe",
-      "sm": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "subscribe": {
       "newLine": true,
       "label": "enabled",
       "type": "checkbox",
       "default": false,
-      "sm": 2
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "subChangesOnly": {
       "disabled": "!data.subscribe",
       "label": "changes only",
       "type": "checkbox",
       "default": false,
-      "sm": 3
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "subAsObject": {
       "disabled": "!data.subscribe",
       "label": "as object",
       "type": "checkbox",
       "default": false,
-      "sm": 2
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "subQos": {
       "disabled": "!data.subscribe",
@@ -109,14 +153,22 @@
           "value": 2
         }
       ],
-      "sm": 3
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "setAck": {
       "disabled": "!data.subscribe",
       "label": "ack",
       "type": "checkbox",
       "default": false,
-      "sm": 2
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     }
   }
 }

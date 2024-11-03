@@ -87,6 +87,9 @@ default: state-ID converted to a mqtt topic.
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+### __WORK IN PROGRESS__
+* (simatec) Responsive Design added
+
 ### 2.0.1 (2024-09-23)
 * (@klein0r) Added missing information in configuration dialog
 * (@klein0r) Fixed type of port configuration to avoid conflicts

@@ -1,6 +1,9 @@
 {
     "i18n": true,
     "type": "tabs",
+    "tabsStyle": {
+        "width": "calc(100% - 100px)"
+    },
     "iconPosition": "top",
     "items": {
         "_general": {
@@ -11,9 +14,11 @@
                 "host": {
                     "newLine": true,
                     "type": "text",
-                    "sm": 10,
-                    "md": 4,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "host"
                 },
                 "port": {
@@ -21,9 +26,11 @@
                     "min": 1,
                     "max": 65535,
                     "step": 1,
-                    "sm": 2,
-                    "md": 4,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "port"
                 },
                 "mqttVersion": {
@@ -42,74 +49,92 @@
                             "value": 5
                         }
                     ],
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "MQTT Version"
                 },
                 "websocket": {
                     "newLine": true,
                     "type": "checkbox",
-                    "sm": 4,
-                    "md": 4,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "Use websockets"
                 },
                 "ssl": {
                     "type": "checkbox",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "ssl"
                 },
                 "rejectUnauthorized": {
                     "hidden": "!data.ssl",
                     "type": "checkbox",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "rejectUnauthorized"
                 },
                 "clientId": {
                     "newLine": true,
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "Client ID"
                 },
                 "username": {
                     "newLine": true,
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "username"
                 },
                 "password": {
                     "type": "password",
                     "repeat": false,
                     "visible": true,
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "password"
                 },
                 "_headerCustomOptions": {
                     "newLine": true,
                     "type": "header",
                     "size": 2,
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
                     "lg": 12,
+                    "xl": 12,
                     "text": "Custom options"
                 },
                 "onConnectTopic": {
                     "newLine": true,
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "on connect topic",
                     "validator": "!data.onConnectTopic.startsWith('/')",
                     "validatorErrorText": "Topic must not start with /",
@@ -117,17 +142,21 @@
                 },
                 "onConnectMessage": {
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "on connect message"
                 },
                 "onDisconnectTopic": {
                     "newLine": true,
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "on disconnect topic",
                     "validator": "!data.onDisconnectTopic.startsWith('/')",
                     "validatorErrorText": "Topic must not start with /",
@@ -135,17 +164,21 @@
                 },
                 "onDisconnectMessage": {
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "on disconnect message"
                 },
                 "lastWillTopic": {
                     "newLine": true,
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "last will topic",
                     "validator": "!data.lastWillTopic.startsWith('/')",
                     "validatorErrorText": "Topic must not start with /",
@@ -153,17 +186,21 @@
                 },
                 "lastWillMessage": {
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "last will message"
                 },
                 "inbox": {
                     "newLine": true,
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "prefix for subscribing topics",
                     "validator": "!data.inbox.endsWith('/')",
                     "validatorErrorText": "Topic must not end with /",
@@ -171,9 +208,11 @@
                 },
                 "outbox": {
                     "type": "text",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4,
+                    "md": 6,
                     "lg": 4,
+                    "xl": 4,
                     "label": "prefix for publishing topics",
                     "validator": "!data.outbox.endsWith('/')",
                     "validatorErrorText": "Topic must not end with /",
@@ -183,9 +222,11 @@
                     "type": "chips",
                     "label": "additional subscriptions",
                     "delimiter": ",",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
-                    "lg": 12
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         }
