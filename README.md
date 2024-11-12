@@ -88,7 +88,10 @@ default: state-ID converted to a mqtt topic.
 -->
 ## Changelog
 ### __WORK IN PROGRESS__
-* (simatec) Responsive Design added
+* (mcm1957) Adapter requires node.js 20 now.
+* (mcm1957) Adapter requires js-controller 5.0.19 and admin 6.17.14 now.
+* (simatec) Adapter changed to meet Responsive Design rules.
+* (mcm1957) Dependencies have been updated.
 
 ### 2.0.1 (2024-09-23)
 * (@klein0r) Added missing information in configuration dialog
