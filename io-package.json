@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mqtt-client",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "news": {
+      "2.1.0": {
+        "en": "Adapter requires node.js 20 now.\nAdapter requires js-controller 5.0.19 and admin 6.17.14 now.\nAdapter changed to meet Responsive Design rules.\nDependencies have been updated.",
+        "de": "Adapter benötigt node.js 20 jetzt.\nAdapter benötigt jetzt js-controller 5.0.19 und admin 6.17.14.\nAdapter geändert, um Responsive Design Regeln zu erfüllen.\nAbhängigkeiten wurden aktualisiert.",
+        "ru": "Адаптер требует node.js 20.\nАдаптер требует js-контроллер 5.0.19 и admin 6.17.14.\nАдаптер изменился, чтобы соответствовать правилам Responsive Design.\nЗависимость была обновлена.",
+        "pt": "Adaptador requer node.js 20 agora.\nAdaptador requer js-controller 5.0.19 e admin 6.17.14 agora.\nAdapter mudou para atender às regras de Design Responsável.\nAs dependências foram atualizadas.",
+        "nl": "Adapter vereist node.js 20 nu.\nAdapter vereist js-controller 5.01.19 en admin 6.17.14 nu.\nAdapter veranderd om te voldoen aan Responsive Design regels.\nAfhankelijkheden zijn bijgewerkt.",
+        "fr": "Adaptateur nécessite node.js 20 maintenant.\nAdaptateur nécessite js-controller 5.0.19 et admin 6.17.14 maintenant.\nAdaptateur modifié pour respecter les règles de conception réactive.\nLes dépendances ont été actualisées.",
+        "it": "Adattatore richiede node.js 20 ora.\nAdattatore richiede js-controller 5.0.19 e admin 6.17.14 ora.\nAdattatore modificato per soddisfare le regole di Responsive Design.\nLe dipendenze sono state aggiornate.",
+        "es": "Adaptador requiere node.js 20 ahora.\nAdaptador requiere js-controller 5.0.19 y admin 6.17.14 ahora.\nAdaptador cambió para cumplir con las reglas de diseño responsable.\nSe han actualizado las dependencias.",
+        "pl": "Adapter wymaga Node.js 20 teraz.\nAdapter wymaga sterownika js- 5.0.19 i admin 6.17.14 teraz.\nAdapter zmienił się w celu spełnienia zasad Responsive Design.\nZaktualizowano zależność.",
+        "uk": "Адаптер вимагає node.js 20 тепер.\nАдаптер вимагає js-controller 5.0.19 і admin 6.17.14 тепер.\nПерехідник змінився для дотримання правил адаптивного дизайну.\nОновлено залежність.",
+        "zh-cn": "适配器现在需要20号节点.\n适配器现在需要js控制器5.0.19和管理员6.17.14.\n适配器更改以满足应变设计规则.\n附属关系已经更新."
+      },
       "2.0.1": {
         "en": "Added missing information in configuration dialog\nFixed type of port configuration to avoid conflicts",
         "de": "Fehlende Informationen im Konfigurationsdialog hinzugefügt\nFeste Art der Port-Konfiguration, um Konflikte zu vermeiden",
@@ -80,19 +93,6 @@
         "pl": "Opcjonalnie dodaje certyfikaty w ustawieniach adapterów.",
         "uk": "Для того, щоб дозволити собі сертифікати в налаштуваннях адаптера.",
         "zh-cn": "备选案文是允许在适应环境中自发证书。."
-      },
-      "1.6.3": {
-        "en": "Prevent potential crash cases reported by Sentry",
-        "de": "Verhindern potenzielle Crashfälle gemeldet von Sentry",
-        "ru": "Предотвратить потенциальные случаи аварии, сообщаемые Сентри",
-        "pt": "Previne casos potenciais de acidente relatados pela Sentry",
-        "nl": "Vertaling:",
-        "fr": "Prévenir les cas de crash potentiels signalés par Sentry",
-        "it": "Prevenire potenziali casi di crash segnalati da Sentry",
-        "es": "Prevent potential accident cases reported by Sentry",
-        "pl": "Prevent potential collisions (ang.)",
-        "zh-cn": "Sentry所报告的预防潜在事故",
-        "uk": "Запобігайте потенційним випадкам збоїв, про які повідомляє Sentry"
       }
     },
     "titleLang": {
