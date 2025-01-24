@@ -213,6 +213,46 @@
           "agree",
           "cancel"
         ]
+      },
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<3.0.0",
+            "newVersion>=3.0.0"
+          ]
+        },
+        "title": {
+          "en": "Your topics may change",
+          "de": "Deine Topics könnten sich ändern",
+          "ru": "Ваши темы могут измениться",
+          "pt": "Seus tópicos podem mudar",
+          "nl": "Uw onderwerpen kunnen veranderen",
+          "fr": "Vos sujets peuvent changer",
+          "it": "I tuoi argomenti possono cambiare",
+          "es": "Sus temas pueden cambiar",
+          "pl": "Twoje tematy mogą się zmienić",
+          "uk": "Ваша тема може змінитися",
+          "zh-cn": "你的主题可能会改变"
+        },
+        "text": {
+          "en": "Underscores in object IDs have been replaced by spaces in the corresponding topic. This has been changed in version 3.0.0. Check if any of your object IDs contains an underscore which might lead to another topic.",
+          "de": "Unterstriche in Objekt-IDs wurden bisher durch Leerzeichen im entsprechenden Topic ersetzt. Dies wurde in Version 3.0.0 geändert. Überprüfe, ob eine Deiner Objekt-IDs einen Unterstrich enthält, welcher zu einem anderen Topic führen könnte.",
+          "ru": "Заполнители в ID объектов были заменены пробелами в соответствующей теме. Это было изменено в версии 3.0.0. Проверьте, содержит ли какой-либо из ваших идентификаторов объекта подчеркивание, которое может привести к другой теме.",
+          "pt": "Os sublinhados em IDs de objeto foram substituídos por espaços no tópico correspondente. Isso foi alterado na versão 3.0.0. Verifique se qualquer um dos seus IDs de objeto contém um sublinhado que pode levar a outro tópico.",
+          "nl": "Onderscores in object-ID's zijn vervangen door spaties in het overeenkomstige onderwerp. Dit is veranderd in versie 3.0.0. Controleer of een van uw object-ID's een underscore bevat die kan leiden tot een ander onderwerp.",
+          "fr": "Les sous-scores dans les ID d'objet ont été remplacés par des espaces dans le sujet correspondant. Ceci a été modifié dans la version 3.0.0. Vérifiez si l'un de vos identifiants d'objet contient un souligné qui pourrait conduire à un autre sujet.",
+          "it": "Gli underscore in ID oggetto sono stati sostituiti da spazi nell'argomento corrispondente. Questo è stato modificato nella versione 3.0.0. Controlla se uno dei tuoi ID oggetti contiene un underscore che potrebbe portare a un altro argomento.",
+          "es": "Los subscores en identificaciones de objetos han sido reemplazados por espacios en el tema correspondiente. Esto ha sido cambiado en la versión 3.0.0. Comprueba si alguna de tus identificaciones de objetos contiene un subrayado que podría llevar a otro tema.",
+          "pl": "Podkreślenia w identyfikatorach obiektów zostały zastąpione spacjami w odpowiednim temacie. Zostało to zmienione w wersji 3.0.0. Sprawdź, czy któraś z identyfikatorów obiektu zawiera podkreślenie, które może prowadzić do innego tematu.",
+          "uk": "Підкреслення в ідентифікаторах об'єкта було замінено на пробіли в відповідній темі. Це було змінено в версії 3.0.0. Перевірити, якщо будь-який з ідентифікаторів об'єкта містить підряд, який може призвести до іншої теми.",
+          "zh-cn": "对象ID中的强调已被相应主题的空格所取代. 在3.0.0版本中,这一说法有所改变。 检查您的对象ID是否包含一个可能导致另一个主题的下划线 ."
+        },
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
       }
     ]
   },

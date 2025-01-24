@@ -390,8 +390,8 @@ class MqttClient extends utils.Adapter {
             topic = id;
         }
 
-        //replace dots with slashes and underscores with spaces
-        topic = topic.replace(/\./g, '/').replace(/_/g, ' ');
+        //replace dots with slashes
+        topic = topic.replace(/\./g, '/');
         return topic;
     }
 
