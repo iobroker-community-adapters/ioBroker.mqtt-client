@@ -8,14 +8,14 @@ const _context = {
     subTopics: {}, //subscribed mqtt topics
     topic2id: {}, //maps mqtt topics to ioBroker ids
     addTopics: {}, //additional mqtt topics to subscribe to
-    addedTopics: {} //received mqtt topics that created a new object (addTopics)
+    addedTopics: {}, //received mqtt topics that created a new object (addTopics)
 };
 
 class MqttClient extends utils.Adapter {
     constructor(options) {
         super({
             ...options,
-            name: 'mqtt-client'
+            name: 'mqtt-client',
         });
 
         this._connected = false;
@@ -47,9 +47,11 @@ class MqttClient extends utils.Adapter {
                 { qos: 2, retain: true },
                 () =>
                     this.log.debug(
-                        'successfully published ' +
-                            JSON.stringify({ topic: topic, message: this.config.onConnectMessage })
-                    )
+                        `successfully published ${JSON.stringify({
+                            topic: topic,
+                            message: this.config.onConnectMessage,
+                        })}`,
+                    ),
             );
         }
 
@@ -58,12 +60,12 @@ class MqttClient extends utils.Adapter {
 
         //initially subscribe to topics
         if (Object.keys(subTopics).length) {
-            this.subscribe(subTopics, () => this.log.debug('subscribed to: ' + JSON.stringify(subTopics)));
+            this.subscribe(subTopics, () => this.log.debug(`subscribed to: ${JSON.stringify(subTopics)}`));
         }
 
         if (Object.keys(addTopics).length) {
             this.subscribe(addTopics, () =>
-                this.log.debug('subscribed to additional topics: ' + JSON.stringify(addTopics))
+                this.log.debug(`subscribed to additional topics: ${JSON.stringify(addTopics)}`),
             );
         }
     }
@@ -89,7 +91,7 @@ class MqttClient extends utils.Adapter {
     }
 
     error(err) {
-        this.log.warn('client error: ' + err);
+        this.log.warn(`client error: ${err}`);
     }
 
     message(topic, msg) {
@@ -123,11 +125,11 @@ class MqttClient extends utils.Adapter {
                     read: true,
                     write: true,
                     desc: 'created from topic',
-                    custom: {}
+                    custom: {},
                 },
                 native: {
                     topic,
-                }
+                },
             };
             obj.common.custom[this.namespace] = {
                 enabled: true,
@@ -141,9 +143,9 @@ class MqttClient extends utils.Adapter {
                 subChangesOnly: false,
                 subAsObject: false,
                 subQos: 0,
-                setAck: true
+                setAck: true,
             };
-            this.setObjectNotExists(id, obj, () => this.log.debug('created and subscribed to new state: ' + id));
+            this.setObjectNotExists(id, obj, () => this.log.debug(`created and subscribed to new state: ${id}`));
             //onObjectChange should now receive this object
         } else {
             this.log.debug('state already exists');
@@ -159,11 +161,11 @@ class MqttClient extends utils.Adapter {
                 if (Object.prototype.hasOwnProperty.call(obj, 'val')) {
                     const custom = _context.custom;
                     if (Object.prototype.hasOwnProperty.call(obj, 'ts') && state && obj.ts <= state.ts) {
-                        this.log.debug('object ts not newer than current state ts: ' + msg);
+                        this.log.debug(`object ts not newer than current state ts: ${msg}`);
                         return false;
                     }
                     if (Object.prototype.hasOwnProperty.call(obj, 'lc') && state && obj.lc < state.lc) {
-                        this.log.debug('object lc not newer than current state lc: ' + msg);
+                        this.log.debug(`object lc not newer than current state lc: ${msg}`);
                         return false;
                     }
                     // todo: !== correct???
@@ -174,12 +176,12 @@ class MqttClient extends utils.Adapter {
                         !Object.prototype.hasOwnProperty.call(obj, 'lc') &&
                         obj.val !== state.val
                     ) {
-                        this.log.debug('object value did not change (loop protection): ' + msg);
+                        this.log.debug(`object value did not change (loop protection): ${msg}`);
                         return false;
                     }
                     // todo: !== correct???
                     if (custom[id].subChangesOnly && obj.val !== state.val) {
-                        this.log.debug('object value did not change: ' + msg);
+                        this.log.debug(`object value did not change: ${msg}`);
                         return false;
                     }
                     if (custom[id].setAck) {
@@ -187,14 +189,13 @@ class MqttClient extends utils.Adapter {
                     }
                     delete obj.from;
                     this.setForeignState(id, obj);
-                    this.log.debug('object set (as object) to ' + JSON.stringify(obj));
+                    this.log.debug(`object set (as object) to ${JSON.stringify(obj)}`);
                     return true;
-                } else {
-                    this.log.warn('no value in object: ' + msg);
-                    return false;
                 }
+                this.log.warn(`no value in object: ${msg}`);
+                return false;
             } catch {
-                this.log.warn('could not parse message as object: ' + msg);
+                this.log.warn(`could not parse message as object: ${msg}`);
                 return false;
             }
         });
@@ -216,7 +217,7 @@ class MqttClient extends utils.Adapter {
             }
             const _state = { val: this.stringToVal(custom, id, msg), ack: custom[id] && custom[id].setAck };
             this.setForeignState(id, _state);
-            this.log.debug('value of ' + id + ' set to ' + JSON.stringify(_state));
+            this.log.debug(`value of ${id} set to ${JSON.stringify(_state)}`);
             return true;
         });
     }
@@ -233,7 +234,7 @@ class MqttClient extends utils.Adapter {
             }
 
             custom[id].pubState = state;
-            this.log.debug('publishing ' + id);
+            this.log.debug(`publishing ${id}`);
 
             const topic = settings.topic;
 
@@ -245,8 +246,8 @@ class MqttClient extends utils.Adapter {
                 { qos: settings.qos, retain: settings.retain },
                 () =>
                     this.log.debug(
-                        `successfully published ${id}: ${JSON.stringify({ topic: topic, message: message })}`
-                    )
+                        `successfully published ${id}: ${JSON.stringify({ topic: topic, message: message })}`,
+                    ),
             );
 
             return true;
@@ -279,12 +280,12 @@ class MqttClient extends utils.Adapter {
             }
 
             custom[id].pubState = null;
-            this.log.debug('unpublishing ' + id);
+            this.log.debug(`unpublishing ${id}`);
 
             const topic = settings.topic;
 
             this.client.publish(this.topicAddPrefixOut(topic), null, { qos: settings.qos, retain: false }, () =>
-                this.log.debug('successfully unpublished ' + id)
+                this.log.debug(`successfully unpublished ${id}`),
             );
 
             return true;
@@ -300,7 +301,7 @@ class MqttClient extends utils.Adapter {
             }
 
             this.log.debug(
-                `trying to subscribe to ${Object.keys(subTopics).length} topics: ${JSON.stringify(subTopics)}`
+                `trying to subscribe to ${Object.keys(subTopics).length} topics: ${JSON.stringify(subTopics)}`,
             );
             this.client.subscribe(subTopics, (err, granted) => {
                 if (!err) {
@@ -445,7 +446,10 @@ class MqttClient extends utils.Adapter {
         }
     }
 
-    main() {
+    /**
+     * Is called when databases are this. and adapter received configuration.
+     */
+    onReady() {
         this.getState('info.connection', (err, state) => {
             (!state || state.val) && this.setState('info.connection', false, true);
 
@@ -460,11 +464,11 @@ class MqttClient extends utils.Adapter {
 
                 const protocol = `${this.config.websocket ? 'ws' : 'mqtt'}${this.config.ssl ? 's' : ''}`;
                 const _url = `${protocol}://${
-                    this.config.username ? this.config.username + ':' + this.config.password + '@' : ''
-                }${this.config.host}${this.config.port ? ':' + this.config.port : ''}?clientId=${this.config.clientId}`;
+                    this.config.username ? `${this.config.username}:${this.config.password}@` : ''
+                }${this.config.host}${this.config.port ? `:${this.config.port}` : ''}?clientId=${this.config.clientId}`;
                 const __url = `${protocol}://${
-                    this.config.username ? this.config.username + ':*******************@' : ''
-                }${this.config.host}${this.config.port ? ':' + this.config.port : ''}?clientId=${this.config.clientId}`;
+                    this.config.username ? `${this.config.username}:*******************@` : ''
+                }${this.config.host}${this.config.port ? `:${this.config.port}` : ''}?clientId=${this.config.clientId}`;
 
                 this.getObjectView('system', 'custom', {}, (err, doc) => {
                     const ids = [];
@@ -498,10 +502,10 @@ class MqttClient extends utils.Adapter {
                             this.log.debug(
                                 `enabled syncing of ${id} (publish/subscribe:${custom[id].publish.toString()}/${custom[
                                     id
-                                ].subscribe.toString()})`
+                                ].subscribe.toString()})`,
                             );
                         }
-                        this.log.debug('complete Custom: ' + JSON.stringify(custom));
+                        this.log.debug(`complete Custom: ${JSON.stringify(custom)}`);
 
                         if (this.config.subscriptions) {
                             for (const topic of this.config.subscriptions.split(',')) {
@@ -516,17 +520,17 @@ class MqttClient extends utils.Adapter {
 
                         if (this.config.lastWillTopic && this.config.lastWillMessage) {
                             this.log.info(
-                                `Try to connect to ${__url}, protocol version ${this.config.mqttVersion} with lwt "${this.config.lastWillTopic}"`
+                                `Try to connect to ${__url}, protocol version ${this.config.mqttVersion} with lwt "${this.config.lastWillTopic}"`,
                             );
 
                             will = {
                                 topic: this.topicAddPrefixOut(this.config.lastWillTopic),
                                 payload: this.config.lastWillMessage,
                                 qos: 2,
-                                retain: true
+                                retain: true,
                             };
                         } else {
-                            this.log.info('Try to connect to ' + __url);
+                            this.log.info(`Try to connect to ${__url}`);
                         }
                         const mqttVersion = Number.parseInt(this.config.mqttVersion || 4);
                         try {
@@ -541,7 +545,7 @@ class MqttClient extends utils.Adapter {
                                 password: this.config.password,
                                 clientId: this.config.clientId,
                                 clean: true,
-                                will
+                                will,
                             });
                         } catch (e) {
                             this.log.error(e);
@@ -566,15 +570,9 @@ class MqttClient extends utils.Adapter {
     }
 
     /**
-     * Is called when databases are this. and adapter received configuration.
-     */
-    onReady() {
-        this.main();
-    }
-
-    /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
-     * @param {() => void} callback
+     *
+     * @param callback
      */
     finish(callback) {
         if (this.adapterFinished) {
@@ -590,11 +588,13 @@ class MqttClient extends utils.Adapter {
                 { qos: 2, retain: true },
                 () => {
                     this.log.debug(
-                        'successfully published ' +
-                            JSON.stringify({ topic: topic, message: this.config.onDisconnectMessage })
+                        `successfully published ${JSON.stringify({
+                            topic: topic,
+                            message: this.config.onDisconnectMessage,
+                        })}`,
                     );
                     this.end(callback);
-                }
+                },
             );
         } else {
             this.end(callback);
@@ -603,7 +603,8 @@ class MqttClient extends utils.Adapter {
 
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
-     * @param {() => void} callback
+     *
+     * @param callback
      */
     end(callback) {
         this.adapterFinished = true;
@@ -617,7 +618,8 @@ class MqttClient extends utils.Adapter {
 
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
-     * @param {() => void} callback
+     *
+     * @param callback
      */
     onUnload(callback) {
         try {
@@ -631,8 +633,9 @@ class MqttClient extends utils.Adapter {
 
     /**
      * Is called if a subscribed object changes
-     * @param {string} id
-     * @param {ioBroker.Object | null | undefined} obj
+     *
+     * @param id
+     * @param obj
      */
     onObjectChange(id, obj) {
         const custom = _context.custom;
@@ -652,7 +655,7 @@ class MqttClient extends utils.Adapter {
                 sub[custom[id].topic] = custom[id].subQos;
 
                 this.subscribe(sub, () => {
-                    this.log.debug('subscribed to ' + JSON.stringify(sub));
+                    this.log.debug(`subscribed to ${JSON.stringify(sub)}`);
                 });
             } else {
                 delete subTopics[custom[id].topic];
@@ -661,7 +664,7 @@ class MqttClient extends utils.Adapter {
 
                 this.unsubscribe(
                     custom[id].topic,
-                    () => custom[id] && this.log.debug('unsubscribed from ' + custom[id].topic)
+                    () => custom[id] && this.log.debug(`unsubscribed from ${custom[id].topic}`),
                 );
             }
 
@@ -685,12 +688,12 @@ class MqttClient extends utils.Adapter {
             this.log.debug(
                 `enabled syncing of ${id} (publish/subscribe:${custom[id].publish.toString()}/${custom[
                     id
-                ].subscribe.toString()})`
+                ].subscribe.toString()})`,
             );
         } else if (custom[id]) {
             const topic = custom[id].topic;
 
-            this.unsubscribe(topic, () => this.log.debug('unsubscribed from ' + topic));
+            this.unsubscribe(topic, () => this.log.debug(`unsubscribed from ${topic}`));
 
             delete subTopics[custom[id].topic];
             delete topic2id[custom[id].topic];
@@ -701,14 +704,15 @@ class MqttClient extends utils.Adapter {
 
             delete custom[id];
 
-            this.log.debug('disabled syncing of ' + id);
+            this.log.debug(`disabled syncing of ${id}`);
         }
     }
 
     /**
      * Is called if a subscribed state changes
-     * @param {string} id
-     * @param {ioBroker.State | null | undefined} state
+     *
+     * @param id
+     * @param state
      */
     onStateChange(id, state) {
         const custom = _context.custom;
@@ -720,7 +724,7 @@ class MqttClient extends utils.Adapter {
                 if (!state) {
                     // The state was deleted/expired, make sure it is no longer retained
                     this.unpublish(id);
-                } else if (state.from !== 'system.adapter.' + this.namespace) {
+                } else if (state.from !== `system.adapter.${this.namespace}`) {
                     // prevent republishing to same broker
                     this.publishState(id, state);
                 }
@@ -731,7 +735,8 @@ class MqttClient extends utils.Adapter {
     /**
      * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
      * Using this method requires "common.message" property to be set to true in io-package.json
-     * @param {ioBroker.Message} obj
+     *
+     * @param obj
      */
     onMessage(obj) {
         if (typeof obj === 'object' && obj.command) {
@@ -750,11 +755,11 @@ class MqttClient extends utils.Adapter {
     }
 }
 
-// @ts-ignore parent is a valid property on module
+// @ts-expect-error parent is a valid property on module
 if (module.parent) {
     // Export the constructor in compact mode
     /**
-     * @param {Partial<ioBroker.AdapterOptions>} [options={}]
+     * @param [options]
      */
     module.exports = options => new MqttClient(options);
 } else {
