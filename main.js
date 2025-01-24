@@ -126,12 +126,12 @@ class MqttClient extends utils.Adapter {
                     custom: {}
                 },
                 native: {
-                    topic: topic
+                    topic,
                 }
             };
             obj.common.custom[this.namespace] = {
                 enabled: true,
-                topic: topic,
+                topic,
                 publish: false,
                 pubChangesOnly: false,
                 pubAsObject: false,
