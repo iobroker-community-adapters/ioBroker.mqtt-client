@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mqtt-client",
-    "version": "2.1.0",
+    "version": "3.0.0",
     "news": {
+      "3.0.0": {
+        "en": "Breaking change: Underscores are not replaced by spaces in the corresponding topic anymore",
+        "de": "Bruchänderung: Underscores werden nicht mehr durch Leerzeichen im entsprechenden Thema ersetzt",
+        "ru": "Перерыв: Недооценки больше не заменяются пробелами в соответствующей теме",
+        "pt": "Mudança de ruptura: Os sublinhados não são substituídos por espaços no tópico correspondente mais",
+        "nl": "Verandering: Onderscores worden niet meer vervangen door spaties in het bijbehorende onderwerp",
+        "fr": "Briser le changement : Les sous-scores ne sont plus remplacés par des espaces dans le sujet correspondant",
+        "it": "Cambiamento di rottura: Gli underscore non sono più sostituiti da spazi nell'argomento corrispondente",
+        "es": "Cambio de ruptura: Los subscores ya no son reemplazados por espacios en el tema correspondiente",
+        "pl": "Łamanie zmian: Podkreślenia nie są już zastępowane spacjami w odpowiednim temacie",
+        "uk": "Зміна розривів: Не замінюють пробіли в відповідній темі",
+        "zh-cn": "中断更改 : 重点不再被相应主题的空格所取代"
+      },
       "2.1.0": {
         "en": "Adapter requires node.js 20 now.\nAdapter requires js-controller 5.0.19 and admin 6.17.14 now.\nAdapter changed to meet Responsive Design rules.\nDependencies have been updated.",
         "de": "Adapter benötigt node.js 20 jetzt.\nAdapter benötigt jetzt js-controller 5.0.19 und admin 6.17.14.\nAdapter geändert, um Responsive Design Regeln zu erfüllen.\nAbhängigkeiten wurden aktualisiert.",
@@ -80,19 +93,6 @@
         "pl": "zapobieganie wypadków w przypadku nielegalnego subskrypcji",
         "uk": "запобігання аварійних випадків на недійсній підписці",
         "zh-cn": "防止无效同意的事故"
-      },
-      "1.6.4": {
-        "en": "Option to allow self-signed certificates in adapter settings added.",
-        "de": "Option, um selbst signierte Zertifikate in Adaptereinstellungen hinzuzufügen.",
-        "ru": "Возможность позволить самоподписанные сертификаты в настройках адаптера добавлены.",
-        "pt": "Opção para permitir certificados auto-assinados em configurações de adaptador adicionado.",
-        "nl": "Optie om zelf toegewezen certificaten toe te voegen in adapter settings.",
-        "fr": "Option pour permettre des certificats autosignés dans les réglages d'adaptateur ajoutés.",
-        "it": "Opzione per consentire certificati auto-firmati nelle impostazioni dell'adattatore aggiunto.",
-        "es": "Opción para permitir certificados auto-firmados en ajustes de adaptador añadidos.",
-        "pl": "Opcjonalnie dodaje certyfikaty w ustawieniach adapterów.",
-        "uk": "Для того, щоб дозволити собі сертифікати в налаштуваннях адаптера.",
-        "zh-cn": "备选案文是允许在适应环境中自发证书。."
       }
     },
     "titleLang": {
