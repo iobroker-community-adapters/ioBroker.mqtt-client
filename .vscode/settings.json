@@ -1,13 +1,7 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib",
     "eslint.enable": true,
     "editor.formatOnSave": false,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "[typescript]": {
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        }
-    },
     "json.schemas": [
         {
             "fileMatch": [
@@ -21,10 +15,7 @@
                 "admin/jsonCustom.json",
                 "admin/jsonTab.json"
             ],
-            "url": "https://raw.githubusercontent.com/ioBroker/adapter-react-v5/main/schemas/jsonConfig.json"
+            "url": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/packages/jsonConfig/schemas/jsonConfig.json"
         }
-    ],
-    "[json]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    }
+    ]
 }
