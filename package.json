@@ -2,23 +2,12 @@
   "name": "iobroker.mqtt-client",
   "version": "3.0.0",
   "description": "Client to connect states to MQTT Broker",
-  "author": {
-    "name": "mcm1957",
-    "email": "mcm57@gmx.at"
-  },
+  "author": "mcm1957 <mcm57@gmx.at>",
   "contributors": [
-    {
-      "name": "patrickmo",
-      "email": "patrickmo@gmx.de"
-    },
-    {
-      "name": "algar42",
-      "email": "igor.aleschenkov@gmail.com"
-    },
-    {
-      "name": "Matthias Kleine",
-      "email": "info@haus-automatisierung.com"
-    }
+    "patrickmo <patrickmo@gmx.de>",
+    "algar42 <igor.aleschenkov@gmail.com>",
+    "Matthias Kleine <info@haus-automatisierung.com>",
+    "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
   ],
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.mqtt-client",
   "license": "MIT",
