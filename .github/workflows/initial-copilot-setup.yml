@@ -1,0 +1,94 @@
+# GitHub Action: Initial ioBroker Copilot Setup
+# Template: https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-InitialSetup.yml
+
+name: Initial ioBroker Copilot Setup
+
+on:
+  workflow_dispatch:  # Manual triggering for initial setup
+    inputs:
+      force_setup:
+        description: 'Force setup even if copilot-instructions.md already exists'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  initial-setup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Check repository structure
+        id: repo-check
+        run: |
+          echo "🔍 Analyzing repository structure..."
+          
+          # Check if this is an ioBroker adapter
+          IOBROKER_ADAPTER="false"
+          if [ -f "package.json" ] && grep -q "iobroker" package.json; then
+            IOBROKER_ADAPTER="true"
+          elif [ -f "io-package.json" ]; then
+            IOBROKER_ADAPTER="true"
+          fi
+          
+          echo "is_iobroker_adapter=$IOBROKER_ADAPTER" >> $GITHUB_OUTPUT
+          
+          # Check if copilot instructions already exist
+          COPILOT_EXISTS="false"
+          if [ -f ".github/copilot-instructions.md" ]; then
+            COPILOT_EXISTS="true"
+          fi
+          
+          echo "copilot_exists=$COPILOT_EXISTS" >> $GITHUB_OUTPUT
+          
+          # Extract adapter information
+          if [ -f "package.json" ]; then
+            ADAPTER_NAME=$(jq -r '.name // "unknown"' package.json)
+            DESCRIPTION=$(jq -r '.description // "ioBroker adapter"' package.json)
+          else
+            ADAPTER_NAME="unknown"
+            DESCRIPTION="ioBroker adapter"
+          fi
+          
+          echo "adapter_name=$ADAPTER_NAME" >> $GITHUB_OUTPUT
+          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+          
+      - name: Get latest template version
+        id: version-check
+        run: |
+          echo "🌐 Fetching latest template version..."
+          LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/config/metadata.json | jq -r '.version' 2>/dev/null || echo "0.5.7")
+          echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          echo "📋 Latest version: $LATEST_VERSION"
+          
+      - name: Setup automated version checking
+        if: steps.repo-check.outputs.is_iobroker_adapter == 'true'
+        run: |
+          echo "⚙️ Setting up automated version checking workflow..."
+          
+          # Create workflows directory if it doesn't exist
+          mkdir -p .github/workflows
+          
+          # Download and create the automated version check workflow
+          curl -o .github/workflows/check-copilot-template.yml \
+            https://raw.githubusercontent.com/DrozmotiX/ioBroker-Copilot-Instructions/main/templates/ghAction-AutomatedVersionCheckAndUpdate.yml
+          
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .github/workflows/check-copilot-template.yml
+          git commit -m "feat: add automated copilot template version checking" || echo "No changes to commit"
+          git push
+          
+      - name: Summary
+        run: |
+          echo "🎯 Initial Setup Summary"
+          echo "   Adapter: ${{ steps.repo-check.outputs.adapter_name }}"
+          echo "   Is ioBroker Adapter: ${{ steps.repo-check.outputs.is_iobroker_adapter }}"
+          echo "   Copilot Instructions Exist: ${{ steps.repo-check.outputs.copilot_exists }}"
+          echo "   Latest Template Version: ${{ steps.version-check.outputs.latest_version }}"
