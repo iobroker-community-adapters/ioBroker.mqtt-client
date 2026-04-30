@@ -93,8 +93,6 @@ default: state-ID converted to a mqtt topic.
 - (copilot) Adapter requires admin >= 7.7.22 now
 - (copilot) Adapter requires js-controller >= 6.0.11 now
 - (copilot) Adapter requires admin >= 7.6.17 now
-
-### __WORK IN PROGRESS__
 * (@klein0r) Updated dependencies
 
 ### 3.0.0 (2025-01-24)
