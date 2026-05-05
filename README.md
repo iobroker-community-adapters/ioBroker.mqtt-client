@@ -89,11 +89,10 @@ default: state-ID converted to a mqtt topic.
 ## Changelog
 
 ### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
 - (copilot) Adapter requires admin >= 7.7.22 now
 - (copilot) Adapter requires js-controller >= 6.0.11 now
 - (copilot) Adapter requires admin >= 7.6.17 now
-
-### __WORK IN PROGRESS__
 * (@klein0r) Updated dependencies
 
 ### 3.0.0 (2025-01-24)
@@ -116,6 +115,8 @@ default: state-ID converted to a mqtt topic.
 ### 1.8.0 (2024-04-07)
 * (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
 * (mcm1957) Dependencies have been updated
+
+[Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
 The MIT License (MIT)

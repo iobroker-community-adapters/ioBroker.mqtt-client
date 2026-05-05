@@ -26,11 +26,11 @@
     "url": "https://github.com/iobroker-community-adapters/ioBroker.mqtt-client"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.3.2",
-    "mqtt": "^5.14.1"
+    "mqtt": "^5.15.1"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^5.0.0",
