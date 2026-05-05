@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "mqtt-client",
-    "version": "3.0.0",
+    "version": "4.0.0",
     "news": {
+      "4.0.0": {
+        "en": "Adapter requires node.js >= 22 now\nAdapter requires admin >= 7.7.22 now\nAdapter requires js-controller >= 6.0.11 now\nUpdated dependencies",
+        "de": "Adapter benötigt node.js >= 22 jetzt\nAdapter benötigt admin >= 7.7.22 jetzt\nAdapter benötigt jetzt js-controller >= 6.0.11\nAktualisierte Abhängigkeiten",
+        "ru": "Адаптер требует node.js >= 22 сейчас\nАдаптер требует администратора >= 7.7.22\nАдаптер требует js-контроллер >= 6.0.11\nОбновленные зависимости",
+        "pt": "Adaptador requer nod.js >= 22 agora\nAdaptador requer admin >= 7.7.22 agora\nAdaptador requer js-controlador >= 6.0.11 agora\nDependências atualizadas",
+        "nl": "Voor de adapter zijn node.js < 22 nu nodig\nAdapter vereist admin < 7.7.22 nu\nAdapter vereist js-controller < 6,0.11 nu\nBijgewerkte afhankelijkheden",
+        "fr": "Adaptateur nécessite node.js >= 22 maintenant\nAdaptateur nécessite admin >= 7.7.22 maintenant\nAdaptateur nécessite js-controller >= 6.0.11 maintenant\nDépendances actualisées",
+        "it": "Adattatore richiede node.js >= 22 ora\nAdattatore richiede admin >= 7.7.22 ora\nAdattatore richiede js-controller >= 6.0.11 ora\nDipendenze aggiornate",
+        "es": "Adaptador requiere node.js ю= 22 ahora\nEl adaptador requiere administrador= 7.7.22 ahora\nAdaptador requiere js-controller >= 6.0.11\nDependencias actualizadas",
+        "pl": "Adapter wymaga node.js > = 22\nAdapter wymaga admin > = 7.7.22\nAdapter wymaga sterownika js- > = 6.0.11\nAktualizacja zależności",
+        "uk": "Адаптер вимагає node.js >= 22 тепер\nАдаптер вимагає адмін >= 7.7.22 тепер\nАдаптер вимагає js-controller >=6.0.11 тепер\nОновлені залежності",
+        "zh-cn": "适配器需要节点.js 现在22\n适任者需要管理员 \\ 7.7.22 现在\n适配器需要js控制器 现在6.0.11\n更新的依赖关系"
+      },
       "3.0.0": {
         "en": "Breaking change: Underscores are not replaced by spaces in the corresponding topic anymore",
         "de": "Bruchänderung: Underscores werden nicht mehr durch Leerzeichen im entsprechenden Thema ersetzt",
@@ -80,19 +93,6 @@
         "pl": "Zależności zostały zaktualizowane\nAdapter wymaga już 16 węzłów",
         "uk": "Оновлено залежність\nАдаптер вимагає nodejs 16 тепер",
         "zh-cn": "已更新了属地\n道歉现在需要16个不听众。"
-      },
-      "1.6.5": {
-        "en": "prevent crash cases on invalid subscribe",
-        "de": "verhindern crash-fälle bei ungültiger anmeldung",
-        "ru": "предотвратить случаи аварии на недействительной подписке",
-        "pt": "prevenir casos de acidente em assinatura inválida",
-        "nl": "verhinder crash gevallen op invalide subschrijving",
-        "fr": "prévenir les cas de crash sur les abonnés invalides",
-        "it": "prevenire casi di crash su abbonamento non valido",
-        "es": "evitar los casos de fallo en invalidez",
-        "pl": "zapobieganie wypadków w przypadku nielegalnego subskrypcji",
-        "uk": "запобігання аварійних випадків на недійсній підписці",
-        "zh-cn": "防止无效同意的事故"
       }
     },
     "titleLang": {

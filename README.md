@@ -87,8 +87,7 @@ default: state-ID converted to a mqtt topic.
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 4.0.0 (2026-05-05)
 * (copilot) Adapter requires node.js >= 22 now
 * (copilot) Adapter requires admin >= 7.7.22 now
 * (copilot) Adapter requires js-controller >= 6.0.11 now
@@ -110,12 +109,6 @@ default: state-ID converted to a mqtt topic.
 ### 2.0.0 (2024-06-21)
 * (klein0r) Password is now encrypted - you have to re-renter your password in instance settings!
 * (klein0r) Use jsonConfig instead of materialize (for instance settings)
-
-### 1.8.0 (2024-04-07)
-* (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
-* (mcm1957) Dependencies have been updated
-
-[Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
 The MIT License (MIT)

@@ -1,4 +1,10 @@
 # Older changes
+## 1.8.0 (2024-04-07)
+* (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
+* (mcm1957) Dependencies have been updated
+
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## 1.7.0 (2023-10-30)
 
 * (mcm1957) Dependencies have been updated
