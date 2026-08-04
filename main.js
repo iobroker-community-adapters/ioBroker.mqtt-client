@@ -539,7 +539,7 @@ class MqttClient extends utils.Adapter {
                                 port: this.config.port,
                                 protocolVersion: mqttVersion,
                                 ssl: this.config.ssl,
-                                rejectUnauthorized: this.config.rejectUnauthorized,
+                                rejectUnauthorized: this.config.rejectUnauthorized !== false,
                                 reconnectPeriod: this.config.reconnectPeriod,
                                 username: this.config.username,
                                 password: this.config.password,
