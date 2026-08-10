@@ -1,10 +1,15 @@
 {
     "(without prefix)": "（无前缀）",
     "Client ID": "客户编号",
+    "Custom options": "自定义选项",
+    "MQTT Version": "MQTT版本",
     "MQTT-client adapter settings": "MQTT客户端适配器设置",
     "Prefix for topics": "主题前缀",
     "QoS": "QoS",
     "Server settings": "服务器设定",
+    "Topic must not end with /": "主题不得以 / 结尾",
+    "Topic must not start with /": "主题不得以 / 开头",
+    "Use websockets": "使用网络套接字",
     "additional subscriptions": "额外订阅",
     "as object": "作为对象",
     "changes only": "仅更改",
@@ -23,14 +28,9 @@
     "prefix for publishing topics": "发布主题的前缀",
     "prefix for subscribing topics": "订阅主题的前缀",
     "publish": "发布",
+    "rejectUnauthorized": "强制执行签名证书",
     "retain": "retain",
     "ssl": "SSL协议",
     "username": "用户名",
-    "without prefix": "无前缀",
-    "rejectUnauthorized": "强制执行签名证书",
-    "Custom options": "自定义选项",
-    "MQTT Version": "MQTT版本",
-    "Use websockets": "使用网络套接字",
-    "Topic must not start with /": "主题不得以 / 开头",
-    "Topic must not end with /": "主题不得以 / 结尾"
+    "without prefix": "无前缀"
 }

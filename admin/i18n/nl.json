@@ -1,10 +1,15 @@
 {
     "(without prefix)": "(zonder voorvoegsel)",
     "Client ID": "klant identificatie",
+    "Custom options": "Aangepaste opties",
+    "MQTT Version": "MQTT-versie",
     "MQTT-client adapter settings": "MQTT-client adapterinstellingen",
     "Prefix for topics": "Voorvoegsel voor onderwerpen",
     "QoS": "QoS",
     "Server settings": "Server instellingen",
+    "Topic must not end with /": "Onderwerp mag niet eindigen op /",
+    "Topic must not start with /": "Onderwerp mag niet beginnen met /",
+    "Use websockets": "Gebruik websockets",
     "additional subscriptions": "extra abonnementen",
     "as object": "als object",
     "changes only": "alleen wijzigingen",
@@ -23,14 +28,9 @@
     "prefix for publishing topics": "voorvoegsel voor het publiceren van onderwerpen",
     "prefix for subscribing topics": "voorvoegsel voor abonnementsonderwerpen",
     "publish": "publish",
+    "rejectUnauthorized": "Ondertekende certificaten afdwingen",
     "retain": "retain",
     "ssl": "SSL",
     "username": "gebruikersnaam",
-    "without prefix": "zonder voorvoegsel",
-    "rejectUnauthorized": "Ondertekende certificaten afdwingen",
-    "Custom options": "Aangepaste opties",
-    "MQTT Version": "MQTT-versie",
-    "Use websockets": "Gebruik websockets",
-    "Topic must not start with /": "Onderwerp mag niet beginnen met /",
-    "Topic must not end with /": "Onderwerp mag niet eindigen op /"
+    "without prefix": "zonder voorvoegsel"
 }

@@ -1,10 +1,15 @@
 {
     "(without prefix)": "(sem prefixo)",
     "Client ID": "ID do Cliente",
+    "Custom options": "Opções personalizadas",
+    "MQTT Version": "Versão MQTT",
     "MQTT-client adapter settings": "Configurações do adaptador do cliente MQTT",
     "Prefix for topics": "Prefixo para tópicos",
     "QoS": "QoS",
     "Server settings": "Configurações do servidor",
+    "Topic must not end with /": "O tópico não deve terminar com /",
+    "Topic must not start with /": "O tópico não deve começar com /",
+    "Use websockets": "Usar websockets",
     "additional subscriptions": "assinaturas adicionais",
     "as object": "como objeto",
     "changes only": "muda apenas",
@@ -23,14 +28,9 @@
     "prefix for publishing topics": "prefixo para publicar tópicos",
     "prefix for subscribing topics": "prefixo para subscrever tópicos",
     "publish": "publish",
+    "rejectUnauthorized": "Aplicar certificados assinados",
     "retain": "retain",
     "ssl": "SSL",
     "username": "nome de usuário",
-    "without prefix": "sem prefixo",
-    "rejectUnauthorized": "Aplicar certificados assinados",
-    "Custom options": "Opções personalizadas",
-    "MQTT Version": "Versão MQTT",
-    "Use websockets": "Usar websockets",
-    "Topic must not start with /": "O tópico não deve começar com /",
-    "Topic must not end with /": "O tópico não deve terminar com /"
+    "without prefix": "sem prefixo"
 }

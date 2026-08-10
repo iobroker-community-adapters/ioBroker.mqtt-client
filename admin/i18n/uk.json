@@ -1,10 +1,15 @@
 {
     "(without prefix)": "(без префікса)",
     "Client ID": "ID клієнта",
+    "Custom options": "Спеціальні параметри",
+    "MQTT Version": "Версія MQTT",
     "MQTT-client adapter settings": "Налаштування адаптера MQTT-клієнта",
     "Prefix for topics": "Префікс для тем",
     "QoS": "QoS",
     "Server settings": "Налаштування сервера",
+    "Topic must not end with /": "Тема не повинна закінчуватися на /",
+    "Topic must not start with /": "Тема не повинна починатися з /",
+    "Use websockets": "Використовуйте веб-сокети",
     "additional subscriptions": "Додаткові підписки",
     "as object": "як об'єкт",
     "changes only": "тільки зміни",
@@ -23,14 +28,9 @@
     "prefix for publishing topics": "Префікс для публікації тем",
     "prefix for subscribing topics": "Префікс для підписки на теми",
     "publish": "публікувати",
+    "rejectUnauthorized": "Примусове виконання підписаних сертифікатів",
     "retain": "зберегти",
     "ssl": "SSL",
     "username": "Ім'я користувача",
-    "without prefix": "без префікса",
-    "rejectUnauthorized": "Примусове виконання підписаних сертифікатів",
-    "Custom options": "Спеціальні параметри",
-    "MQTT Version": "Версія MQTT",
-    "Use websockets": "Використовуйте веб-сокети",
-    "Topic must not start with /": "Тема не повинна починатися з /",
-    "Topic must not end with /": "Тема не повинна закінчуватися на /"
+    "without prefix": "без префікса"
 }
