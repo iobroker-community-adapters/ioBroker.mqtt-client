@@ -2,6 +2,7 @@
     "(without prefix)": "(без префікса)",
     "Client ID": "ID клієнта",
     "Custom options": "Спеціальні параметри",
+    "General settings": "Загальні налаштування",
     "MQTT Version": "Версія MQTT",
     "MQTT-client adapter settings": "Налаштування адаптера MQTT-клієнта",
     "Prefix for topics": "Префікс для тем",

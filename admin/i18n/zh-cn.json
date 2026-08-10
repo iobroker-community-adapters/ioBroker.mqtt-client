@@ -2,6 +2,7 @@
     "(without prefix)": "（无前缀）",
     "Client ID": "客户编号",
     "Custom options": "自定义选项",
+    "General settings": "常规设置",
     "MQTT Version": "MQTT版本",
     "MQTT-client adapter settings": "MQTT客户端适配器设置",
     "Prefix for topics": "主题前缀",

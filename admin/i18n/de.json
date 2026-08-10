@@ -2,6 +2,7 @@
     "(without prefix)": "(ohne Präfix)",
     "Client ID": "Client ID",
     "Custom options": "Benutzerdefinierte Optionen",
+    "General settings": "Allgemeine Einstellungen",
     "MQTT Version": "MQTT-Version",
     "MQTT-client adapter settings": "MQTT-client Adapter Einstellungen",
     "Prefix for topics": "Prefix für alle Topics",
