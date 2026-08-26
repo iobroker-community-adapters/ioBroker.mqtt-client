@@ -2,6 +2,7 @@
 
 const utils = require('@iobroker/adapter-core');
 const mqtt = require('mqtt');
+const { convertID2Topic, convertTopic2ID } = require('./lib/topics');
 
 const _context = {
     custom: {}, //cache object's mqtt-client settings
@@ -382,41 +383,18 @@ class MqttClient extends utils.Adapter {
     }
 
     convertID2Topic(id, namespace) {
-        let topic;
-
-        //if necessary remove namespace before converting, e.g. "mqtt-client.0..."
-        if (id.startsWith(namespace)) {
-            topic = id.substring(namespace.length + 1);
-        } else {
-            topic = id;
-        }
-
-        //replace dots with slashes
-        topic = topic.replace(/\./g, '/');
-        return topic;
+        return convertID2Topic(id, namespace);
     }
 
     convertTopic2ID(topic) {
-        if (!topic) {
-            return topic;
-        }
-
-        //replace slashes with dots and spaces with underscores
-        topic = topic.replace(/\//g, '.').replace(/\s/g, '_');
-
-        //replace guiding and trailing dot
-        if (topic[0] === '.') {
-            topic = topic.substring(1);
-        }
-        if (topic[topic.length - 1] === '.') {
-            topic = topic.substring(0, topic.length - 1);
-        }
-
-        return topic;
+        return convertTopic2ID(topic);
     }
 
     checkSettings(id, custom, aNamespace, qos, subQos) {
-        custom.topic = custom.topic || this.convertID2Topic(id, aNamespace);
+        if (!custom.topic) {
+            custom.topic = this.convertID2Topic(id, aNamespace);
+            this.log.debug(`derived topic "${custom.topic}" for ${id}`);
+        }
         custom.enabled = custom.enabled === true;
         custom.publish = custom.publish === true;
         custom.pubChangesOnly = custom.pubChangesOnly === true;
