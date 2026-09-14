@@ -100,6 +100,7 @@ If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is l
 * (@Tarvion) Automatically derived topics no longer contain the mqtt wildcards `+` and `#` (as used by shelly IDs), slashes or whitespace taken from the state-ID. These characters are replaced by `_` now
 * (@GermanBluefox) A warning is logged if two states derive to the same topic
 * (@GermanBluefox) Adapter icon converted to SVG
+* (@GermanBluefox) The adapter was refactored to TypeScript
 
 ### 4.0.0 (2026-05-05)
 * (copilot) Adapter requires node.js >= 22 now

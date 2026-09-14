@@ -31,6 +31,7 @@ jobs:
           node-version: '24.x'
           # Uncomment the following line if your adapter cannot be installed using 'npm ci'
           # install-command: 'npm install'
+          type-checking: true
           lint: true
 
   # Runs adapter tests on all supported node versions and OSes
@@ -51,10 +52,8 @@ jobs:
           os: ${{ matrix.os }}
           # Uncomment the following line if your adapter cannot be installed using 'npm ci'
           # install-command: 'npm install'
-
-# TODO: To enable automatic npm releases, create a token on npmjs.org 
-# Enter this token as a GitHub secret (with name NPM_TOKEN) in the repository options
-# Then uncomment the following block:
+          # compiles src/ to build/ - runs test:unit and test:integration afterwards
+          build: true
 
   # Deploys the final package to NPM
   deploy:
@@ -78,16 +77,17 @@ jobs:
           node-version: '24.x'
           # Uncomment the following line if your adapter cannot be installed using 'npm ci'
           # install-command: 'npm install'
-          # npm-token: ${{ secrets.NPM_TOKEN }}  # Commented out for migration to Trusted Publishing
+          # without the build the package would be published without build/
+          build: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
           # When using Sentry for error reporting, Sentry can be informed about new releases
           # To enable create a API-Token in Sentry (User settings, API keys)
           # Enter this token as a GitHub secret (with name SENTRY_AUTH_TOKEN) in the repository options
-          # Then uncomment and customize the following block:
+          # Then uncomment the following block:
 #          sentry: true
 #          sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-#          sentry-project: "iobroker-pid"
-#          sentry-version-prefix: "iobroker.pid"
+#          sentry-project: "iobroker-mqtt-client"
+#          sentry-version-prefix: "iobroker.mqtt-client"
 #          # If your sentry project is linked to a GitHub repository, you can enable the following option
 #          # sentry-github-integration: true
