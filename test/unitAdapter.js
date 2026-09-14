@@ -561,6 +561,45 @@ describe('mqtt-client adapter', function () {
         });
     });
 
+    describe('protocol version', () => {
+        /**
+         * Starts a broker that - like mosquitto - accepts protocol level 3 (MQTT 3.1) only with the protocol name "MQIsdp"
+         *
+         * @param {{ protocolId: string, protocolVersion: number }[]} packets receives the CONNECT packets
+         */
+        async function startStrictBroker(packets) {
+            const strict = await TestBroker.start();
+            strict.aedes.preConnect = (client, packet, callback) => {
+                packets.push({ protocolId: packet.protocolId, protocolVersion: packet.protocolVersion });
+                if (packet.protocolVersion === 3 && packet.protocolId !== 'MQIsdp') {
+                    const err = new Error('unacceptable protocol version');
+                    err.returnCode = 1;
+                    callback(err, false);
+                    return;
+                }
+                callback(null, true);
+            };
+            return strict;
+        }
+
+        for (const [mqttVersion, protocolId] of [
+            [3, 'MQIsdp'],
+            [4, 'MQTT'],
+        ]) {
+            it(`connects with MQTT version ${mqttVersion} using the protocol name "${protocolId}" (#169)`, async () => {
+                const packets = [];
+                const strict = await startStrictBroker(packets);
+                try {
+                    const adapter = await startAdapter({ mqttVersion }, {}, strict);
+                    assert.deepStrictEqual(packets[0], { protocolId, protocolVersion: mqttVersion });
+                    await adapter.testUnload();
+                } finally {
+                    await strict.stop();
+                }
+            });
+        }
+    });
+
     describe('additional subscriptions', () => {
         it('creates a state for a received unknown topic and writes the following values', async () => {
             const id = `${NS}.sensors.temp`;

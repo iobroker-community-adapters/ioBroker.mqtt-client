@@ -3,6 +3,7 @@
     "Client ID": "Client ID",
     "Custom options": "Custom options",
     "General settings": "General settings",
+    "MQTT 3.1 allows at most 23 characters": "MQTT 3.1 allows at most 23 characters",
     "MQTT Version": "MQTT Version",
     "MQTT-client adapter settings": "MQTT-client adapter settings",
     "Prefix for topics": "Prefix for topics",

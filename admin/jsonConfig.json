@@ -35,17 +35,18 @@
                 },
                 "mqttVersion": {
                     "type": "select",
+                    "noTranslation": true,
                     "options": [
                         {
-                            "label": "3",
+                            "label": "3.1 (MQIsdp)",
                             "value": 3
                         },
                         {
-                            "label": "4",
+                            "label": "3.1.1",
                             "value": 4
                         },
                         {
-                            "label": "5",
+                            "label": "5.0",
                             "value": 5
                         }
                     ],
@@ -93,7 +94,10 @@
                     "md": 6,
                     "lg": 4,
                     "xl": 4,
-                    "label": "Client ID"
+                    "label": "Client ID",
+                    "validator": "data.mqttVersion !== 3 || !data.clientId || data.clientId.length <= 23",
+                    "validatorErrorText": "MQTT 3.1 allows at most 23 characters",
+                    "validatorNoSaveOnError": true
                 },
                 "username": {
                     "newLine": true,

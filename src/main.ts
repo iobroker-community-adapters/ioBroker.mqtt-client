@@ -572,6 +572,9 @@ class MqttClient extends Adapter {
             host: this.config.host,
             port: this.config.port,
             protocolVersion: mqttVersion as MqttProtocolVersion,
+            // MQTT 3.1 (protocol level 3) uses the protocol name "MQIsdp", MQTT 3.1.1 and 5 use "MQTT".
+            // mqtt.js always sends "MQTT", which MQTT 3.1 brokers reject (#169)
+            protocolId: mqttVersion === 3 ? 'MQIsdp' : 'MQTT',
             ssl: this.config.ssl,
             rejectUnauthorized: this.config.rejectUnauthorized,
             reconnectPeriod: this.config.reconnectPeriod,

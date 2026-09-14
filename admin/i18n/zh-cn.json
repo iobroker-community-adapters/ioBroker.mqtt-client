@@ -3,6 +3,7 @@
     "Client ID": "客户编号",
     "Custom options": "自定义选项",
     "General settings": "常规设置",
+    "MQTT 3.1 allows at most 23 characters": "MQTT 3.1 最多允许 23 个字符",
     "MQTT Version": "MQTT版本",
     "MQTT-client adapter settings": "MQTT客户端适配器设置",
     "Prefix for topics": "主题前缀",
