@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Characters that must not end up in an automatically derived topic:
  * - '+' and '#' are wildcards and are not allowed in a topic name (MQTT 5.0, 4.7.0)
@@ -11,21 +9,21 @@ const INVALID_TOPIC_CHARS = /[+#/\s]/g;
 /**
  * Convert an ioBroker id into a valid mqtt topic
  *
- * @param {string} id ioBroker id, e.g. "shelly.0.SHSW-1#B96701#1.Relay0.Switch"
- * @param {string} [namespace] adapter namespace to strip from the id, e.g. "mqtt-client.0"
- * @returns {string} mqtt topic, e.g. "shelly/0/SHSW-1_B96701_1/Relay0/Switch"
+ * @param id ioBroker id, e.g. "shelly.0.SHSW-1#B96701#1.Relay0.Switch"
+ * @param namespace adapter namespace to strip from the id, e.g. "mqtt-client.0"
+ * @returns mqtt topic, e.g. "shelly/0/SHSW-1_B96701_1/Relay0/Switch"
  */
-function convertID2Topic(id, namespace) {
-    let topic;
+export function convertID2Topic(id: string, namespace?: string): string {
+    let topic: string;
 
-    //if necessary remove namespace before converting, e.g. "mqtt-client.0..."
+    // if necessary, remove namespace before converting, e.g. "mqtt-client.0..."
     if (namespace && id.startsWith(`${namespace}.`)) {
         topic = id.substring(namespace.length + 1);
     } else {
         topic = id;
     }
 
-    //replace characters that are not allowed within a topic. This must happen before dots become separators
+    //replace characters that must not end up in a derived topic. This must happen before dots become separators
     topic = topic.replace(INVALID_TOPIC_CHARS, '_');
 
     //replace dots with slashes
@@ -36,10 +34,10 @@ function convertID2Topic(id, namespace) {
 /**
  * Convert a mqtt topic into an ioBroker id
  *
- * @param {string} topic mqtt topic (without prefix)
- * @returns {string} ioBroker id
+ * @param topic mqtt topic (without prefix)
+ * @returns ioBroker id
  */
-function convertTopic2ID(topic) {
+export function convertTopic2ID(topic: string): string {
     if (!topic) {
         return topic;
     }
@@ -57,8 +55,3 @@ function convertTopic2ID(topic) {
 
     return topic;
 }
-
-module.exports = {
-    convertID2Topic,
-    convertTopic2ID,
-};

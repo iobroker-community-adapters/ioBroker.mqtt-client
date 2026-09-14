@@ -93,13 +93,18 @@ If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is l
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
-	### __WORK IN PROGRESS__
+	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### __WORK IN PROGRESS__
+### **WORK IN PROGRESS**
+* (@GermanBluefox) Adapter requires node.js >= 22.19 now
 * (@Tarvion) Automatically derived topics no longer contain the mqtt wildcards `+` and `#` (as used by shelly IDs), slashes or whitespace taken from the state-ID. These characters are replaced by `_` now
 * (@GermanBluefox) A warning is logged if two states derive to the same topic
 * (@GermanBluefox) Adapter icon converted to SVG
+* (@GermanBluefox) The adapter was refactored to TypeScript
+* (@GermanBluefox) Fixed: stopping the adapter waited for the timeout when no broker was configured or after `stopInstance`
+* (@GermanBluefox) Fixed: states created from received topics now have `common.role` instead of a `role` outside of `common`
+* (@GermanBluefox) Fixed: with "subscribe as object", the loop protection and "changes only" skipped changed values instead of unchanged ones
 
 ### 4.0.0 (2026-05-05)
 * (copilot) Adapter requires node.js >= 22 now

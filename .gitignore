@@ -7,6 +7,10 @@
 node_modules
 nbproject
 
+# compiled sources (common.nogit is set in io-package.json)
+build
+*.tsbuildinfo
+
 # npm package files
 iobroker.*.tgz
 
