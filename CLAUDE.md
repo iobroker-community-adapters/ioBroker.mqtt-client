@@ -17,7 +17,8 @@ npm run check                             # type check only (tsconfig.json, noEm
 npm run lint                              # eslint (@iobroker/eslint-config, flat config)
 npx eslint -c eslint.config.mjs --fix src # autofix + prettier formatting
 
-npm run test:unit                         # topic conversion tests - runs against build/, build first!
+npm run test:unit                         # topic conversion + adapter tests - run against build/, build first!
+npx mocha test/unitAdapter --exit --grep "loop protection"   # single adapter test (MQTT_CLIENT_TEST_LOG=1 prints the adapter log)
 npm run test:package                      # validates package.json / io-package.json / admin JSON (fast)
 npm run test:integration                  # starts a real js-controller + adapter instance
 npm run release-patch                     # @alcalzone/release-script, moves README changelog into io-package news
@@ -80,6 +81,13 @@ All runtime state lives in instance fields (`custom`, `subTopics`, `topic2id`, `
 These look wrong but are kept to not change behaviour; they are marked with comments in `src/main.ts`:
 
 - The publish-once after enabling an object in `onObjectChange()` only happens when the id was not subscribed before.
+
+## Tests
+
+- `test/unitTopics.js` — `convertID2Topic()` / `convertTopic2ID()`.
+- `test/unitAdapter.js` — the adapter logic end to end without js-controller. `@iobroker/adapter-core` is replaced via `require.cache` by `test/lib/adapterMock.js`: objects and states live in memory, `objectChange`/`stateChange` are emitted like js-controller does, and log, `sendTo` and `terminate` are recorded (helpers start with `test`). The MQTT side is real: an `aedes` broker (`test/lib/testBroker.js`) and a second client that plays the remote side (`test/lib/testClient.js`). aedes does not support MQTT 5, so protocol version 5 is not covered.
+- Wait for conditions with `waitFor()` instead of fixed sleeps, and use unique topics per test — the broker keeps retained messages for the whole file.
+- `test/packageFiles.js` / `test/integrationAdapter.js` — `@iobroker/testing`; the integration test starts a real js-controller and aborts if one is already running on the machine.
 
 ## Release flow
 

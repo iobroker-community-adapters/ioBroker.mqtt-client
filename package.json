@@ -43,6 +43,7 @@
     "@iobroker/types": "^7.2.2",
     "@tsconfig/node22": "^22.0.5",
     "@types/node": "^22.20.1",
+    "aedes": "^1.1.2",
     "typescript": "~6.0.3"
   },
   "main": "build/main.js",
@@ -57,7 +58,7 @@
     "watch": "tsc -p tsconfig.build.json --watch",
     "check": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint -c eslint.config.mjs",
-    "test:unit": "mocha test/unitTopics --exit",
+    "test:unit": "mocha test/unitTopics test/unitAdapter --exit",
     "test:package": "mocha test/packageFiles --exit",
     "test:integration": "mocha test/integrationAdapter --exit",
     "test": "npm run test:package",
