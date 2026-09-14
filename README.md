@@ -93,10 +93,10 @@ If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is l
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
-	### __WORK IN PROGRESS__
+	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### __WORK IN PROGRESS__
+### **WORK IN PROGRESS**
 * (@Tarvion) Automatically derived topics no longer contain the mqtt wildcards `+` and `#` (as used by shelly IDs), slashes or whitespace taken from the state-ID. These characters are replaced by `_` now
 * (@GermanBluefox) A warning is logged if two states derive to the same topic
 * (@GermanBluefox) Adapter icon converted to SVG
