@@ -70,7 +70,7 @@ class MqttClient extends Adapter {
             );
         }
 
-        //initially subscribe to topics
+        // initially subscribe to topics
         if (Object.keys(this.subTopics).length) {
             this.subscribeTopics(this.subTopics, () =>
                 this.log.debug(`subscribed to: ${JSON.stringify(this.subTopics)}`),
@@ -280,12 +280,12 @@ class MqttClient extends Adapter {
     }
 
     private topicAddPrefixOut(topic: string): string {
-        //add outgoing prefix
+        // add outgoing prefix
         return this.config.outbox ? `${this.config.outbox}/${topic}` : topic;
     }
 
     private topicAddPrefixIn(topic: string): string {
-        //add incoming prefix
+        // add incoming prefix
         return this.config.inbox ? `${this.config.inbox}/${topic}` : topic;
     }
 
@@ -407,7 +407,7 @@ class MqttClient extends Adapter {
     }
 
     private addTopic2Id(topic: string, id: string): void {
-        //derived topics can collide, e.g. "a#b" and "a+b" both become "a_b"
+        // derived topics can collide, e.g. "a#b" and "a+b" both become "a_b"
         if (this.topic2id[topic] && this.topic2id[topic] !== id) {
             this.log.warn(
                 `topic "${topic}" is used by ${this.topic2id[topic]} and ${id}, only ${id} will receive messages. Please configure an explicit topic for one of them`,
@@ -502,7 +502,7 @@ class MqttClient extends Adapter {
         }
 
         const ids: string[] = [];
-        if (doc?.rows) {
+        if (doc && doc.rows) {
             for (let i = 0, l = doc.rows.length; i < l; i++) {
                 const cust = doc.rows[i].value;
                 if (cust?.[this.namespace]?.enabled) {
@@ -697,9 +697,9 @@ class MqttClient extends Adapter {
             }
 
             if (this.custom[id].enabled) {
-                //subscribe to state changes
+                // subscribe to state changes
                 void this.iobSubscribe(id).then(async subscribed => {
-                    //publish state once
+                    // publish state once
                     if (!subscribed || !this.custom[id]?.publish) {
                         return;
                     }
