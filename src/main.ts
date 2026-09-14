@@ -1,4 +1,4 @@
-import * as utils from '@iobroker/adapter-core';
+import { Adapter, type AdapterOptions } from '@iobroker/adapter-core';
 import {
     connect,
     type IClientOptions,
@@ -14,7 +14,7 @@ import type { MqttCustomSettings, StateMessage } from './lib/types';
 type QoS = NonNullable<IClientPublishOptions['qos']>;
 type MqttProtocolVersion = NonNullable<IClientOptions['protocolVersion']>;
 
-class MqttClient extends utils.Adapter {
+class MqttClient extends Adapter {
     /** cache of the mqtt-client settings of all enabled objects */
     private readonly custom: Record<string, MqttCustomSettings> = {};
     /** subscribed mqtt topics (without prefix) and their QoS */
@@ -32,7 +32,7 @@ class MqttClient extends utils.Adapter {
     private readonly iobSubscribes: string[] = [];
     private adapterFinished = false;
 
-    public constructor(options: Partial<utils.AdapterOptions> = {}) {
+    public constructor(options: Partial<AdapterOptions> = {}) {
         super({
             ...options,
             name: 'mqtt-client',
@@ -113,21 +113,21 @@ class MqttClient extends utils.Adapter {
 
         topic = this.topicRemovePrefixIn(topic);
 
-        //if topic2id[topic] does not exist automatically convert topic to id with guiding adapter namespace
+        // if topic2id[topic] does not exist, automatically convert topic to id with guiding adapter namespace
         const id = this.topic2id[topic] || convertTopic2ID(topic);
 
         this.log.debug(`received message ${msg} for id ${id}=>${JSON.stringify(this.custom[id])}`);
 
-        if (this.topic2id[topic] && this.custom[id] && this.custom[id].subscribe) {
+        if (this.topic2id[topic] && this.custom[id]?.subscribe) {
             if (this.custom[id].subAsObject) {
                 void this.setStateObj(id, msg);
             } else {
                 void this.setStateVal(id, msg);
             }
         } else if (!this.addedTopics[topic]) {
-            //prevents object from being recreated while first creation has not finished.
-            //Intentionally kept from the JS version: `null` is falsy, so the guard never triggers -
-            //setObjectNotExists() makes a second creation harmless.
+            // prevents an object from being recreated while the first creation has not finished.
+            // Intentionally kept from the JS version: `null` is falsy, so the guard never triggers -
+            // setObjectNotExists() makes a second creation harmless.
             this.addedTopics[topic] = null;
             const obj: ioBroker.SettableStateObject = {
                 type: 'state',
@@ -229,10 +229,10 @@ class MqttClient extends utils.Adapter {
         }
 
         if (state && this.val2String(state.val) === msg) {
-            if (this.config.inbox === this.config.outbox && this.custom[id] && this.custom[id].publish) {
+            if (this.config.inbox === this.config.outbox && this.custom[id]?.publish) {
                 this.log.debug('value did not change (loop protection)');
                 return;
-            } else if (this.custom[id] && this.custom[id].subChangesOnly) {
+            } else if (this.custom[id]?.subChangesOnly) {
                 this.log.debug('value did not change');
                 return;
             }
@@ -240,7 +240,7 @@ class MqttClient extends utils.Adapter {
         // `val` is undefined for the message "undefined" - kept from the JS version
         const _state = {
             val: this.stringToVal(id, msg),
-            ack: this.custom[id] && this.custom[id].setAck,
+            ack: this.custom[id]?.setAck,
         } as ioBroker.SettableState;
         void this.setForeignState(id, _state);
         this.log.debug(`value of ${id} set to ${JSON.stringify(_state)}`);
@@ -469,8 +469,8 @@ class MqttClient extends utils.Adapter {
         this.config.inbox = this.config.inbox.trim();
         this.config.outbox = this.config.outbox.trim();
 
-        if (this.config.host && this.config.host !== '') {
-            // not awaited: the object subscription below is requested at the same time like in the JS version
+        if (this.config.host) {
+            // not awaited: the object subscription below is requested at the same time as in the JS version
             this.startClient().catch(e => this.log.error(`Cannot start client: ${(e as Error).message}`));
         }
 
@@ -499,7 +499,7 @@ class MqttClient extends utils.Adapter {
         if (doc?.rows) {
             for (let i = 0, l = doc.rows.length; i < l; i++) {
                 const cust = doc.rows[i].value;
-                if (cust && cust[this.namespace] && cust[this.namespace]!.enabled) {
+                if (cust?.[this.namespace]?.enabled) {
                     ids.push(doc.rows[i].id);
                 }
             }
@@ -534,7 +534,7 @@ class MqttClient extends utils.Adapter {
 
         if (this.config.subscriptions) {
             for (const topic of this.config.subscriptions.split(',')) {
-                if (topic && topic.trim()) {
+                if (topic?.trim()) {
                     this.addTopics[topic.trim()] = 0; // QoS
                 }
             }
@@ -644,7 +644,7 @@ class MqttClient extends utils.Adapter {
     }
 
     /**
-     * Is called when adapter shuts down - callback has to be called under any circumstances!
+     * Is called when the adapter shuts down - callback has to be called under any circumstances!
      *
      * @param callback
      */
@@ -759,8 +759,8 @@ class MqttClient extends utils.Adapter {
     }
 
     /**
-     * Some message was sent to this instance over message box.
-     * Using this method requires "common.messagebox" property to be set to true in io-package.json
+     * Some message was sent to this instance over the message box.
+     * Using this method requires the "common.messagebox" property to be set to true in io-package.json
      *
      * @param obj
      */
@@ -780,7 +780,7 @@ class MqttClient extends utils.Adapter {
 
 if (require.main !== module) {
     // Export the constructor in compact mode
-    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new MqttClient(options);
+    module.exports = (options: Partial<AdapterOptions> | undefined) => new MqttClient(options);
 } else {
     // otherwise start the instance directly
     (() => new MqttClient())();

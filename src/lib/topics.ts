@@ -16,7 +16,7 @@ const INVALID_TOPIC_CHARS = /[+#/\s]/g;
 export function convertID2Topic(id: string, namespace?: string): string {
     let topic: string;
 
-    //if necessary remove namespace before converting, e.g. "mqtt-client.0..."
+    // if necessary, remove namespace before converting, e.g. "mqtt-client.0..."
     if (namespace && id.startsWith(`${namespace}.`)) {
         topic = id.substring(namespace.length + 1);
     } else {
