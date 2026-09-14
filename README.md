@@ -1,4 +1,4 @@
-![Logo](admin/mqtt-client.png)
+![Logo](admin/mqtt-client.svg)
 
 # ioBroker.mqtt-client
 
@@ -63,11 +63,14 @@ Disabling will delete any mqtt-client settings from this state.
 The topic this state is published to and subscribed from.
 default: state-ID converted to a mqtt topic.
 
-When the topic is derived from the state-ID, dots are converted to topic level separators (`/`) and
-characters which are not allowed within a mqtt topic name are replaced by `_`. This affects the mqtt
-wildcards `+` and `#` (as used by shelly IDs like `shelly.0.SHSW-1#B96701#1`), slashes contained in the
-ID itself and whitespace. So `shelly.0.SHSW-1#B96701#1.Relay0.Switch` becomes
-`shelly/0/SHSW-1_B96701_1/Relay0/Switch`.
+When the topic is derived from the state-ID, dots are converted to topic level separators (`/`) and the
+following characters are replaced by `_`:
+* the mqtt wildcards `+` and `#` - they are not allowed in topic names (used e.g. by shelly IDs like `shelly.0.SHSW-1#B96701#1`)
+* slashes contained in the ID itself - they would create additional topic levels
+* whitespace - it must not end up in object IDs when the topic is converted back
+
+So `shelly.0.SHSW-1#B96701#1.Relay0.Switch` becomes `shelly/0/SHSW-1_B96701_1/Relay0/Switch`.
+If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is logged. Configure an explicit topic for one of them in this case.
 
 ### publish
 * ```enable``` state will be published
@@ -94,7 +97,9 @@ ID itself and whitespace. So `shelly.0.SHSW-1#B96701#1.Relay0.Switch` becomes
 -->
 ## Changelog
 ### __WORK IN PROGRESS__
-* Automatically derived topics no longer contain the mqtt wildcards `+` and `#` (as used by shelly IDs), slashes or whitespace taken from the state-ID. These characters are replaced by `_` now
+* (@Tarvion) Automatically derived topics no longer contain the mqtt wildcards `+` and `#` (as used by shelly IDs), slashes or whitespace taken from the state-ID. These characters are replaced by `_` now
+* (@GermanBluefox) A warning is logged if two states derive to the same topic
+* (@GermanBluefox) Adapter icon converted to SVG
 
 ### 4.0.0 (2026-05-05)
 * (copilot) Adapter requires node.js >= 22 now
