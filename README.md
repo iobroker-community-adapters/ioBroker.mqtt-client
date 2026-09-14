@@ -105,6 +105,7 @@ If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is l
 * (@GermanBluefox) Fixed: stopping the adapter waited for the timeout when no broker was configured or after `stopInstance`
 * (@GermanBluefox) Fixed: states created from received topics now have `common.role` instead of a `role` outside of `common`
 * (@GermanBluefox) Fixed: with "subscribe as object", the loop protection and "changes only" skipped changed values instead of unchanged ones
+* (@GermanBluefox) Fixed: deleting a state that was published with retain now also removes the retained message from the broker
 
 ### 4.0.0 (2026-05-05)
 * (copilot) Adapter requires node.js >= 22 now

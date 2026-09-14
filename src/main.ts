@@ -309,9 +309,13 @@ class MqttClient extends Adapter {
 
         const topic = settings.topic;
 
-        // an empty payload deletes the retained message (the JS version passed `null`, which mqtt sends as empty payload)
-        this.client.publish(this.topicAddPrefixOut(topic), '', { qos: settings.qos as QoS, retain: false }, () =>
-            this.log.debug(`successfully unpublished ${id}`),
+        // An empty payload with the retain flag deletes the retained message on the broker. Without the flag the broker
+        // keeps the last retained value, so the flag follows the retain setting the value was published with.
+        this.client.publish(
+            this.topicAddPrefixOut(topic),
+            '',
+            { qos: settings.qos as QoS, retain: settings.retain },
+            () => this.log.debug(`successfully unpublished ${id}`),
         );
     }
 

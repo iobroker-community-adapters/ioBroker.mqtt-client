@@ -312,6 +312,21 @@ describe('mqtt-client adapter', function () {
             await remote.waitForMessage('out/javascript/0/pub6', m => m.payload === '');
         });
 
+        it('clears the retained message when a state published with retain is deleted', async () => {
+            const id = 'javascript.0.pub7';
+            const remote = await connectClient('out/javascript/0/pub7');
+            const adapter = await startAdapter({}, { [id]: stateObject('string', { publish: true, retain: true }) });
+
+            adapter.testSetState(id, 'on');
+            await remote.waitForMessage('out/javascript/0/pub7', m => m.payload === 'on');
+            adapter.testDeleteState(id);
+            await remote.waitForMessage('out/javascript/0/pub7', m => m.payload === '');
+
+            const late = await connectClient('out/javascript/0/pub7');
+            await sleep(300);
+            assert.deepStrictEqual(late.messagesOn('out/javascript/0/pub7'), [], 'no retained message may be left');
+        });
+
         it('publishes the current value once when an object is enabled at runtime', async () => {
             const remote = await connectClient('out/#');
             const adapter = await startAdapter();
