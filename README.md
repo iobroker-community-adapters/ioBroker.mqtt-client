@@ -63,6 +63,12 @@ Disabling will delete any mqtt-client settings from this state.
 The topic this state is published to and subscribed from.
 default: state-ID converted to a mqtt topic.
 
+When the topic is derived from the state-ID, dots are converted to topic level separators (`/`) and
+characters which are not allowed within a mqtt topic name are replaced by `_`. This affects the mqtt
+wildcards `+` and `#` (as used by shelly IDs like `shelly.0.SHSW-1#B96701#1`), slashes contained in the
+ID itself and whitespace. So `shelly.0.SHSW-1#B96701#1.Relay0.Switch` becomes
+`shelly/0/SHSW-1_B96701_1/Relay0/Switch`.
+
 ### publish
 * ```enable``` state will be published
 * ```changes only``` state will only be published when its value changes
@@ -87,6 +93,9 @@ default: state-ID converted to a mqtt topic.
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+### __WORK IN PROGRESS__
+* Automatically derived topics no longer contain the mqtt wildcards `+` and `#` (as used by shelly IDs), slashes or whitespace taken from the state-ID. These characters are replaced by `_` now
+
 ### 4.0.0 (2026-05-05)
 * (copilot) Adapter requires node.js >= 22 now
 * (copilot) Adapter requires admin >= 7.7.22 now
