@@ -129,13 +129,12 @@ class MqttClient extends utils.Adapter {
             //Intentionally kept from the JS version: `null` is falsy, so the guard never triggers -
             //setObjectNotExists() makes a second creation harmless.
             this.addedTopics[topic] = null;
-            //`role` is placed outside of `common` since the JS version
-            const obj = {
+            const obj: ioBroker.SettableStateObject = {
                 type: 'state',
-                role: 'text',
                 common: {
-                    name: id.split('.').pop(),
+                    name: id.split('.').pop() as string,
                     type: 'mixed',
+                    role: 'text',
                     read: true,
                     write: true,
                     desc: 'created from topic',
@@ -159,7 +158,7 @@ class MqttClient extends utils.Adapter {
                 native: {
                     topic,
                 },
-            } as unknown as ioBroker.SettableObject;
+            };
 
             void this.setObjectNotExists(id, obj, () => this.log.debug(`created and subscribed to new state: ${id}`));
             //onObjectChange should now receive this object
@@ -598,6 +597,8 @@ class MqttClient extends utils.Adapter {
      */
     private finish(callback?: () => void): void {
         if (this.adapterFinished) {
+            // e.g. unload after stopInstance: the client is already closed or closing
+            callback?.();
             return;
         }
         if (this.client && this.config.onDisconnectTopic && this.config.onDisconnectMessage) {
@@ -630,7 +631,12 @@ class MqttClient extends utils.Adapter {
      */
     private end(callback?: () => void): void {
         this.adapterFinished = true;
-        this.client?.end(false, {}, () => {
+        if (!this.client) {
+            // no broker configured
+            callback?.();
+            return;
+        }
+        this.client.end(false, {}, () => {
             this.log.debug(`closed client`);
             void this.setState('info.connection', false, true);
             callback?.();
