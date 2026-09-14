@@ -174,50 +174,49 @@ class MqttClient extends Adapter {
     }
 
     private async setStateObj(id: string, msg: string): Promise<void> {
-        let state: ioBroker.State | null | undefined;
+        let oldState: ioBroker.State | null | undefined;
         try {
-            state = await this.getForeignStateAsync(id);
+            oldState = await this.getForeignStateAsync(id);
         } catch {
-            state = undefined;
+            oldState = undefined;
         }
 
         try {
-            const obj = JSON.parse(msg) as StateMessage;
-            this.log.debug(JSON.stringify(obj));
+            const newState = JSON.parse(msg) as StateMessage;
+            this.log.debug(JSON.stringify(newState));
 
-            if (Object.prototype.hasOwnProperty.call(obj, 'val')) {
-                if (Object.prototype.hasOwnProperty.call(obj, 'ts') && state && obj.ts! <= state.ts) {
+            if (Object.prototype.hasOwnProperty.call(newState, 'val')) {
+                if (Object.prototype.hasOwnProperty.call(newState, 'ts') && oldState && newState.ts! <= oldState.ts) {
                     this.log.debug(`object ts not newer than current state ts: ${msg}`);
                     return;
                 }
-                if (Object.prototype.hasOwnProperty.call(obj, 'lc') && state && obj.lc! < state.lc) {
+                if (Object.prototype.hasOwnProperty.call(newState, 'lc') && oldState && newState.lc! < oldState.lc) {
                     this.log.debug(`object lc not newer than current state lc: ${msg}`);
                     return;
                 }
-                // todo: !== correct???
-                // Intentionally kept from the JS version: if the state does not exist yet, accessing
-                // `state.val` throws and the message is reported as "could not parse" below.
+                // loop protection: do not write back an unchanged value that this adapter publishes to the same topic.
+                // `custom[id]` may have been removed while the old state was read.
                 if (
                     this.config.inbox === this.config.outbox &&
-                    this.custom[id].publish &&
-                    !Object.prototype.hasOwnProperty.call(obj, 'ts') &&
-                    !Object.prototype.hasOwnProperty.call(obj, 'lc') &&
-                    obj.val !== (state as ioBroker.State).val
+                    this.custom[id]?.publish &&
+                    !Object.prototype.hasOwnProperty.call(newState, 'ts') &&
+                    !Object.prototype.hasOwnProperty.call(newState, 'lc') &&
+                    oldState &&
+                    newState.val === oldState.val
                 ) {
                     this.log.debug(`object value did not change (loop protection): ${msg}`);
                     return;
                 }
-                // todo: !== correct???
-                if (this.custom[id].subChangesOnly && obj.val !== (state as ioBroker.State).val) {
+                if (this.custom[id]?.subChangesOnly && oldState && newState.val === oldState.val) {
                     this.log.debug(`object value did not change: ${msg}`);
                     return;
                 }
-                if (this.custom[id].setAck) {
-                    obj.ack = true;
+                if (this.custom[id]?.setAck) {
+                    newState.ack = true;
                 }
-                delete obj.from;
-                void this.setForeignState(id, obj as ioBroker.SettableState);
-                this.log.debug(`object set (as object) to ${JSON.stringify(obj)}`);
+                delete newState.from;
+                void this.setForeignState(id, newState as ioBroker.SettableState);
+                this.log.debug(`object set (as object) to ${JSON.stringify(newState)}`);
                 return;
             }
             this.log.warn(`no value in object: ${msg}`);
@@ -540,7 +539,7 @@ class MqttClient extends Adapter {
 
         if (this.config.subscriptions) {
             for (const topic of this.config.subscriptions.split(',')) {
-                if (topic?.trim()) {
+                if (topic.trim()) {
                     this.addTopics[topic.trim()] = 0; // QoS
                 }
             }

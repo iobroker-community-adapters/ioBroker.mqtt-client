@@ -79,7 +79,6 @@ All runtime state lives in instance fields (`custom`, `subTopics`, `topic2id`, `
 
 These look wrong but are kept to not change behaviour; they are marked with comments in `src/main.ts`:
 
-- In `setStateObj()` the loop protection compares with `!==` (see the `todo` comments) and throws on a not-existing state, which is logged as "could not parse message as object".
 - The publish-once after enabling an object in `onObjectChange()` only happens when the id was not subscribed before.
 
 ## Release flow
