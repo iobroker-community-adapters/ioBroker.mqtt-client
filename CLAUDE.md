@@ -68,7 +68,7 @@ All runtime state lives in instance fields (`custom`, `subTopics`, `topic2id`, `
 `onBrokerMessage()`:
 
 - known topic + `subscribe` enabled → `setStateVal()` (string payload converted by `common.type` in `stringToVal()`) or `setStateObj()` (JSON state, respects `ts`/`lc`).
-- unknown topic → a new state `mqtt-client.<i>.<converted topic>` is created with subscribe enabled; `onObjectChange()` then picks it up.
+- unknown topic → a new state `mqtt-client.<i>.<converted topic>` is created with subscribe enabled; `onObjectChange()` then picks it up. The message that triggers the creation is **not** written to the state. Until `onObjectChange()` has added the topic to `topic2id`, the `addedTopics` set blocks further creation attempts; `onObjectChange()` removes the topic from the set when the object is deleted or its syncing is disabled, and a failed creation removes it right away.
 - Loop protection: when `inbox === outbox` and the object also publishes, an unchanged value is not written back.
 
 ### Shutdown
@@ -79,7 +79,6 @@ All runtime state lives in instance fields (`custom`, `subTopics`, `topic2id`, `
 
 These look wrong but are kept to not change behaviour; they are marked with comments in `src/main.ts`:
 
-- `addedTopics[topic] = null` never blocks a second object creation (`null` is falsy).
 - In `setStateObj()` the loop protection compares with `!==` (see the `todo` comments) and throws on a not-existing state, which is logged as "could not parse message as object".
 - The publish-once after enabling an object in `onObjectChange()` only happens when the id was not subscribed before.
 

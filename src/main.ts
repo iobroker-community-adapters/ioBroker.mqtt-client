@@ -23,8 +23,8 @@ class MqttClient extends Adapter {
     private readonly topic2id: Record<string, string> = {};
     /** additional mqtt topics to subscribe to (`config.subscriptions`) and their QoS */
     private readonly addTopics: Record<string, number> = {};
-    /** received mqtt topics that created a new object */
-    private readonly addedTopics: Record<string, null> = {};
+    /** received mqtt topics (without prefix) for which a new object was created */
+    private readonly addedTopics = new Set<string>();
 
     private brokerConnected = false;
     private client: MqttConnection | null = null;
@@ -108,7 +108,7 @@ class MqttClient extends Adapter {
         this.log.warn(`client error: ${String(err)}`);
     }
 
-    private onBrokerMessage(topic: string, payload: Buffer): void {
+    private async onBrokerMessage(topic: string, payload: Buffer): Promise<void> {
         const msg = payload.toString();
 
         topic = this.topicRemovePrefixIn(topic);
@@ -124,11 +124,10 @@ class MqttClient extends Adapter {
             } else {
                 void this.setStateVal(id, msg);
             }
-        } else if (!this.addedTopics[topic]) {
-            // prevents an object from being recreated while the first creation has not finished.
-            // Intentionally kept from the JS version: `null` is falsy, so the guard never triggers -
-            // setObjectNotExists() makes a second creation harmless.
-            this.addedTopics[topic] = null;
+        } else if (!this.addedTopics.has(topic)) {
+            // prevents the object from being created again until onObjectChange() has added the topic to topic2id.
+            // onObjectChange() removes the topic again when the object is deleted or its syncing is disabled.
+            this.addedTopics.add(topic);
             const obj: ioBroker.SettableStateObject = {
                 type: 'state',
                 common: {
@@ -160,8 +159,15 @@ class MqttClient extends Adapter {
                 },
             };
 
-            void this.setObjectNotExists(id, obj, () => this.log.debug(`created and subscribed to new state: ${id}`));
-            //onObjectChange should now receive this object
+            try {
+                await this.setObjectNotExistsAsync(id, obj);
+                this.log.debug(`created and subscribed to new state: ${id}`);
+                // onObjectChange should now receive this object
+            } catch (e) {
+                // allow another attempt with the next message
+                this.addedTopics.delete(topic);
+                this.log.error(`Cannot create state ${id} for topic "${topic}": ${(e as Error).message}`);
+            }
         } else {
             this.log.debug('state already exists');
         }
@@ -723,6 +729,8 @@ class MqttClient extends Adapter {
 
             delete this.subTopics[this.custom[id].topic];
             delete this.topic2id[this.custom[id].topic];
+            // a deleted state that was created from a topic may be created again by the next message
+            this.addedTopics.delete(topic);
 
             if (this.custom[id].publish) {
                 this.iobUnsubscribe(id);
