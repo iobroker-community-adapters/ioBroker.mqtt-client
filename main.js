@@ -390,6 +390,16 @@ class MqttClient extends utils.Adapter {
         return convertTopic2ID(topic);
     }
 
+    addTopic2Id(topic2id, topic, id) {
+        //derived topics can collide, e.g. "a#b" and "a+b" both become "a_b"
+        if (topic2id[topic] && topic2id[topic] !== id) {
+            this.log.warn(
+                `topic "${topic}" is used by ${topic2id[topic]} and ${id}, only ${id} will receive messages. Please configure an explicit topic for one of them`,
+            );
+        }
+        topic2id[topic] = id;
+    }
+
     checkSettings(id, custom, aNamespace, qos, subQos) {
         if (!custom.topic) {
             custom.topic = this.convertID2Topic(id, aNamespace);
@@ -469,7 +479,7 @@ class MqttClient extends utils.Adapter {
 
                             if (custom[id].subscribe) {
                                 subTopics[custom[id].topic] = custom[id].subQos;
-                                topic2id[custom[id].topic] = id;
+                                this.addTopic2Id(topic2id, custom[id].topic, id);
                             }
 
                             // subscribe on changes
@@ -628,7 +638,7 @@ class MqttClient extends utils.Adapter {
 
             if (custom[id].subscribe) {
                 subTopics[custom[id].topic] = custom[id].subQos;
-                topic2id[custom[id].topic] = id;
+                this.addTopic2Id(topic2id, custom[id].topic, id);
                 const sub = {};
                 sub[custom[id].topic] = custom[id].subQos;
 

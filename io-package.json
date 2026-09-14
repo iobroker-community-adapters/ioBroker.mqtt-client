@@ -140,9 +140,9 @@
       "type": "free"
     },
     "platform": "Javascript/Node.js",
-    "icon": "mqtt-client.png",
+    "icon": "mqtt-client.svg",
     "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.mqtt-client/master/admin/mqtt-client.png",
+    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.mqtt-client/master/admin/mqtt-client.svg",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.mqtt-client/blob/master/README.md",
     "loglevel": "info",
     "tier": 1,
