@@ -1,4 +1,8 @@
 # Older changes
+## 2.0.0 (2024-06-21)
+* (klein0r) Password is now encrypted - you have to re-renter your password in instance settings!
+* (klein0r) Use jsonConfig instead of materialize (for instance settings)
+
 ## 1.8.0 (2024-04-07)
 * (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
 * (mcm1957) Dependencies have been updated

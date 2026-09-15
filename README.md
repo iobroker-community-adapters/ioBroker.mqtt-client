@@ -110,7 +110,7 @@ If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is l
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.1.0 (2026-09-15)
 * (@GermanBluefox) Adapter requires node.js >= 22.19 now
 * (@Tarvion) Automatically derived topics no longer contain the mqtt wildcards `+` and `#` (as used by shelly IDs), slashes or whitespace taken from the state-ID. These characters are replaced by `_` now
 * (@GermanBluefox) A warning is logged if two states derive to the same topic
@@ -144,10 +144,6 @@ If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is l
 ### 2.0.1 (2024-09-23)
 * (@klein0r) Added missing information in configuration dialog
 * (@klein0r) Fixed type of port configuration to avoid conflicts
-
-### 2.0.0 (2024-06-21)
-* (klein0r) Password is now encrypted - you have to re-renter your password in instance settings!
-* (klein0r) Use jsonConfig instead of materialize (for instance settings)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
