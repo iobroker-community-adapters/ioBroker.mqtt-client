@@ -488,12 +488,10 @@ class MqttClient extends Adapter {
 
     private async startClient(): Promise<void> {
         const protocol = `${this.config.websocket ? 'ws' : 'mqtt'}${this.config.ssl ? 's' : ''}`;
-        const _url = `${protocol}://${
-            this.config.username ? `${this.config.username}:${this.config.password}@` : ''
-        }${this.config.host}${this.config.port ? `:${this.config.port}` : ''}?clientId=${this.config.clientId}`;
-        const __url = `${protocol}://${
-            this.config.username ? `${this.config.username}:*******************@` : ''
-        }${this.config.host}${this.config.port ? `:${this.config.port}` : ''}?clientId=${this.config.clientId}`;
+        // User name, password and client ID are passed as options only. mqtt.js parses the URL with url.parse(): values
+        // in the URL would have to be encoded ("%" throws, ":" splits the password) and would override the options (#200)
+        const url = `${protocol}://${this.config.host}${this.config.port ? `:${this.config.port}` : ''}`;
+        const target = `${url} (client ID "${this.config.clientId}"${this.config.username ? `, user "${this.config.username}"` : ''})`;
 
         let doc:
             | { rows: { id: string; value: Record<string, { enabled?: boolean } | undefined> | null }[] }
@@ -554,7 +552,7 @@ class MqttClient extends Adapter {
 
         if (this.config.lastWillTopic && this.config.lastWillMessage) {
             this.log.info(
-                `Try to connect to ${__url}, protocol version ${this.config.mqttVersion} with lwt "${this.config.lastWillTopic}"`,
+                `Try to connect to ${target}, protocol version ${this.config.mqttVersion} with lwt "${this.config.lastWillTopic}"`,
             );
 
             will = {
@@ -564,7 +562,7 @@ class MqttClient extends Adapter {
                 retain: true,
             };
         } else {
-            this.log.info(`Try to connect to ${__url}`);
+            this.log.info(`Try to connect to ${target}`);
         }
         const mqttVersion = Number.parseInt(String(this.config.mqttVersion || 4));
         // `ssl` is not an option of mqtt.js (the protocol comes from the url), it is passed on like in the JS version
@@ -585,7 +583,7 @@ class MqttClient extends Adapter {
             will,
         };
         try {
-            this.client = connect(_url, options);
+            this.client = connect(url, options);
         } catch (e) {
             this.log.error(String(e));
             this.finish(() => {

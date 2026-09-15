@@ -107,6 +107,7 @@ If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is l
 * (@GermanBluefox) Fixed: with "subscribe as object", the loop protection and "changes only" skipped changed values instead of unchanged ones
 * (@GermanBluefox) Fixed: deleting a state that was published with retain now also removes the retained message from the broker
 * (@GermanBluefox) Fixed: MQTT version 3 connects with the protocol name `MQIsdp`, so MQTT 3.1 brokers accept the connection. The versions are labeled 3.1, 3.1.1 and 5.0 in the settings (#169)
+* (@GermanBluefox) Fixed: special characters like `%` or `:` in the user name, password or client ID broke the connection (#200)
 
 ### 4.0.0 (2026-05-05)
 * (copilot) Adapter requires node.js >= 22 now

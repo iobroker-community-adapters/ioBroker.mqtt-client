@@ -600,6 +600,43 @@ describe('mqtt-client adapter', function () {
         }
     });
 
+    describe('credentials and client ID (#200)', () => {
+        const cases = [
+            { name: '"%" in the password', username: 'user', password: 'pa%ss 100%' },
+            { name: '":" in the password', username: 'user', password: 'p:ss:word' },
+            { name: '"@", "#", "/" and "?" in the password', username: 'user', password: 'p@ss#w/o?rd' },
+            { name: '"@" and ":" in the user name', username: 'us@er:name', password: 'secret' },
+            { name: '"#", "&" and "%" in the client ID', username: 'user', password: 'secret', clientId: 'client#1&x=%' },
+        ];
+
+        for (const c of cases) {
+            it(`passes ${c.name} unchanged to the broker`, async () => {
+                const authBroker = await TestBroker.start();
+                const connects = [];
+                authBroker.aedes.authenticate = (client, username, password, callback) => {
+                    connects.push({ clientId: client.id, username, password: password?.toString() });
+                    callback(null, username === c.username && password?.toString() === c.password);
+                };
+                try {
+                    const adapter = await startAdapter(
+                        { username: c.username, password: c.password, ...(c.clientId ? { clientId: c.clientId } : {}) },
+                        {},
+                        authBroker,
+                    );
+                    assert.deepStrictEqual(connects[0], {
+                        clientId: adapter.config.clientId,
+                        username: c.username,
+                        password: c.password,
+                    });
+                    assert.ok(!adapter.logs.some(l => l.message.includes(c.password)), 'the password must not be logged');
+                    await adapter.testUnload();
+                } finally {
+                    await authBroker.stop();
+                }
+            });
+        }
+    });
+
     describe('additional subscriptions', () => {
         it('creates a state for a received unknown topic and writes the following values', async () => {
             const id = `${NS}.sensors.temp`;

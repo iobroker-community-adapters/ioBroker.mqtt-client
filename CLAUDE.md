@@ -43,7 +43,7 @@ There is deliberately **no `prepare` script** — `npm ci`/`npm install` does no
 
 ### Startup
 
-`onReady()` requests the `system/custom` view and **at the same time** subscribes to all foreign objects (`subscribeForeignObjects('*')`). `startClient()` loads every object whose custom settings are enabled, normalizes them with `checkSettings()`, fills the caches and then calls `mqtt.connect()`. On every broker `connect` event all cached topics are (re)subscribed and the on-connect message is published.
+`onReady()` requests the `system/custom` view and **at the same time** subscribes to all foreign objects (`subscribeForeignObjects('*')`). `startClient()` loads every object whose custom settings are enabled, normalizes them with `checkSettings()`, fills the caches and then calls `mqtt.connect()`. The URL only contains protocol, host and port; user name, password and client ID are passed as options — mqtt.js parses the URL with `url.parse`, so credentials in the URL break on `%` or `:` and override the options (#200). On every broker `connect` event all cached topics are (re)subscribed and the on-connect message is published.
 
 All runtime state lives in instance fields (`custom`, `subTopics`, `topic2id`, `addTopics`, `addedTopics`) — the JS version kept them in a module global that was shared between instances in compact mode.
 
