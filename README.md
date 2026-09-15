@@ -124,6 +124,7 @@ If two state-IDs derive to the same topic (e.g. `a#b` and `a+b`), a warning is l
 * (@GermanBluefox) Fixed: special characters like `%` or `:` in the user name, password or client ID broke the connection (#200)
 * (@GermanBluefox) New option "split JSON into states for topics": JSON objects, e.g. from zigbee2mqtt, become a channel with one state per value; written values are sent to `<topic>/set` (#322)
 * (@GermanBluefox) Fixed: a subscribed state was not updated after a restart when an object of the adapter's namespace had the same topic. Changing the topic of a state now also unsubscribes the old topic, and no copy of a state is created for an old topic anymore (#418)
+* (@GermanBluefox) Fixed: every change of an object (e.g. `extendObject` by another adapter) published the current value of the state again, which could overwrite a newer value on the same topic. The value is now published once only when publishing starts or the topic changes (#467)
 
 ### 4.0.0 (2026-05-05)
 * (copilot) Adapter requires node.js >= 22 now

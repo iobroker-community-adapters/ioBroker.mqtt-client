@@ -834,38 +834,49 @@ class MqttClient extends Adapter {
      * @param obj
      */
     private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
-        // topic of the object before this change - a changed topic has to be forgotten (#418)
-        const previousTopic = this.custom[id]?.topic;
+        // settings before this change: a changed topic has to be forgotten (#418), publishing once depends on them (#467)
+        const previous = this.custom[id];
+        const previousTopic = previous?.topic;
 
         if (obj?.common?.custom?.[this.namespace]?.enabled) {
-            this.custom[id] = obj.common.custom[this.namespace] as MqttCustomSettings;
-            this.custom[id].type = (obj.common as ioBroker.StateCommon).type;
+            const settings = obj.common.custom[this.namespace] as MqttCustomSettings;
+            settings.type = (obj.common as ioBroker.StateCommon).type;
 
-            this.checkSettings(id, this.custom[id], this.namespace, this.config.qos, this.config.subQos);
+            this.checkSettings(id, settings, this.namespace, this.config.qos, this.config.subQos);
 
-            if (previousTopic !== undefined && previousTopic !== this.custom[id].topic) {
+            // runtime values survive an object change as long as the topic stays the same, e.g. for "changes only" (#467)
+            if (previous && previousTopic === settings.topic) {
+                settings.pubState = previous.pubState;
+                settings.state = previous.state;
+            }
+            this.custom[id] = settings;
+
+            if (previousTopic !== undefined && previousTopic !== settings.topic) {
                 this.removeTopic2Id(previousTopic, id);
             }
 
-            if (this.custom[id].subscribe) {
-                this.subTopics[this.custom[id].topic] = this.custom[id].subQos;
-                this.addTopic2Id(this.custom[id].topic, id);
+            if (settings.subscribe) {
+                this.subTopics[settings.topic] = settings.subQos;
+                this.addTopic2Id(settings.topic, id);
                 const sub: Record<string, number> = {};
-                sub[this.custom[id].topic] = this.custom[id].subQos;
+                sub[settings.topic] = settings.subQos;
 
                 this.subscribeTopics(sub, () => {
                     this.log.debug(`subscribed to ${JSON.stringify(sub)}`);
                 });
             } else {
-                this.removeTopic2Id(this.custom[id].topic, id);
-                this.iobUnsubscribe(id);
+                this.removeTopic2Id(settings.topic, id);
             }
 
-            if (this.custom[id].enabled) {
+            // The current value is published once only when publishing starts: the object is newly enabled, publish is
+            // switched on or the topic changed. Any other object change, e.g. extendObject() of another adapter, must not
+            // publish the value again - it could overwrite a newer value on the same topic (#467)
+            const publishOnce = settings.publish && (!previous?.publish || previousTopic !== settings.topic);
+
+            if (settings.enabled) {
                 // subscribe to state changes
-                void this.iobSubscribe(id).then(async subscribed => {
-                    // publish state once
-                    if (!subscribed || !this.custom[id]?.publish) {
+                void this.iobSubscribe(id).then(async () => {
+                    if (!publishOnce || !this.custom[id]?.publish) {
                         return;
                     }
                     let state: ioBroker.State | null | undefined;

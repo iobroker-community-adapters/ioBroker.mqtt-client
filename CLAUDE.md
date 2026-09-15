@@ -90,9 +90,11 @@ Only active when `config.splitJsonTopics` (comma separated topic filters with `+
 
 ### Legacy behaviour kept on purpose
 
-These look wrong but are kept to not change behaviour; they are marked with comments in `src/main.ts`:
+There is currently no known legacy behaviour that is kept on purpose.
 
-- The publish-once after enabling an object in `onObjectChange()` only happens when the id was not subscribed before.
+### Publish once
+
+`onObjectChange()` publishes the current value of a state once only when publishing starts: the object is newly enabled, `publish` is switched on, or the topic changed. Every other object change — `extendObject()` of another adapter changes name, unit or native very often — must not publish, otherwise an old value overwrites a newer one on the same (retained) topic (#467). The runtime values `pubState` and `state` are carried over to the new settings as long as the topic stays the same, so "changes only" keeps working after an object change.
 
 ## Tests
 

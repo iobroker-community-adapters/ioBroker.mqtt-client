@@ -637,6 +637,104 @@ describe('mqtt-client adapter', function () {
         }
     });
 
+    describe('object changes, e.g. extendObject (#467)', () => {
+        /** waits until the adapter processed the object change (the start logs "enabled syncing" once) */
+        function waitForObjectChange(adapter, id, count = 2) {
+            return waitFor(() => countLogs(adapter, 'debug', `enabled syncing of ${id} `) >= count, `object change of ${id}`);
+        }
+
+        it('does not publish the value again when a publish-only object is changed', async () => {
+            const id = 'lorawan.1.dev.uplink.Battery';
+            const remote = await connectClient('out/#');
+            const adapter = await startAdapter({}, { [id]: stateObject('number', { publish: true }) });
+            adapter.states[id] = { val: 80, ack: true, ts: 1000, lc: 1000, from: 'system.adapter.lorawan.1' };
+
+            adapter.testSetObject(id, { ...stateObject('number', { publish: true }), native: { changed: true } });
+            await waitForObjectChange(adapter, id);
+            await sleep(300);
+
+            assert.deepStrictEqual(remote.messagesOn('out/lorawan/1/dev/uplink/Battery'), []);
+            assert.ok(!hasLog(adapter, 'debug', `publish ${id} once`));
+        });
+
+        it('keeps a command when the state that publishes the device value on the same topic is changed', async () => {
+            const topic = 'Thermostat/TargetTemperature';
+            const uplink = 'lorawan.1.dev.uplink.TargetTemperature';
+            const downlink = 'lorawan.1.dev.downlink.TargetTemperature';
+            const remote = await connectClient(`out/${topic}`);
+            const adapter = await startAdapter(
+                { inbox: 'iob', outbox: 'iob' },
+                {
+                    [downlink]: stateObject('number', { publish: true, subscribe: true, retain: true, setAck: false, topic }),
+                    [uplink]: stateObject('number', { publish: true, retain: true, topic }),
+                },
+            );
+            adapter.states[uplink] = { val: 20, ack: true, ts: 1000, lc: 1000, from: 'system.adapter.lorawan.1' };
+            const commands = await connectClient(`iob/${topic}`);
+
+            adapter.testSetState(downlink, 19, { from: 'system.adapter.admin.0' });
+            await commands.waitForMessage(`iob/${topic}`, m => m.payload === '19');
+
+            // lorawan calls extendObject() on the uplink state, the MQTT settings do not change
+            adapter.testSetObject(uplink, { ...stateObject('number', { publish: true, retain: true, topic }), native: { changed: true } });
+            await waitForObjectChange(adapter, uplink);
+            await sleep(300);
+
+            assert.ok(!commands.messagesOn(`iob/${topic}`).some(m => m.payload === '20'), 'the old value must not be published');
+            assert.strictEqual(adapter.states[downlink].val, 19, 'the command must not be overwritten');
+            assert.deepStrictEqual(remote.messagesOn(`out/${topic}`), []);
+        });
+
+        it('publishes the current value once when publishing is switched on and not again on the next change', async () => {
+            const id = 'javascript.0.switchedOn';
+            const remote = await connectClient('out/#');
+            const adapter = await startAdapter({}, { [id]: stateObject('number', { subscribe: true }) });
+            adapter.states[id] = { val: 7, ack: true, ts: 1000, lc: 1000, from: 'system.adapter.javascript.0' };
+
+            adapter.testSetObject(id, stateObject('number', { subscribe: true, publish: true }));
+            await remote.waitForMessage('out/javascript/0/switchedOn', m => m.payload === '7');
+
+            adapter.testSetObject(id, { ...stateObject('number', { subscribe: true, publish: true }), native: { changed: true } });
+            await waitForObjectChange(adapter, id, 3);
+            await sleep(300);
+            assert.strictEqual(remote.messagesOn('out/javascript/0/switchedOn').length, 1);
+        });
+
+        it('publishes the current value on the new topic when the topic is changed', async () => {
+            const id = 'javascript.0.moved';
+            const remote = await connectClient('out/#');
+            const adapter = await startAdapter({}, { [id]: stateObject('number', { publish: true, topic: 'place/one' }) });
+            adapter.states[id] = { val: 5, ack: true, ts: 1000, lc: 1000, from: 'system.adapter.javascript.0' };
+
+            adapter.testSetObject(id, stateObject('number', { publish: true, topic: 'place/two' }));
+
+            const msg = await remote.waitForMessage('out/place/two');
+            assert.strictEqual(msg.payload, '5');
+        });
+
+        it('does not publish an unchanged value with "changes only" after the object was changed', async () => {
+            const id = 'javascript.0.changesOnly';
+            const remote = await connectClient('out/#');
+            const adapter = await startAdapter({}, { [id]: stateObject('number', { publish: true, pubChangesOnly: true }) });
+
+            adapter.testSetState(id, 1);
+            await remote.waitForMessage('out/javascript/0/changesOnly', m => m.payload === '1');
+
+            adapter.testSetObject(id, { ...stateObject('number', { publish: true, pubChangesOnly: true }), native: { changed: true } });
+            await waitForObjectChange(adapter, id);
+            await sleep(5);
+            adapter.testSetState(id, 1);
+            await sleep(5);
+            adapter.testSetState(id, 2);
+            await remote.waitForMessage('out/javascript/0/changesOnly', m => m.payload === '2');
+
+            assert.deepStrictEqual(
+                remote.messagesOn('out/javascript/0/changesOnly').map(m => m.payload),
+                ['1', '2'],
+            );
+        });
+    });
+
     describe('topic changes and duplicate topics (#418)', () => {
         const REAL = 'javascript.0.Strom.totalPower';
         const COPY = `${NS}.javascript.0.Strom.totalPower`;
