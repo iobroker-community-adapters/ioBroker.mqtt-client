@@ -637,6 +637,109 @@ describe('mqtt-client adapter', function () {
         }
     });
 
+    describe('topic changes and duplicate topics (#418)', () => {
+        const REAL = 'javascript.0.Strom.totalPower';
+        const COPY = `${NS}.javascript.0.Strom.totalPower`;
+
+        it('does not let a leftover object of the own namespace take the topic of a real state on start', async () => {
+            const remote = await connectClient();
+            // the object view delivers the objects sorted by id: javascript.0... before mqtt-client.0...
+            const adapter = await startAdapter(
+                {},
+                {
+                    [REAL]: stateObject('number', { subscribe: true, topic: 'Smartmeter/total' }),
+                    [COPY]: stateObject('mixed', { subscribe: true, topic: 'Smartmeter/total' }),
+                },
+            );
+
+            await remote.publish('in/Smartmeter/total', '686');
+
+            await waitFor(() => adapter.states[REAL], 'real state written');
+            assert.strictEqual(adapter.states[REAL].val, 686);
+            assert.strictEqual(adapter.states[COPY], undefined, 'the leftover copy must not receive the value');
+            assert.ok(hasLog(adapter, 'warn', `only ${REAL} will receive messages`), 'duplicate topic warning expected');
+        });
+
+        it('lets a state of another adapter take the topic from an object of the own namespace', async () => {
+            const zwave = 'zwave.0.power';
+            const remote = await connectClient();
+            const adapter = await startAdapter(
+                {},
+                {
+                    [`${NS}.zwave.0.power`]: stateObject('mixed', { subscribe: true, topic: 'meter/power' }),
+                    [zwave]: stateObject('number', { subscribe: true, topic: 'meter/power' }),
+                },
+            );
+
+            await remote.publish('in/meter/power', '12');
+
+            await waitFor(() => adapter.states[zwave], 'state of the other adapter written');
+            assert.strictEqual(adapter.states[`${NS}.zwave.0.power`], undefined);
+        });
+
+        it('forgets the old topic when the topic of a state is changed', async () => {
+            const remote = await connectClient();
+            const adapter = await startAdapter({}, { [REAL]: stateObject('number', { subscribe: true, topic: 'old/topic' }) });
+
+            adapter.testSetObject(REAL, stateObject('number', { subscribe: true, topic: 'new/topic' }));
+            await waitFor(() => hasLog(adapter, 'debug', 'subscribed to {"new/topic":0}'), 'new topic subscribed');
+            await waitFor(() => hasLog(adapter, 'debug', 'unsubscribed from old/topic'), 'old topic unsubscribed');
+
+            await remote.publish('in/old/topic', '1');
+            await sleep(300);
+            assert.strictEqual(adapter.states[REAL], undefined, 'a message on the old topic must not be written');
+
+            await remote.publish('in/new/topic', '2');
+            await waitFor(() => adapter.states[REAL]?.val === 2, 'message on the new topic written');
+        });
+
+        for (const action of ['deleted', 'disabled']) {
+            it(`does not create a copy of a state for its old topic after it was ${action}`, async () => {
+                const remote = await connectClient();
+                // "old/#" keeps receiving the old topic, so the message reaches the adapter in any case
+                const adapter = await startAdapter(
+                    { subscriptions: 'old/#' },
+                    { [REAL]: stateObject('number', { subscribe: true, topic: 'old/topic' }) },
+                );
+                adapter.testSetObject(REAL, stateObject('number', { subscribe: true, topic: 'new/topic' }));
+                await waitFor(() => hasLog(adapter, 'debug', 'subscribed to {"new/topic":0}'), 'new topic subscribed');
+
+                if (action === 'deleted') {
+                    adapter.testDeleteObject(REAL);
+                } else {
+                    adapter.testSetObject(REAL, stateObject('number', { subscribe: true, topic: 'new/topic', enabled: false }));
+                }
+                await waitFor(() => hasLog(adapter, 'debug', `disabled syncing of ${REAL}`), action);
+
+                await remote.publish('in/old/topic', '42');
+                await waitFor(() => adapter.objects[`${NS}.old.topic`], 'state for the unknown topic');
+
+                assert.deepStrictEqual(
+                    Object.keys(adapter.objects).filter(id => id.startsWith(`${NS}.javascript`)),
+                    [],
+                    'no copy of the state may be created',
+                );
+            });
+        }
+
+        it('keeps the topic of a state when another state with the same topic is disabled', async () => {
+            const remote = await connectClient();
+            const adapter = await startAdapter(
+                {},
+                {
+                    'javascript.0.a': stateObject('number', { subscribe: true, topic: 'shared/topic' }),
+                    'javascript.0.b': stateObject('number', { subscribe: true, topic: 'shared/topic' }),
+                },
+            );
+
+            adapter.testSetObject('javascript.0.a', stateObject('number', { subscribe: true, topic: 'shared/topic', enabled: false }));
+            await waitFor(() => hasLog(adapter, 'debug', 'disabled syncing of javascript.0.a'), 'disabled');
+
+            await remote.publish('in/shared/topic', '5');
+            await waitFor(() => adapter.states['javascript.0.b']?.val === 5, 'the other state still receives the topic');
+        });
+    });
+
     describe('split JSON into states (#322)', () => {
         const Z2M = { subscriptions: 'zigbee2mqtt/#', splitJsonTopics: 'zigbee2mqtt/+' };
         const base = `${NS}.zigbee2mqtt.sensor`;

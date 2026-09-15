@@ -58,7 +58,9 @@ All runtime state lives in instance fields (`custom`, `subTopics`, `topic2id`, `
 
 - `convertID2Topic()`: strips the own namespace (only on a level boundary), replaces `+`, `#`, `/` and whitespace with `_`, then dots with `/`.
 - `convertTopic2ID()`: `/` → `.`, whitespace → `_`, strips a leading/trailing dot. Used for received topics that are not in `topic2id`.
-- `topic2id` maps topics to ids for subscribed objects. Two ids with the same topic are logged as a warning by `addTopic2Id()`; the last one wins.
+- `topic2id` maps topics to ids for subscribed objects. Two ids with the same topic are logged as a warning by `addTopic2Id()`; the last one wins, except that an object of the own namespace never takes a topic from a state of another adapter (leftover copies, #418).
+- `removeTopic2Id()` removes a mapping and unsubscribes the topic only if the topic belongs to that id. `onObjectChange()` calls it for the old topic when the topic of an object changes, when subscribing is disabled and when the object is removed.
+- A received topic without subscribed object creates `mqtt-client.<i>.<convertTopic2ID(topic)>` — never an id taken from `topic2id`, that created copies like `mqtt-client.0.javascript.0.…` (#418).
 - `config.outbox` is prepended to published topics, `config.inbox` to subscribed topics and stripped from received topics (`topicAddPrefixOut` / `topicAddPrefixIn` / `topicRemovePrefixIn`). Both are trimmed on startup.
 
 ### Publishing (ioBroker → broker)

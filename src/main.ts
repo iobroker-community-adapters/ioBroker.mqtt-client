@@ -151,10 +151,13 @@ class MqttClient extends Adapter {
             // prevents the object from being created again until onObjectChange() has added the topic to topic2id.
             // onObjectChange() removes the topic again when the object is deleted or its syncing is disabled.
             this.addedTopics.add(topic);
+            // Always derive the id from the topic. An id from topic2id belongs to another object and would create a copy
+            // of it in the own namespace, e.g. "mqtt-client.0.javascript.0.x" (#418)
+            const newId = convertTopic2ID(topic);
             const obj: ioBroker.SettableStateObject = {
                 type: 'state',
                 common: {
-                    name: id.split('.').pop() as string,
+                    name: newId.split('.').pop() as string,
                     type: 'mixed',
                     role: 'text',
                     read: true,
@@ -183,13 +186,13 @@ class MqttClient extends Adapter {
             };
 
             try {
-                await this.setObjectNotExistsAsync(id, obj);
-                this.log.debug(`created and subscribed to new state: ${id}`);
+                await this.setObjectNotExistsAsync(newId, obj);
+                this.log.debug(`created and subscribed to new state: ${newId}`);
                 // onObjectChange should now receive this object
             } catch (e) {
                 // allow another attempt with the next message
                 this.addedTopics.delete(topic);
-                this.log.error(`Cannot create state ${id} for topic "${topic}": ${(e as Error).message}`);
+                this.log.error(`Cannot create state ${newId} for topic "${topic}": ${(e as Error).message}`);
             }
         } else {
             this.log.debug('state already exists');
@@ -434,12 +437,35 @@ class MqttClient extends Adapter {
 
     private addTopic2Id(topic: string, id: string): void {
         // derived topics can collide, e.g. "a#b" and "a+b" both become "a_b"
-        if (this.topic2id[topic] && this.topic2id[topic] !== id) {
+        const current = this.topic2id[topic];
+        if (current && current !== id) {
+            // An object of the own namespace (e.g. a leftover created from a topic) never takes the topic
+            // from a state of another adapter - otherwise the order of loading decides (#418)
+            const keepCurrent = !current.startsWith(`${this.namespace}.`) && id.startsWith(`${this.namespace}.`);
             this.log.warn(
-                `topic "${topic}" is used by ${this.topic2id[topic]} and ${id}, only ${id} will receive messages. Please configure an explicit topic for one of them`,
+                `topic "${topic}" is used by ${current} and ${id}, only ${keepCurrent ? current : id} will receive messages. Please configure an explicit topic for one of them`,
             );
+            if (keepCurrent) {
+                return;
+            }
         }
         this.topic2id[topic] = id;
+    }
+
+    /**
+     * Removes the mapping of a topic and unsubscribes it - only if the topic belongs to this id,
+     * so that another object with the same topic keeps receiving it (#418)
+     *
+     * @param topic topic without prefix
+     * @param id ioBroker id
+     */
+    private removeTopic2Id(topic: string, id: string): void {
+        if (this.topic2id[topic] !== id) {
+            return;
+        }
+        delete this.topic2id[topic];
+        delete this.subTopics[topic];
+        this.unsubscribeTopic(topic, () => this.log.debug(`unsubscribed from ${topic}`));
     }
 
     private checkSettings(
@@ -808,11 +834,18 @@ class MqttClient extends Adapter {
      * @param obj
      */
     private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
+        // topic of the object before this change - a changed topic has to be forgotten (#418)
+        const previousTopic = this.custom[id]?.topic;
+
         if (obj?.common?.custom?.[this.namespace]?.enabled) {
             this.custom[id] = obj.common.custom[this.namespace] as MqttCustomSettings;
             this.custom[id].type = (obj.common as ioBroker.StateCommon).type;
 
             this.checkSettings(id, this.custom[id], this.namespace, this.config.qos, this.config.subQos);
+
+            if (previousTopic !== undefined && previousTopic !== this.custom[id].topic) {
+                this.removeTopic2Id(previousTopic, id);
+            }
 
             if (this.custom[id].subscribe) {
                 this.subTopics[this.custom[id].topic] = this.custom[id].subQos;
@@ -824,15 +857,8 @@ class MqttClient extends Adapter {
                     this.log.debug(`subscribed to ${JSON.stringify(sub)}`);
                 });
             } else {
-                delete this.subTopics[this.custom[id].topic];
-                delete this.topic2id[this.custom[id].topic];
+                this.removeTopic2Id(this.custom[id].topic, id);
                 this.iobUnsubscribe(id);
-
-                this.unsubscribeTopic(this.custom[id].topic, () => {
-                    if (this.custom[id]) {
-                        this.log.debug(`unsubscribed from ${this.custom[id].topic}`);
-                    }
-                });
             }
 
             if (this.custom[id].enabled) {
@@ -864,10 +890,7 @@ class MqttClient extends Adapter {
         } else if (this.custom[id]) {
             const topic = this.custom[id].topic;
 
-            this.unsubscribeTopic(topic, () => this.log.debug(`unsubscribed from ${topic}`));
-
-            delete this.subTopics[this.custom[id].topic];
-            delete this.topic2id[this.custom[id].topic];
+            this.removeTopic2Id(topic, id);
             // a deleted state that was created from a topic may be created again by the next message
             this.addedTopics.delete(topic);
 
