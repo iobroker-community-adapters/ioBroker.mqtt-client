@@ -7,8 +7,16 @@ import {
     type MqttClient as MqttConnection,
 } from 'mqtt';
 
+import {
+    buildSetPayload,
+    keyToIdPart,
+    parseJsonObject,
+    parseTopicFilters,
+    splitJson,
+    topicMatchesFilter,
+} from './lib/splitJson';
 import { convertID2Topic, convertTopic2ID } from './lib/topics';
-import type { MqttCustomSettings, StateMessage } from './lib/types';
+import type { MqttCustomSettings, SplitStateInfo, StateMessage } from './lib/types';
 
 // mqtt does not re-export these types from mqtt-packet
 type QoS = NonNullable<IClientPublishOptions['qos']>;
@@ -25,6 +33,12 @@ class MqttClient extends Adapter {
     private readonly addTopics: Record<string, number> = {};
     /** received mqtt topics (without prefix) for which a new object was created */
     private readonly addedTopics = new Set<string>();
+    /** topic filters of `config.splitJsonTopics` (#322) */
+    private splitTopicFilters: string[] = [];
+    /** states created by splitting JSON payloads (#322): id → topic and original JSON keys, used to write back */
+    private readonly splitStates = new Map<string, SplitStateInfo>();
+    /** channels and states created by splitting JSON payloads, so that they are created only once per run */
+    private readonly splitObjects = new Set<string>();
 
     private brokerConnected = false;
     private client: MqttConnection | null = null;
@@ -117,6 +131,15 @@ class MqttClient extends Adapter {
         const id = this.topic2id[topic] || convertTopic2ID(topic);
 
         this.log.debug(`received message ${msg} for id ${id}=>${JSON.stringify(this.custom[id])}`);
+
+        // JSON objects on topics of `config.splitJsonTopics` become a channel with one state per value (#322)
+        if (this.splitTopicFilters.some(filter => topicMatchesFilter(topic, filter))) {
+            const json = parseJsonObject(msg);
+            if (json) {
+                await this.writeSplitJson(topic, json);
+                return;
+            }
+        }
 
         if (this.topic2id[topic] && this.custom[id]?.subscribe) {
             if (this.custom[id].subAsObject) {
@@ -478,12 +501,124 @@ class MqttClient extends Adapter {
         this.config.inbox = this.config.inbox.trim();
         this.config.outbox = this.config.outbox.trim();
 
+        this.splitTopicFilters = parseTopicFilters(this.config.splitJsonTopics);
+        if (this.splitTopicFilters.length) {
+            await this.loadSplitStates();
+        }
+
         if (this.config.host) {
             // not awaited: the object subscription below is requested at the same time as in the JS version
             this.startClient().catch(e => this.log.error(`Cannot start client: ${(e as Error).message}`));
         }
 
         void this.subscribeForeignObjectsAsync('*');
+    }
+
+    /**
+     * Reads the states created by splitting JSON payloads and subscribes the own states,
+     * so that values can be written back after a restart before a message was received (#322)
+     */
+    private async loadSplitStates(): Promise<void> {
+        try {
+            const view = await this.getObjectViewAsync('system', 'state', {
+                startkey: `${this.namespace}.`,
+                endkey: `${this.namespace}.\u9999`,
+            });
+            for (const row of view.rows) {
+                const native = row.value?.native as Partial<SplitStateInfo> | undefined;
+                if (row.value && native?.topic && Array.isArray(native.jsonPath)) {
+                    this.splitObjects.add(row.id);
+                    this.splitStates.set(row.id, {
+                        topic: native.topic,
+                        jsonPath: native.jsonPath,
+                        role: row.value.common.role,
+                    });
+                }
+            }
+            await this.subscribeStatesAsync('*');
+        } catch (e) {
+            this.log.error(`Cannot read the states of split JSON topics: ${(e as Error).message}`);
+        }
+    }
+
+    /**
+     * Writes a JSON object received on a topic of `config.splitJsonTopics` into a channel with one state per value (#322)
+     *
+     * @param topic topic without prefix
+     * @param json received JSON object
+     */
+    private async writeSplitJson(topic: string, json: Record<string, unknown>): Promise<void> {
+        const baseId = [this.namespace, ...convertTopic2ID(topic).split('.').map(keyToIdPart)].join('.');
+        const idOf = (path: string[]): string => [baseId, ...path.map(keyToIdPart)].join('.');
+        const { channels, leaves } = splitJson(json);
+
+        try {
+            await this.ensureSplitObject(baseId, {
+                type: 'channel',
+                common: { name: topic.split('/').pop() || topic },
+                native: { topic },
+            });
+            for (const channel of channels) {
+                await this.ensureSplitObject(idOf(channel.path), {
+                    type: 'channel',
+                    common: { name: channel.path[channel.path.length - 1] },
+                    native: { topic, jsonPath: channel.path },
+                });
+            }
+            for (const leaf of leaves) {
+                const id = idOf(leaf.path);
+                await this.ensureSplitObject(id, {
+                    type: 'state',
+                    common: {
+                        name: leaf.path[leaf.path.length - 1],
+                        type: leaf.type,
+                        role: leaf.role,
+                        read: true,
+                        write: true,
+                    },
+                    native: { topic, jsonPath: leaf.path },
+                });
+                this.splitStates.set(id, { topic, jsonPath: leaf.path, role: leaf.role });
+                await this.setForeignStateAsync(id, leaf.value, true);
+            }
+        } catch (e) {
+            this.log.error(`Cannot write the JSON of topic "${topic}" into states: ${(e as Error).message}`);
+        }
+    }
+
+    /** Creates an object of a split JSON topic once per run, existing objects are not changed */
+    private async ensureSplitObject(id: string, obj: ioBroker.SettableObject): Promise<void> {
+        if (!this.splitObjects.has(id)) {
+            await this.setForeignObjectNotExistsAsync(id, obj);
+            this.splitObjects.add(id);
+        }
+    }
+
+    /**
+     * Sends a value written in ioBroker as JSON to `<topic>/set`, e.g. {"color":{"x":0.5}} (#322)
+     *
+     * @param id id of the split state
+     * @param split topic and JSON keys of the state
+     * @param state the written state
+     */
+    private publishSplitState(id: string, split: SplitStateInfo, state: ioBroker.State): void {
+        if (!this.client) {
+            return;
+        }
+        let value: unknown = state.val;
+        if (split.role === 'json' && typeof value === 'string') {
+            try {
+                value = JSON.parse(value);
+            } catch {
+                // send the text as it is
+            }
+        }
+        const topic = this.topicAddPrefixOut(`${split.topic}/set`);
+        const message = JSON.stringify(buildSetPayload(split.jsonPath, value));
+        this.log.debug(`publishing ${id} to ${topic}: ${message}`);
+        this.client.publish(topic, message, { qos: (this.config.qos || 0) as QoS, retain: false }, () =>
+            this.log.debug(`successfully published ${id} to ${topic}`),
+        );
     }
 
     private async startClient(): Promise<void> {
@@ -767,6 +902,12 @@ class MqttClient extends Adapter {
                     this.publishState(id, state);
                 }
             }
+        }
+
+        // a value written in ioBroker into a state of a split JSON topic is a command for the device (#322)
+        const split = this.splitStates.get(id);
+        if (split && state && !state.ack && state.from !== `system.adapter.${this.namespace}`) {
+            this.publishSplitState(id, split, state);
         }
     }
 

@@ -29,3 +29,13 @@ export interface MqttCustomSettings {
 
 /** A state received as JSON when "subscribe as object" is enabled */
 export type StateMessage = Partial<ioBroker.State>;
+
+/** A state created by splitting a JSON payload (#322). `topic` and `jsonPath` are stored in `native` of the state. */
+export interface SplitStateInfo {
+    /** topic (without prefix) the JSON object was received on */
+    topic: string;
+    /** original JSON keys from the root of the message */
+    jsonPath: string[];
+    /** `common.role` - "json" for arrays and objects stored as JSON text */
+    role: string;
+}

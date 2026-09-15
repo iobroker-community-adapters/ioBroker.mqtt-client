@@ -637,6 +637,130 @@ describe('mqtt-client adapter', function () {
         }
     });
 
+    describe('split JSON into states (#322)', () => {
+        const Z2M = { subscriptions: 'zigbee2mqtt/#', splitJsonTopics: 'zigbee2mqtt/+' };
+        const base = `${NS}.zigbee2mqtt.sensor`;
+
+        it('creates a channel with one typed state per value', async () => {
+            const remote = await connectClient();
+            const adapter = await startAdapter(Z2M);
+
+            await remote.publish(
+                'in/zigbee2mqtt/sensor',
+                JSON.stringify({
+                    battery: 100,
+                    occupancy: false,
+                    action: 'on',
+                    last_seen: null,
+                    color: { x: 0.3 },
+                    groups: [1, 2],
+                    'a.b c': 1,
+                }),
+            );
+
+            await waitFor(() => adapter.states[`${base}.a_b_c`], 'last state');
+            assert.strictEqual(adapter.objects[base].type, 'channel');
+            assert.strictEqual(adapter.objects[base].native.topic, 'zigbee2mqtt/sensor');
+            assert.strictEqual(adapter.objects[base].common.custom, undefined, 'split topics have no custom settings');
+            assert.strictEqual(adapter.objects[`${base}.color`].type, 'channel');
+
+            const expected = {
+                battery: [100, 'number', 'value'],
+                occupancy: [false, 'boolean', 'state'],
+                action: ['on', 'string', 'text'],
+                last_seen: [null, 'mixed', 'state'],
+                'color.x': [0.3, 'number', 'value'],
+                groups: ['[1,2]', 'string', 'json'],
+                a_b_c: [1, 'number', 'value'],
+            };
+            for (const [key, [val, type, role]] of Object.entries(expected)) {
+                const obj = adapter.objects[`${base}.${key}`];
+                assert.strictEqual(obj.type, 'state', key);
+                assert.strictEqual(obj.common.type, type, key);
+                assert.strictEqual(obj.common.role, role, key);
+                assert.strictEqual(obj.common.write, true, key);
+                assert.strictEqual(adapter.states[`${base}.${key}`].val, val, key);
+                assert.strictEqual(adapter.states[`${base}.${key}`].ack, true, key);
+            }
+            assert.deepStrictEqual(adapter.objects[`${base}.color.x`].native, {
+                topic: 'zigbee2mqtt/sensor',
+                jsonPath: ['color', 'x'],
+            });
+            assert.deepStrictEqual(adapter.objects[`${base}.a_b_c`].native.jsonPath, ['a.b c']);
+        });
+
+        it('updates values, adds new keys and keeps missing keys', async () => {
+            const remote = await connectClient();
+            const adapter = await startAdapter(Z2M);
+
+            await remote.publish('in/zigbee2mqtt/sensor', JSON.stringify({ battery: 100, linkquality: 10 }));
+            await waitFor(() => adapter.states[`${base}.linkquality`], 'first message');
+            await remote.publish('in/zigbee2mqtt/sensor', JSON.stringify({ battery: 90, voltage: 3000 }));
+            await waitFor(() => adapter.states[`${base}.voltage`], 'second message');
+
+            assert.strictEqual(adapter.states[`${base}.battery`].val, 90);
+            assert.strictEqual(adapter.states[`${base}.linkquality`].val, 10);
+            assert.strictEqual(adapter.states[`${base}.voltage`].val, 3000);
+        });
+
+        it('handles topics without a matching filter, arrays and text as before', async () => {
+            const remote = await connectClient();
+            const adapter = await startAdapter(Z2M);
+
+            await remote.publish('in/zigbee2mqtt/sensor/availability', JSON.stringify({ state: 'online' }));
+            await remote.publish('in/zigbee2mqtt/list', '[1,2]');
+            await remote.publish('in/zigbee2mqtt/text', 'online');
+
+            for (const id of [`${base}.availability`, `${NS}.zigbee2mqtt.list`, `${NS}.zigbee2mqtt.text`]) {
+                const obj = await waitFor(() => adapter.objects[id], id);
+                assert.strictEqual(obj.type, 'state', id);
+                assert.strictEqual(obj.common.custom[NS].subscribe, true, id);
+            }
+            assert.strictEqual(adapter.objects[base], undefined, 'no channel may be created');
+        });
+
+        it('sends a value written in ioBroker as JSON to <topic>/set', async () => {
+            const remote = await connectClient('out/zigbee2mqtt/#');
+            const adapter = await startAdapter(Z2M);
+            await remote.publish('in/zigbee2mqtt/sensor', JSON.stringify({ state: 'OFF', color: { x: 0.3 }, groups: [1] }));
+            await waitFor(() => adapter.states[`${base}.groups`], 'states');
+
+            adapter.testSetState(`${base}.color.x`, 0.5);
+            const msg = await remote.waitForMessage('out/zigbee2mqtt/sensor/set');
+            assert.deepStrictEqual(JSON.parse(msg.payload), { color: { x: 0.5 } });
+
+            adapter.testSetState(`${base}.groups`, '[3,4]');
+            await remote.waitForMessage('out/zigbee2mqtt/sensor/set', m => m.payload.includes('groups'));
+            assert.deepStrictEqual(
+                remote.messagesOn('out/zigbee2mqtt/sensor/set').map(m => JSON.parse(m.payload)),
+                [{ color: { x: 0.5 } }, { groups: [3, 4] }],
+                'JSON text of arrays is sent as array',
+            );
+
+            // acknowledged values are no commands
+            adapter.testSetState(`${base}.state`, 'ON', { ack: true });
+            await sleep(300);
+            assert.strictEqual(remote.messagesOn('out/zigbee2mqtt/sensor/set').length, 2);
+        });
+
+        it('sends values to <topic>/set after a restart before a message was received', async () => {
+            const remote = await connectClient('out/zigbee2mqtt/#');
+            const adapter = await startAdapter(Z2M, {
+                [base]: { type: 'channel', common: { name: 'sensor' }, native: { topic: 'zigbee2mqtt/sensor' } },
+                [`${base}.state`]: {
+                    type: 'state',
+                    common: { name: 'state', type: 'string', role: 'text', read: true, write: true },
+                    native: { topic: 'zigbee2mqtt/sensor', jsonPath: ['state'] },
+                },
+            });
+
+            adapter.testSetState(`${base}.state`, 'ON');
+
+            const msg = await remote.waitForMessage('out/zigbee2mqtt/sensor/set');
+            assert.deepStrictEqual(JSON.parse(msg.payload), { state: 'ON' });
+        });
+    });
+
     describe('additional subscriptions', () => {
         it('creates a state for a received unknown topic and writes the following values', async () => {
             const id = `${NS}.sensors.temp`;

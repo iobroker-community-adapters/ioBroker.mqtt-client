@@ -282,6 +282,7 @@
     "lastWillTopic": "",
     "lastWillMessage": "",
     "subscriptions": "",
+    "splitJsonTopics": "",
     "reconnectPeriod": 30000,
     "outbox": "ioBroker",
     "inbox": "ioBroker",

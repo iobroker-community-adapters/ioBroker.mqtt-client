@@ -27,6 +27,8 @@ declare global {
 
             /** comma separated list of additional topics to subscribe to */
             subscriptions: string;
+            /** comma separated MQTT topic filters: JSON objects received on these topics are split into states (#322) */
+            splitJsonTopics: string;
             /** milliseconds between two reconnection attempts - not in admin/jsonConfig.json */
             reconnectPeriod: number;
             /** prefix for publishing topics */

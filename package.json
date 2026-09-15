@@ -58,7 +58,7 @@
     "watch": "tsc -p tsconfig.build.json --watch",
     "check": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint -c eslint.config.mjs",
-    "test:unit": "mocha test/unitTopics test/unitAdapter --exit",
+    "test:unit": "mocha test/unitTopics test/unitSplitJson test/unitAdapter --exit",
     "test:package": "mocha test/packageFiles --exit",
     "test:integration": "mocha test/integrationAdapter --exit",
     "test": "npm run test:package",

@@ -231,6 +231,17 @@
                     "md": 12,
                     "lg": 12,
                     "xl": 12
+                },
+                "splitJsonTopics": {
+                    "type": "chips",
+                    "label": "Split JSON into states for topics",
+                    "help": "MQTT topic filters with + and #, e.g. zigbee2mqtt/+. A JSON object becomes a channel with one state per value. Written values are sent to <topic>/set.",
+                    "delimiter": ",",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         }

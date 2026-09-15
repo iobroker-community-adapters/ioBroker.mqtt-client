@@ -34,6 +34,7 @@ There is deliberately **no `prepare` script** — `npm ci`/`npm install` does no
 | --- | --- |
 | `src/main.ts` | the whole adapter: one `MqttClient extends utils.Adapter` class |
 | `src/lib/topics.ts` | `convertID2Topic()` / `convertTopic2ID()` - pure functions, unit tested in `test/unitTopics.js` |
+| `src/lib/splitJson.ts` | topic filter matching, splitting JSON objects into channels/states, `/set` payload (#322) - unit tested in `test/unitSplitJson.js` |
 | `src/lib/types.ts` | `MqttCustomSettings` (per-object settings) and `StateMessage` |
 | `src/lib/adapter-config.d.ts` | augments `ioBroker.AdapterConfig` |
 | `admin/jsonConfig.json` | instance configuration (broker, prefixes, additional subscriptions) |
@@ -71,6 +72,15 @@ All runtime state lives in instance fields (`custom`, `subTopics`, `topic2id`, `
 - known topic + `subscribe` enabled → `setStateVal()` (string payload converted by `common.type` in `stringToVal()`) or `setStateObj()` (JSON state, respects `ts`/`lc`).
 - unknown topic → a new state `mqtt-client.<i>.<converted topic>` is created with subscribe enabled; `onObjectChange()` then picks it up. The message that triggers the creation is **not** written to the state. Until `onObjectChange()` has added the topic to `topic2id`, the `addedTopics` set blocks further creation attempts; `onObjectChange()` removes the topic from the set when the object is deleted or its syncing is disabled, and a failed creation removes it right away.
 - Loop protection: when `inbox === outbox` and the object also publishes, an unchanged value is not written back.
+
+### Split JSON into states (#322)
+
+Only active when `config.splitJsonTopics` (comma separated topic filters with `+`/`#`) is set; the pure logic is in `src/lib/splitJson.ts`.
+
+- `onBrokerMessage()` checks the filters **before** `topic2id`: a matching topic with a JSON **object** payload goes to `writeSplitJson()`, everything else (arrays, text, other topics) takes the normal path.
+- `writeSplitJson()` creates `mqtt-client.<i>.<converted topic>` as `channel`, nested objects as channels (up to `MAX_SPLIT_DEPTH`) and one `state` per value with `native.topic` and `native.jsonPath` (the original keys, the ids are sanitized with `keyToIdPart()`). Values are written with `ack=true`. `splitObjects` avoids creating the same object twice per run.
+- Write back: `onReady()` loads all own states with `native.jsonPath` into `splitStates` and subscribes the own states (`subscribeStatesAsync('*')`). A state change with `ack=false` from another sender is published by `publishSplitState()` to `<topic>/set` as nested JSON (`buildSetPayload()`); role `json` values are parsed first. The adapter does not acknowledge the value itself — the device answers with its next message.
+- Split topics have no custom settings and are not in `topic2id`.
 
 ### Shutdown
 

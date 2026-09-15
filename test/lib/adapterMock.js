@@ -7,6 +7,14 @@
 const { EventEmitter } = require('node:events');
 const { native } = require('../../io-package.json');
 
+/**
+ * @param {string} pattern id pattern with "*"
+ * @returns {RegExp}
+ */
+function patternToRegExp(pattern) {
+    return new RegExp(`^${pattern.split('*').map(part => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('.*')}$`);
+}
+
 class AdapterMock extends EventEmitter {
     /**
      * @param {{ name: string, config?: Partial<ioBroker.AdapterConfig> }} options
@@ -29,6 +37,8 @@ class AdapterMock extends EventEmitter {
         this.terminated = null;
 
         this.subscribedStates = new Set();
+        /** @type {RegExp[]} */
+        this.subscribedStatePatterns = [];
         this.objectsSubscribed = false;
         this.timers = new Set();
 
@@ -47,6 +57,10 @@ class AdapterMock extends EventEmitter {
 
     // ---- states
 
+    isStateSubscribed(id) {
+        return this.subscribedStates.has(id) || this.subscribedStatePatterns.some(re => re.test(id));
+    }
+
     writeState(id, state, from) {
         const now = Date.now();
         const old = this.states[id];
@@ -59,7 +73,7 @@ class AdapterMock extends EventEmitter {
             q: 0,
         };
         this.states[id] = stored;
-        if (this.subscribedStates.has(id)) {
+        if (this.isStateSubscribed(id)) {
             setImmediate(() => this.emit('stateChange', id, stored));
         }
         return stored;
@@ -75,6 +89,10 @@ class AdapterMock extends EventEmitter {
         const st = state !== null && typeof state === 'object' ? state : { val: state, ack };
         this.writeState(id, st, `system.adapter.${this.namespace}`);
         return Promise.resolve(id);
+    }
+
+    setForeignStateAsync(id, state, ack) {
+        return this.setForeignState(id, state, ack);
     }
 
     getStateAsync(id) {
@@ -95,6 +113,11 @@ class AdapterMock extends EventEmitter {
         return Promise.resolve();
     }
 
+    subscribeStatesAsync(pattern) {
+        this.subscribedStatePatterns.push(patternToRegExp(this.fullId(pattern)));
+        return Promise.resolve();
+    }
+
     // ---- objects
 
     getForeignObjectAsync(id) {
@@ -102,19 +125,33 @@ class AdapterMock extends EventEmitter {
     }
 
     setObjectNotExistsAsync(id, obj) {
-        id = this.fullId(id);
+        return this.setForeignObjectNotExistsAsync(this.fullId(id), obj);
+    }
+
+    setForeignObjectNotExistsAsync(id, obj) {
         if (!this.objects[id]) {
             this.storeObject(id, obj);
         }
         return Promise.resolve({ id });
     }
 
-    getObjectViewAsync(design, search) {
+    getObjectViewAsync(design, search, params = {}) {
         const rows = [];
         if (design === 'system' && search === 'custom') {
             for (const [id, obj] of Object.entries(this.objects)) {
                 if (obj.common?.custom) {
                     rows.push({ id, value: JSON.parse(JSON.stringify(obj.common.custom)) });
+                }
+            }
+        } else if (design === 'system') {
+            // views by object type, e.g. "state" or "channel", filtered by startkey/endkey
+            for (const [id, obj] of Object.entries(this.objects)) {
+                if (
+                    obj.type === search &&
+                    (params.startkey === undefined || id >= params.startkey) &&
+                    (params.endkey === undefined || id <= params.endkey)
+                ) {
+                    rows.push({ id, value: JSON.parse(JSON.stringify(obj)) });
                 }
             }
         }
@@ -182,7 +219,7 @@ class AdapterMock extends EventEmitter {
     /** Deletes a state (e.g. expired) like js-controller would do */
     testDeleteState(id) {
         delete this.states[id];
-        if (this.subscribedStates.has(id)) {
+        if (this.isStateSubscribed(id)) {
             setImmediate(() => this.emit('stateChange', id, null));
         }
     }
